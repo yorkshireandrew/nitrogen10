@@ -1,0 +1,63 @@
+bounding_radius
+
+nearRendererDist
+farRendererDist
+hlpBreakingDist 		<= distance at which hlp breaking begins
+billboardOrientationDist	<= distance at which item uses billboard orientation
+
+	
+normalDetailPolyStart
+improvedDetailPolyStart
+normalDetailPolyFinish
+improvedDetailPolyFinish 
+improvedDetailDist 
+
+textureMapMax
+{
+  	textureMapName
+  	textureMapResource
+}
+
+polygonMax
+{
+	c1 c2 c3 c4
+	polyDataMax
+	{
+		integer
+	}
+	NameOfRendererTriplet
+	textureMapName
+
+	backsideIndex
+	isBacksideCulled (yes/no)
+	isTransparent (yes/no)	<= determines which renderer pass renders.
+}
+
+backsideMax
+{
+	ix	iy	iz
+	inx	iny	inz
+	calculateLighting(yes/no)
+}
+
+vertexMax
+{
+	x	y	z
+	aux1	aux2	aux3	<== floats
+}
+
+
+
+
+
+
+	
+	
+		
+	
+		
+
+
+
+
+
