@@ -75,10 +75,6 @@ public final class Vert {
     	is_x = iv.is_x;
     	is_y = iv.is_y;
     	is_z = iv.is_z;
-    	
-    	aux1 = iv.aux1;
-    	aux2 = iv.aux2;
-    	aux3 = iv.aux3;
     }
 
     void setZ(int pz)
@@ -87,27 +83,33 @@ public final class Vert {
     }
     
     /** Set auxiliary variable aux1 e.g. an integer polygon colour */
-    void setAux2(int aux1)
+    void setAux2(float aux1)
     {
     	this.aux1=aux1;
 
     }    
 
     /** Set auxiliary variables aux1 and aux2 e.g. texture map coordinates*/
-    void setAux2(int aux1, int aux2)
+    void setAux2(float aux1, float aux2)
     {
     	this.aux1=aux1;
     	this.aux2=aux2;
     }
     
     /** Set auxiliary variables aux1, aux2 & aux3 e.g. RGB values for gourad shading*/    
-    void setAux3(int aux1, int aux2, int aux3)
+    void setAux3(float aux1, float aux2, float aux3)
     {
     	this.aux1=aux1;
     	this.aux2=aux2;
     	this.aux3=aux3;
     }
     
+    void setAux(PolygonVertexData pvd)
+    {
+       	this.aux1 = pvd.aux1;
+       	this.aux2 = pvd.aux2;
+       	this.aux3 = pvd.aux3;
+           }
     /** Calculate the vertex's view-space coordinates 
      * @param v11-v34  The orientation matrix computed by the scene graph (12 floating point values)*/
     void calculateViewSpaceCoordinates(			

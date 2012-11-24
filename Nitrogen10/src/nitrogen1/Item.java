@@ -217,11 +217,18 @@ public class Item {
 				Vert v1 = vertexs[immutablePolygon.c1];
 				Vert v2 = vertexs[immutablePolygon.c2];
 				Vert v3 = vertexs[immutablePolygon.c3];
-				Vert v4 = vertexs[immutablePolygon.c4];
+				Vert v4 = vertexs[immutablePolygon.c4];				
 				v1.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
 				v2.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
 				v3.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
 				v4.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
+
+				// move vertex data across from the immutable polygon
+				v1.setAux(immutablePolygon.pvd_c1);
+				v2.setAux(immutablePolygon.pvd_c2);
+				v3.setAux(immutablePolygon.pvd_c3);
+				v4.setAux(immutablePolygon.pvd_c4);
+				
 				PolygonClipper.prepareForNewPolygon();
 				PolygonClipper.process(
 						context,
@@ -252,12 +259,17 @@ public class Item {
 				Vert v1 = vertexs[immutablePolygon.c1];
 				Vert v2 = vertexs[immutablePolygon.c2];
 				Vert v3 = vertexs[immutablePolygon.c3];
-				Vert v4 = vertexs[immutablePolygon.c4];
+				Vert v4 = vertexs[immutablePolygon.c4];			
 				v1.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
 				v2.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
 				v3.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
 				v4.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
 
+				// move vertex data across from the immutable polygon
+				v1.setAux(immutablePolygon.pvd_c1);
+				v2.setAux(immutablePolygon.pvd_c2);
+				v3.setAux(immutablePolygon.pvd_c3);
+				v4.setAux(immutablePolygon.pvd_c4);
 				// Pass the polygon on to the next process, but reverse the ordering of the vertexes 
 				// because the polygon is facing away, to ensure they occur in a clockwise direction		
 				PolygonClipper.prepareForNewPolygon();

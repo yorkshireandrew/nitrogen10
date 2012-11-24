@@ -86,6 +86,8 @@ public class SharedImmutableSubItem {
             File f = new File(filename);
             System.out.println(f.getAbsolutePath());
             in = new Scanner(new File(filename));
+            int polygonVertexDataMax; 	// number of PolygonVertexData objects the file contains
+            Map<String,PolygonVertexData> polygonVertexDataMap = new HashMap<String,PolygonVertexData>();
             int polygonMax; 	// number of ImmutablePolygons the file indicates it contains
             int textureMapMax; 	// number of texture maps the file indicates it references
             Map<String,TexMap> textureMaps = new HashMap<String,TexMap>();
@@ -139,6 +141,23 @@ public class SharedImmutableSubItem {
     			}
     		}
     		
+        	// load all the PolgonVertexData
+    		String polygonVertexDataName;
+        	if(in.hasNextInt()){polygonVertexDataMax = in.nextInt();}else throw new NitrogenCreationException("unable to find polygonVertexDataMax");    		
+        	for(int i = 0; i < polygonVertexDataMax; i++)
+        	{		
+    			if(!in.hasNextLine())throw new NitrogenCreationException("unable to find polygonVertexData [" + i + "] name loading " + filename);
+    			polygonVertexDataName = in.nextLine();
+        		try
+        		{
+        			polygonVertexDataMap.put(polygonVertexDataName, buildPolygonVertexData(in));
+        		}
+        		catch(NitrogenCreationException e)
+        		{
+        			throw new NitrogenCreationException("Exception occured reading " + filename +" on polygonVertexData" + i + ". " + e.getMessage());
+        		}
+        	} 
+        	
     		// load all the ImmutablePolygons
         	if(in.hasNextInt()){polygonMax = in.nextInt();}else throw new NitrogenCreationException("unable to find polygonMax");    		
         	immutablePolygons = new ImmutablePolygon[polygonMax];
@@ -147,7 +166,7 @@ public class SharedImmutableSubItem {
         		
         		try
         		{
-        			immutablePolygons[i] = buildImmutablePolygon(in , textureMaps);
+        			immutablePolygons[i] = buildImmutablePolygon(in , textureMaps, polygonVertexDataMap);
         		}
         		catch(NitrogenCreationException e)
         		{
@@ -202,7 +221,7 @@ public class SharedImmutableSubItem {
 	}
 	
 	/** creates an ImmutablePolygon using text from a Scanner, it also requires a textureMap Map created earlier in the parsing so that it can identify and inject into the polygon a TexMap reference */
-	ImmutablePolygon buildImmutablePolygon(Scanner in , Map<String, TexMap> textureMaps) throws NitrogenCreationException, NoSuchElementException
+	ImmutablePolygon buildImmutablePolygon(Scanner in , Map<String, TexMap> textureMaps, Map<String, PolygonVertexData> polygonVertexDataMap) throws NitrogenCreationException, NoSuchElementException
 	{
 			int 			temp_c1;	
 			int 			temp_c2;	
@@ -211,8 +230,15 @@ public class SharedImmutableSubItem {
 			int[] 			temp_polyData;
 			RendererTriplet temp_rendererTriplet;
 			String			textureMapName;
+			String			polygonVertexDataName;
 			String			rendererTripletName;
 			TexMap 			temp_textureMap = null;
+			
+			PolygonVertexData temp_pvd_c1 = null;
+			PolygonVertexData temp_pvd_c2 = null;
+			PolygonVertexData temp_pvd_c3 = null;
+			PolygonVertexData temp_pvd_c4 = null;
+			
 			int 			temp_backsideIndex;
 			String			yes_no;
 			boolean 		temp_isBacksideCulled;
@@ -223,6 +249,31 @@ public class SharedImmutableSubItem {
 			if(in.hasNextInt()){temp_c3 = in.nextInt();}else throw new NitrogenCreationException("Unable to find c3.");
 			if(in.hasNextInt()){temp_c4 = in.nextInt();}else throw new NitrogenCreationException("Unable to find c4.");
 
+			// read in the polygonVertexData associated with c1
+			if(!in.hasNextLine())throw new NitrogenCreationException("Unable to find polygonVertexData name associated with c1");
+			polygonVertexDataName = in.nextLine();
+		    if(polygonVertexDataMap.containsKey(polygonVertexDataName)){temp_pvd_c1 = polygonVertexDataMap.get(polygonVertexDataName);}
+			else throw new NitrogenCreationException("The PolygonVertexData named " + polygonVertexDataName + "is not loaded by the file.");
+
+		    // read in the polygonVertexData associated with c2
+			if(!in.hasNextLine())throw new NitrogenCreationException("Unable to find polygonVertexData name associated with c2");
+			polygonVertexDataName = in.nextLine();
+		    if(polygonVertexDataMap.containsKey(polygonVertexDataName)){temp_pvd_c2 = polygonVertexDataMap.get(polygonVertexDataName);}
+			else throw new NitrogenCreationException("The PolygonVertexData named " + polygonVertexDataName + "is not loaded by the file.");
+
+			// read in the polygonVertexData associated with c3
+			if(!in.hasNextLine())throw new NitrogenCreationException("Unable to find polygonVertexData name associated with c3");
+			polygonVertexDataName = in.nextLine();
+		    if(polygonVertexDataMap.containsKey(polygonVertexDataName)){temp_pvd_c3 = polygonVertexDataMap.get(polygonVertexDataName);}
+			else throw new NitrogenCreationException("The PolygonVertexData named " + polygonVertexDataName + "is not loaded by the file.");
+
+			// read in the polygonVertexData associated with c4
+			if(!in.hasNextLine())throw new NitrogenCreationException("Unable to find polygonVertexData name associated with c4");
+			polygonVertexDataName = in.nextLine();
+		    if(polygonVertexDataMap.containsKey(polygonVertexDataName)){temp_pvd_c4 = polygonVertexDataMap.get(polygonVertexDataName);}
+			else throw new NitrogenCreationException("The PolygonVertexData named " + polygonVertexDataName + "is not loaded by the file.");
+		    
+			
 			// read in the polygons polyData
 			int polyDataMax;
 			if(in.hasNextInt()){polyDataMax = in.nextInt();}else throw new NitrogenCreationException("Unable to find polyDataMax.");
@@ -281,6 +332,10 @@ public class SharedImmutableSubItem {
 					temp_c2,
 					temp_c3,
 					temp_c4,
+					temp_pvd_c1,
+					temp_pvd_c2,
+					temp_pvd_c3,
+					temp_pvd_c4,
 					temp_polyData,
 					temp_rendererTriplet,
 					temp_textureMap,
@@ -339,26 +394,25 @@ public class SharedImmutableSubItem {
 		float temp_is_y;
 		float temp_is_z;
 		
-	    float temp_aux1;
-	    float temp_aux2;
-	    float temp_aux3;
-		
 		if(in.hasNextFloat()){temp_is_x = in.nextFloat();}else throw new NitrogenCreationException("Unable to find is_x");
 		if(in.hasNextFloat()){temp_is_y = in.nextFloat();}else throw new NitrogenCreationException("Unable to find is_iy");
 		if(in.hasNextFloat()){temp_is_z = in.nextFloat();}else throw new NitrogenCreationException("Unable to find is_iz");
-		
-		if(in.hasNextFloat()){temp_aux1 = in.nextFloat();}else throw new NitrogenCreationException("Unable to find aux1");
-		if(in.hasNextFloat()){temp_aux2 = in.nextFloat();}else throw new NitrogenCreationException("Unable to find aux2");
-		if(in.hasNextFloat()){temp_aux3 = in.nextFloat();}else throw new NitrogenCreationException("Unable to find aux3");
 
 		return new ImmutableVertex(
 				temp_is_x,
 				temp_is_y,
-				temp_is_z,
-				
-			    temp_aux1,
-			    temp_aux2,
-			    temp_aux3
+				temp_is_z
 				);		
+	}
+	
+	PolygonVertexData buildPolygonVertexData(Scanner in) throws NitrogenCreationException
+	{	
+	    float temp_aux1;
+	    float temp_aux2;
+	    float temp_aux3;
+		if(in.hasNextFloat()){temp_aux1 = in.nextFloat();}else throw new NitrogenCreationException("Unable to find aux1");
+		if(in.hasNextFloat()){temp_aux2 = in.nextFloat();}else throw new NitrogenCreationException("Unable to find aux2");
+		if(in.hasNextFloat()){temp_aux3 = in.nextFloat();}else throw new NitrogenCreationException("Unable to find aux3");
+		return (new PolygonVertexData(temp_aux1,temp_aux2,temp_aux3));
 	}
 }

@@ -14,13 +14,27 @@ improvedDetailDist
 
 textureMapMax
 {
-  	textureMapName
+  	textureMapName <= so it can be referred to later in polygon
   	textureMapResource
+}
+
+polygonVertexDataMax
+{
+	polygonVertexDataName <= so it can be referred to later in polygon
+	aux1 <= float
+	aux2 <= float
+	aux3 <= float
 }
 
 polygonMax
 {
-	c1 c2 c3 c4
+	c1 c2 c3 c4 <= indexes into vertex array
+	
+	polygonVertexDataName <= polygonVertexData name that is associated with c1 etc
+	polygonVertexDataName
+	polygonVertexDataName
+	polygonVertexDataName
+	
 	polyDataMax
 	{
 		integer
@@ -43,7 +57,6 @@ backsideMax
 vertexMax
 {
 	x	y	z
-	aux1	aux2	aux3	<== floats
 }
 
 
