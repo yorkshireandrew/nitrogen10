@@ -284,7 +284,13 @@ public class SharedImmutableSubItem {
 			temp_polyData = new int[polyDataMax];
 			for(int j = 0; j < polyDataMax; j++)
 			{
-				if(in.hasNextInt()){temp_polyData[j] = in.nextInt();}else throw new NitrogenCreationException("Problem reading polyData.");
+				if(in.hasNextInt())
+				{
+					int read = in.nextInt();
+					temp_polyData[j] = read;
+							
+						// else throw new NitrogenCreationException("Problem reading polyData.");
+				}
 			}
 			
 			// obtain renderer triplet
