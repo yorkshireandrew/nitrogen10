@@ -74,7 +74,8 @@ final public class MyApplet extends JApplet{
             	e.printStackTrace();           	
             }
             
-            new Item(sisi,t1);
+            Item i = new Item(sisi,t1);
+            i.setVisibility(true);
             
             t1.render(nc);
             nc.repaint();

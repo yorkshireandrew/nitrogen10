@@ -36,7 +36,7 @@ public class Item {
 	// ************************************************
 	
 	/** Set true if the item is visible, or false if the Item is invisible*/
-	boolean visibility = false;
+	protected boolean visibility = false;
 	
 	/** Set true by scene graph if rotation has occurred since last render call */
 	boolean rotationNeedsUpdate = true;
@@ -504,6 +504,23 @@ public class Item {
 		// It also results in the tanslationNeedsUpdate flag on all backsides and vertexs being set
 		rotationNeedsUpdate = true;		
 		translationNeedsUpdate = true;		//lets selectWhichRenderer know that it has to do something
+	}
+	
+	void setVisibility(boolean in)
+	{
+		if(visibility == in)return;
+		if(visibility)
+		{
+			// we are visible so make invisible
+			if(parent != null)parent.decreaseVisibleChildrenBy(1);
+			visibility = false;
+		}
+		else
+		{
+			// we are invisible so make visible
+			if(parent != null)parent.increaseVisibleChildrenBy(1);
+			visibility = true;			
+		}
 	}
 	
 	

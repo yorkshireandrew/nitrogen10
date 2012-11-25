@@ -142,7 +142,7 @@ public class Transform{
 	{
 		if(childItems.removeElement(i) == true)
 		{
-			decreaseVisibleChildrenBy(1);
+			if(i.visibility)decreaseVisibleChildrenBy(1);
 			return true;
 		}
 		return false;

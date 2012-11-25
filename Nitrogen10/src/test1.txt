@@ -52,7 +52,7 @@ null
 null
 null
 1
-0xFFFF00
+0XFF0000
 sscr
 null
 1
@@ -65,7 +65,7 @@ null
 null
 null
 1
-4284900966
+0X00FF00
 sscr
 null
 2
@@ -79,8 +79,7 @@ null
 null
 null
 1
-4
-4278255360
+0X0000FF
 sscr
 null
 3
@@ -93,8 +92,7 @@ null
 null
 null
 1
-4
-4278190335
+0x0000FF
 sscr
 null
 4
@@ -107,8 +105,7 @@ null
 null
 null
 1
-4
-4278190335
+0XFF8888
 sscr
 null
 5
