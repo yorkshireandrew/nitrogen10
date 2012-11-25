@@ -96,20 +96,20 @@ public class SharedImmutableSubItem {
             int vertexMax; 		// number of ImmutableVertexs
             
             // read bounding radius
-        	if(in.hasNextFloat()){boundingRadius 	= in.nextFloat();}else throw new NitrogenCreationException(" unable to find boundingRadius loading " + filename);
+        	boundingRadius 	= readFloat(in, " unable to find boundingRadius loading " + filename);
 
         	// read values related to renderer
-        	if(in.hasNextFloat()){nearRendererDist 	= in.nextFloat();}else throw new NitrogenCreationException("unable to find nearRendererDist loading " + filename);
-        	if(in.hasNextFloat()){farRendererDist 	= in.nextFloat();}else throw new NitrogenCreationException("unable to find farRendererDist loading " + filename);
-        	if(in.hasNextFloat()){hlpBreakingDist 	= in.nextFloat();}else throw new NitrogenCreationException("unable to find hlpBreakingDist loading " + filename);
-        	if(in.hasNextFloat()){billboardOrientationDist = in.nextFloat();}else throw new NitrogenCreationException("unable to find billboardOrientationDist loading " + filename);
+        	nearRendererDist = readFloat(in, "unable to find nearRendererDist loading " + filename);
+        	farRendererDist  = readFloat(in, "unable to find farRendererDist loading " + filename);
+        	hlpBreakingDist  = readFloat(in, "unable to find hlpBreakingDist loading " + filename);
+        	billboardOrientationDist = readFloat(in, "unable to find billboardOrientationDist loading " + filename);
 
         	// read values related to level of detail
-        	if(in.hasNextInt()){normalDetailPolyStart = in.nextInt();}else throw new NitrogenCreationException("unable to find normalDetailPolyStart loading " + filename);
-        	if(in.hasNextInt()){improvedDetailPolyStart = in.nextInt();}else throw new NitrogenCreationException("unable to find improvedDetailPolyStart loading " + filename); 
-        	if(in.hasNextInt()){normalDetailPolyFinish = in.nextInt();}else throw new NitrogenCreationException("unable to find normalDetailPolyFinish loading " + filename);
-        	if(in.hasNextInt()){improvedDetailPolyFinish = in.nextInt();}else throw new NitrogenCreationException("unable to find improvedDetailPolyFinish loading " + filename);
-        	if(in.hasNextFloat()){improvedDetailDist 	= in.nextFloat();}else throw new NitrogenCreationException("unable to find improvedDetailDist loading " + filename);
+        	normalDetailPolyStart 	= readInt(in, "unable to find normalDetailPolyStart loading " + filename);
+        	improvedDetailPolyStart = readInt(in, "unable to find improvedDetailPolyStart loading " + filename); 
+        	normalDetailPolyFinish 	= readInt(in, "unable to find normalDetailPolyFinish loading " + filename);
+        	improvedDetailPolyFinish = readInt(in, "unable to find improvedDetailPolyFinish loading " + filename);
+        	improvedDetailDist = readFloat(in, "unable to find improvedDetailDist loading " + filename);
         	
         	//calculate hysteresis distances from read values
     		nearRendererDistPlus = nearRendererDist * hysteresis;
@@ -120,19 +120,16 @@ public class SharedImmutableSubItem {
     		
     		// load all the TexMap object referenced by the SISI polygons
     		// and place them in the textureMaps map
-    		if(in.hasNextInt()){textureMapMax = in.nextInt();}else throw new NitrogenCreationException("unable to find textureMapMax loading" + filename);
-			if(in.hasNextLine())in.nextLine(); // pull in line ending
-   		
+    		textureMapMax = readInt(in, "unable to find textureMapMax loading" + filename);
+ 		
     		for(int i = 0; i < textureMapMax; i++)
     		{
     			String textureMapName;
     			String textureMapResource;
     			
     			TexMap newTextureMap;    			
-    			if(!in.hasNextLine())throw new NitrogenCreationException("unable to find textureMap [" + i + "] name loading " + filename);
-    			textureMapName = in.nextLine(); // pulls in the text 
-    			if(!in.hasNextLine())throw new NitrogenCreationException("unable to find textureMap [" + i + "] resource name loading " + filename);
-    			textureMapResource = in.nextLine();
+    			textureMapName = readLine(in, "unable to find textureMap [" + i + "] name loading " + filename);
+    			textureMapResource = readLine(in, "unable to find textureMap [" + i + "] resource name loading " + filename);
     			
     			try{
     				newTextureMap = new TexMap(textureMapResource);
@@ -145,24 +142,22 @@ public class SharedImmutableSubItem {
     		
         	// load all the PolgonVertexData
     		String polygonVertexDataName;
-        	if(in.hasNextInt()){polygonVertexDataMax = in.nextInt();}else throw new NitrogenCreationException("unable to find polygonVertexDataMax");    		
+        	polygonVertexDataMax = readInt(in, "unable to find polygonVertexDataMax loading " + filename);    		
         	for(int i = 0; i < polygonVertexDataMax; i++)
         	{		
-    			if(in.hasNextLine())in.nextLine(); // pull in line ending
-        		if(!in.hasNextLine())throw new NitrogenCreationException("unable to find polygonVertexData [" + i + "] name loading " + filename);
-    			polygonVertexDataName = in.nextLine();
+        		polygonVertexDataName = readLine(in, "unable to find polygonVertexData [" + i + "] name loading " + filename);
         		try
         		{
         			polygonVertexDataMap.put(polygonVertexDataName, buildPolygonVertexData(in));
         		}
         		catch(NitrogenCreationException e)
         		{
-        			throw new NitrogenCreationException("Exception occured reading " + filename +" on polygonVertexData" + i + ". " + e.getMessage());
+        			throw new NitrogenCreationException("Exception occured reading " + filename +" on polygonVertexData" + i + " caused by: " + e.getMessage());
         		}
         	} 
         	
     		// load all the ImmutablePolygons
-        	if(in.hasNextInt()){polygonMax = in.nextInt();}else throw new NitrogenCreationException("unable to find polygonMax");    		
+        	polygonMax = readInt(in, "unable to find polygonMax reading " + filename);    		
         	immutablePolygons = new ImmutablePolygon[polygonMax];
         	for(int i = 0; i < polygonMax; i++)
         	{
@@ -173,12 +168,12 @@ public class SharedImmutableSubItem {
         		}
         		catch(NitrogenCreationException e)
         		{
-        			throw new NitrogenCreationException("Exception occured reading " + filename +" on ImmutablePolygon " + i + ". " + e.getMessage());
+        			throw new NitrogenCreationException("Exception occured reading " + filename +" on ImmutablePolygon " + i + " caused by: " + e.getMessage());
         		}
         	}
         	
         	// load all the ImmutableBacksides
-        	if(in.hasNextInt()){backsideMax = in.nextInt();}else throw new NitrogenCreationException("unable to find backsideMax");    		
+        	backsideMax = readInt( in, "unable to find backsideMax loading " + filename);    		
         	immutableBacksides = new ImmutableBackside[backsideMax];
         	for(int i = 0; i < backsideMax; i++)
         	{
@@ -189,13 +184,13 @@ public class SharedImmutableSubItem {
         		}
         		catch(NitrogenCreationException e)
         		{
-        			throw new NitrogenCreationException("Exception occured reading " + filename +" on ImmutableBackside" + i + ". " + e.getMessage());
+        			throw new NitrogenCreationException("Exception occured reading " + filename +" on ImmutableBackside" + i + " caused by: " + e.getMessage());
         		}
         	} 
         	
         	
         	// load all the ImmutableVertexs
-        	if(in.hasNextInt()){vertexMax = in.nextInt();}else throw new NitrogenCreationException("unable to find backsideMax");    		
+        	vertexMax = readInt( in, "unable to find backsideMax loading " + filename);    		
         	immutableVertexs = new ImmutableVertex[vertexMax];
         	for(int i = 0; i < vertexMax; i++)
         	{		
@@ -205,7 +200,7 @@ public class SharedImmutableSubItem {
         		}
         		catch(NitrogenCreationException e)
         		{
-        			throw new NitrogenCreationException("Exception occured reading " + filename +" on ImmutableVertex" + i + ". " + e.getMessage());
+        			throw new NitrogenCreationException("Exception occured reading " + filename +" on ImmutableVertex" + i + " caused by: " + e.getMessage());
         		}
         	} 
         }
@@ -243,72 +238,59 @@ public class SharedImmutableSubItem {
 			PolygonVertexData temp_pvd_c4 = null;
 			
 			int 			temp_backsideIndex;
-			String			yes_no;
 			boolean 		temp_isBacksideCulled;
 			boolean 		temp_isTransparent;
 			
-			if(in.hasNextInt()){temp_c1 = in.nextInt();}else throw new NitrogenCreationException("Unable to find c1.");
-			if(in.hasNextInt()){temp_c2 = in.nextInt();}else throw new NitrogenCreationException("Unable to find c2.");
-			if(in.hasNextInt()){temp_c3 = in.nextInt();}else throw new NitrogenCreationException("Unable to find c3.");
-			if(in.hasNextInt()){temp_c4 = in.nextInt();}else throw new NitrogenCreationException("Unable to find c4.");
+			temp_c1 = readInt( in, "Unable to find c1.");
+			temp_c2 = readInt( in, "Unable to find c2.");
+			temp_c3 = readInt( in, "Unable to find c3.");
+			temp_c4 = readInt( in, "Unable to find c4.");
 
 			// read in the polygonVertexData associated with c1
-			if(in.hasNextLine())in.nextLine(); // pull in line ending
-			if(!in.hasNextLine())throw new NitrogenCreationException("Unable to find polygonVertexData name associated with c1");
-			polygonVertexDataName = in.nextLine();
+			polygonVertexDataName = readLine(in, "Unable to find polygonVertexData name associated with c1");
 		    if(polygonVertexDataMap.containsKey(polygonVertexDataName)){temp_pvd_c1 = polygonVertexDataMap.get(polygonVertexDataName);}
 			else throw new NitrogenCreationException("The PolygonVertexData named " + polygonVertexDataName + "is not loaded by the file.");
 
-		    // read in the polygonVertexData associated with c2
-			if(!in.hasNextLine())throw new NitrogenCreationException("Unable to find polygonVertexData name associated with c2");
-			polygonVertexDataName = in.nextLine();
+			// read in the polygonVertexData associated with c2
+			polygonVertexDataName = readLine(in, "Unable to find polygonVertexData name associated with c1");
 		    if(polygonVertexDataMap.containsKey(polygonVertexDataName)){temp_pvd_c2 = polygonVertexDataMap.get(polygonVertexDataName);}
 			else throw new NitrogenCreationException("The PolygonVertexData named " + polygonVertexDataName + "is not loaded by the file.");
 
-			// read in the polygonVertexData associated with c3
-			if(!in.hasNextLine())throw new NitrogenCreationException("Unable to find polygonVertexData name associated with c3");
-			polygonVertexDataName = in.nextLine();
+		    // read in the polygonVertexData associated with c3
+			polygonVertexDataName = readLine(in, "Unable to find polygonVertexData name associated with c1");
 		    if(polygonVertexDataMap.containsKey(polygonVertexDataName)){temp_pvd_c3 = polygonVertexDataMap.get(polygonVertexDataName);}
 			else throw new NitrogenCreationException("The PolygonVertexData named " + polygonVertexDataName + "is not loaded by the file.");
 
-			// read in the polygonVertexData associated with c4
-			if(!in.hasNextLine())throw new NitrogenCreationException("Unable to find polygonVertexData name associated with c4");
-			polygonVertexDataName = in.nextLine();
+		    // read in the polygonVertexData associated with c4
+			polygonVertexDataName = readLine(in, "Unable to find polygonVertexData name associated with c1");
 		    if(polygonVertexDataMap.containsKey(polygonVertexDataName)){temp_pvd_c4 = polygonVertexDataMap.get(polygonVertexDataName);}
 			else throw new NitrogenCreationException("The PolygonVertexData named " + polygonVertexDataName + "is not loaded by the file.");
-		    
-			
+		
 			// read in the polygons polyData
 			int polyDataMax;
-			if(in.hasNextInt()){polyDataMax = in.nextInt();}else throw new NitrogenCreationException("Unable to find polyDataMax.");
+			polyDataMax = readInt( in, "Unable to find polyDataMax.");
 			temp_polyData = new int[polyDataMax];
 			for(int j = 0; j < polyDataMax; j++)
 			{
-				if(in.hasNextInt())
-				{
-					int read = in.nextInt();
-					temp_polyData[j] = read;
-							
-						// else throw new NitrogenCreationException("Problem reading polyData.");
-				}
+				String temp = readLine( in, "Unable to find polyData [" + j + "]. (polyData entries must be on seperate lines)");
+				int read = Integer.decode(temp);
+				temp_polyData[j] = read;
 			}
-			
+				
 			// obtain renderer triplet
-			if(in.hasNextLine())in.nextLine(); // pull in line ending
-			if(!in.hasNextLine())throw new NitrogenCreationException("Unable to find RenderTriplet name.");
-			rendererTripletName = in.nextLine();
+			rendererTripletName = readLine( in, "Unable to find RenderTriplet name.");
+
 			// The Exception that getRenderTriplet() may throw is suitably informative
 			try{
 				temp_rendererTriplet = RendererHelper.getRendererTriplet(rendererTripletName);
 			}
 			catch(Exception e)
 			{
-				throw new NitrogenCreationException("Unable to find RenderTriplet named " + rendererTripletName );
+				throw new NitrogenCreationException("Unable to find a RenderTriplet named " + rendererTripletName + "in RendererHelper" );
 			}
 
 			// obtain the texture map
-			if(!in.hasNextLine())throw new NitrogenCreationException("Unable to find TexMap name, should be a line containing \"null\" if no texture map is used.");
-			textureMapName = in.nextLine();
+			textureMapName = readLine( in, "Unable to find TexMap name, should be a line containing \"null\" if no texture map is used.");
 			if(!textureMapName.equals("null"))
 			{
 				if(textureMaps.containsKey(textureMapName)){temp_textureMap = textureMaps.get(textureMapName);}
@@ -316,28 +298,13 @@ public class SharedImmutableSubItem {
 			}
 			
 			// obtain the backside index			
-			if(in.hasNextInt()){temp_backsideIndex = in.nextInt();}else throw new NitrogenCreationException("Unable to find backsideIndex.");
+			temp_backsideIndex = readInt( in, "Unable to find backsideIndex.");
 				
 			// obtain the isBacksideCulled
-			if(in.hasNextLine())in.nextLine(); // pull in line ending
-			if(!in.hasNextLine())throw new NitrogenCreationException("Unable to find isBacksideCulled, should be \"yes\" or \"no\".");
-			yes_no = in.nextLine();
-			if((yes_no.equals("yes"))||(yes_no.equals("no")))
-			{
-				if(yes_no.equals("yes")){temp_isBacksideCulled = true;}
-				else{temp_isBacksideCulled = false;}
-			}
-			else throw new NitrogenCreationException("Unable to find isBacksideCulled " + yes_no + "found where \"yes\" or \"no\" expected.");
-			
+		    temp_isBacksideCulled = readBoolean( in, "Unable to find isBacksideCulled ");
+
 			// obtain isTransparent
-			if(!in.hasNextLine())throw new NitrogenCreationException("Unable to find isTransparent, should be \"yes\" or \"no\".");
-			yes_no = in.nextLine();
-			if((yes_no.equals("yes"))||(yes_no.equals("no")))
-			{
-				if(yes_no.equals("yes")){temp_isTransparent = true;}
-				else{temp_isTransparent = false;}
-			}
-			else throw new NitrogenCreationException("Unable to find isTransparent " + yes_no + "found where \"yes\" or \"no\" expected.");
+		    temp_isTransparent = readBoolean( in, "Unable to find isTransparent");
 	
 			return new ImmutablePolygon(
 					temp_c1,
@@ -366,27 +333,18 @@ public class SharedImmutableSubItem {
 		float temp_inx;
 		float temp_iny;
 		float temp_inz;
-		String yes_no;
 		boolean temp_calculateLighting;
 		
-		if(in.hasNextFloat()){temp_ix = in.nextFloat();}else throw new NitrogenCreationException("Unable to find ix");
-		if(in.hasNextFloat()){temp_iy = in.nextFloat();}else throw new NitrogenCreationException("Unable to find iy");
-		if(in.hasNextFloat()){temp_iz = in.nextFloat();}else throw new NitrogenCreationException("Unable to find iz");
+		temp_ix = readFloat(in, "Unable to find ix");
+		temp_iy = readFloat(in, "Unable to find iy");
+		temp_iz = readFloat(in, "Unable to find iz");
 		
-		if(in.hasNextFloat()){temp_inx = in.nextFloat();}else throw new NitrogenCreationException("Unable to find inx");
-		if(in.hasNextFloat()){temp_iny = in.nextFloat();}else throw new NitrogenCreationException("Unable to find iny");
-		if(in.hasNextFloat()){temp_inz = in.nextFloat();}else throw new NitrogenCreationException("Unable to find inz");
+		temp_inx = readFloat(in, "Unable to find inx");
+		temp_iny = readFloat(in, "Unable to find iny");
+		temp_inz = readFloat(in, "Unable to find inz");
 
-		// obtain calculateLighting
-		if(!in.hasNextLine())throw new NitrogenCreationException("Unable to find calculateLighting, should be \"yes\" or \"no\".");
-		yes_no = in.nextLine();
-		if((yes_no.equals("yes"))||(yes_no.equals("no")))
-		{
-			if(yes_no.equals("yes")){temp_calculateLighting = true;}
-			else{temp_calculateLighting = false;}
-		}
-		else throw new NitrogenCreationException("Unable to find calculateLighting " + yes_no + "found where \"yes\" or \"no\" expected.");
-		
+		temp_calculateLighting = readBoolean(in, "Unable to find calculateLighting");
+
 		return new ImmutableBackside(
 				temp_ix,
 				temp_iy,
@@ -406,9 +364,9 @@ public class SharedImmutableSubItem {
 		float temp_is_y;
 		float temp_is_z;
 		
-		if(in.hasNextFloat()){temp_is_x = in.nextFloat();}else throw new NitrogenCreationException("Unable to find is_x");
-		if(in.hasNextFloat()){temp_is_y = in.nextFloat();}else throw new NitrogenCreationException("Unable to find is_iy");
-		if(in.hasNextFloat()){temp_is_z = in.nextFloat();}else throw new NitrogenCreationException("Unable to find is_iz");
+		temp_is_x = readFloat(in, "Unable to find is_x");
+		temp_is_y = readFloat(in, "Unable to find is_y");
+		temp_is_z = readFloat(in, "Unable to find is_z");
 
 		return new ImmutableVertex(
 				temp_is_x,
@@ -422,9 +380,41 @@ public class SharedImmutableSubItem {
 	    float temp_aux1;
 	    float temp_aux2;
 	    float temp_aux3;
-		if(in.hasNextFloat()){temp_aux1 = in.nextFloat();}else throw new NitrogenCreationException("Unable to find aux1");
-		if(in.hasNextFloat()){temp_aux2 = in.nextFloat();}else throw new NitrogenCreationException("Unable to find aux2");
-		if(in.hasNextFloat()){temp_aux3 = in.nextFloat();}else throw new NitrogenCreationException("Unable to find aux3");
+		temp_aux1 = readFloat(in, "Unable to find aux1");
+		temp_aux2 = readFloat(in, "Unable to find aux2");
+		temp_aux3 = readFloat(in, "Unable to find aux3");
 		return (new PolygonVertexData(temp_aux1,temp_aux2,temp_aux3));
+	}
+	
+	/** reads the next line from the scanner or throws a NitrogenCreationException containing the exception text if not found */
+	final static String readLine(Scanner in, String exceptionText)throws NitrogenCreationException
+	{
+		String retval;
+		do{
+			if(in.hasNextLine()){retval = in.nextLine();}
+			else throw new NitrogenCreationException(exceptionText);
+		}while(!retval.equals("/r/n"));
+		return retval;
+		
+	}
+
+	final static int readInt(Scanner in, String exceptionText)throws NitrogenCreationException
+	{
+		if(in.hasNextInt()){return in.nextInt();}
+		else throw new NitrogenCreationException(exceptionText);
+	}
+	
+	final static float readFloat(Scanner in, String exceptionText)throws NitrogenCreationException
+	{
+		if(in.hasNextFloat()){return in.nextFloat();}
+		else throw new NitrogenCreationException(exceptionText);
+	}
+
+	final static boolean readBoolean(Scanner in, String exceptionText)throws NitrogenCreationException
+	{
+		String temp = readLine(in,exceptionText);
+		if(temp.equals("yes")||temp.equals("YES")||temp.equals("true")||temp.equals("TRUE"))return true;
+		if(temp.equals("no")||temp.equals("NO")||temp.equals("false")||temp.equals("FALSE"))return false;
+		throw new NitrogenCreationException(exceptionText + " caused by " + temp + " not equating to a boolean");
 	}
 }
