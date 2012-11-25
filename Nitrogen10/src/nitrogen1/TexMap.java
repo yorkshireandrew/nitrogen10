@@ -24,7 +24,7 @@ public class TexMap {
     TexMap(String st) throws NitrogenCreationException
     {
         URL url = getClass().getResource(st);
-        if(url == null)throw new NitrogenCreationException("TexMap resource " + st + "could not be found");
+        if(url == null)throw new NitrogenCreationException("TexMap resource " + st + " could not be found");
     	Image ii = new javax.swing.ImageIcon(getClass().getResource(st)).getImage();
         BufferedImage i = new BufferedImage(ii.getWidth(null),ii.getHeight(null),BufferedImage.TYPE_INT_ARGB);
         Graphics2D osg = i.createGraphics();

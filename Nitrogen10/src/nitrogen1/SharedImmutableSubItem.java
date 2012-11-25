@@ -82,6 +82,7 @@ public class SharedImmutableSubItem {
 		
         System.out.println("loading SISI from " + filename);
         Scanner in = null;
+        
         try{
             File f = new File(filename);
             System.out.println(f.getAbsolutePath());
@@ -125,10 +126,13 @@ public class SharedImmutableSubItem {
     		{
     			String textureMapName;
     			String textureMapResource;
+    			
     			TexMap newTextureMap;
     			
     			if(!in.hasNextLine())throw new NitrogenCreationException("unable to find textureMap [" + i + "] name loading " + filename);
-    			textureMapName = in.nextLine();
+    			if(in.hasNextLine())in.nextLine(); // seems to just pull in line ending
+    			if(!in.hasNextLine())throw new NitrogenCreationException("unable to find textureMap [" + i + "] name loading " + filename);
+    			textureMapName = in.next(); // pulls in the text 
     			if(!in.hasNextLine())throw new NitrogenCreationException("unable to find textureMap [" + i + "] resource name loading " + filename);
     			textureMapResource = in.nextLine();
     			
@@ -137,7 +141,7 @@ public class SharedImmutableSubItem {
     				textureMaps.put(textureMapName, newTextureMap);
     			}
     			catch(NitrogenCreationException e){
-    				throw new NitrogenCreationException("unable to find textureMap resource " + textureMapResource + " loading " + filename);
+    				throw new NitrogenCreationException("unable to find textureMap resource " + textureMapResource + " loading " + filename + "   " + e.getMessage());
     			}
     		}
     		
@@ -146,7 +150,8 @@ public class SharedImmutableSubItem {
         	if(in.hasNextInt()){polygonVertexDataMax = in.nextInt();}else throw new NitrogenCreationException("unable to find polygonVertexDataMax");    		
         	for(int i = 0; i < polygonVertexDataMax; i++)
         	{		
-    			if(!in.hasNextLine())throw new NitrogenCreationException("unable to find polygonVertexData [" + i + "] name loading " + filename);
+    			if(in.hasNextLine())in.nextLine(); // pull in line ending
+        		if(!in.hasNextLine())throw new NitrogenCreationException("unable to find polygonVertexData [" + i + "] name loading " + filename);
     			polygonVertexDataName = in.nextLine();
         		try
         		{
@@ -250,6 +255,7 @@ public class SharedImmutableSubItem {
 			if(in.hasNextInt()){temp_c4 = in.nextInt();}else throw new NitrogenCreationException("Unable to find c4.");
 
 			// read in the polygonVertexData associated with c1
+			if(in.hasNextLine())in.nextLine(); // pull in line ending
 			if(!in.hasNextLine())throw new NitrogenCreationException("Unable to find polygonVertexData name associated with c1");
 			polygonVertexDataName = in.nextLine();
 		    if(polygonVertexDataMap.containsKey(polygonVertexDataName)){temp_pvd_c1 = polygonVertexDataMap.get(polygonVertexDataName);}
@@ -284,6 +290,7 @@ public class SharedImmutableSubItem {
 			}
 			
 			// obtain renderer triplet
+			if(in.hasNextLine())in.nextLine(); // pull in line ending
 			if(!in.hasNextLine())throw new NitrogenCreationException("Unable to find RenderTriplet name.");
 			rendererTripletName = in.nextLine();
 			// The Exception that getRenderTriplet() may throw is suitably informative
@@ -308,6 +315,7 @@ public class SharedImmutableSubItem {
 			if(in.hasNextInt()){temp_backsideIndex = in.nextInt();}else throw new NitrogenCreationException("Unable to find backsideIndex.");
 				
 			// obtain the isBacksideCulled
+			if(in.hasNextLine())in.nextLine(); // pull in line ending
 			if(!in.hasNextLine())throw new NitrogenCreationException("Unable to find isBacksideCulled, should be \"yes\" or \"no\".");
 			yes_no = in.nextLine();
 			if((yes_no.equals("yes"))||(yes_no.equals("no")))
