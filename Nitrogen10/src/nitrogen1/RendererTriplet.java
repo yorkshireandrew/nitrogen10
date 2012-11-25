@@ -18,6 +18,14 @@ public class RendererTriplet {
 		this.farRenderer = farRenderer;
 	}
 	
+	/** Simple constructor that sets near-mid-far renderers all to be the passed in one */
+	RendererTriplet(Renderer theRenderer)
+	{
+		this.nearRenderer = theRenderer;
+		this.midRenderer = theRenderer;
+		this.farRenderer = theRenderer;
+	}
+	
 	Renderer getRenderer(int whichRenderer)
 	{
 		switch(whichRenderer)

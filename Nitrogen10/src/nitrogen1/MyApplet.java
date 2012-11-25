@@ -46,12 +46,22 @@ final public class MyApplet extends JApplet{
             						null,
             						1f, 0f, 0f, 0f,
             						0f, 1f, 0f, 0f,
-            						0f, 0f, 1f, -2f);
+            						0f, 0f, 1f, -20f);
+            
+            // add renderers to RendererHelper
             SimpleTextureRenderer str = new SimpleTextureRenderer();
-            RendererTriplet rt = new RendererTriplet(str, str, str);
+            RendererTriplet rt = new RendererTriplet(str);
             try
             {
-            	RendererHelper.addRendererTriplet("rt1",rt);
+            	RendererHelper.addRendererTriplet("str",rt);
+            }
+            catch(Exception e){System.out.println(e.getMessage());}
+
+            SimpleSingleColourRenderer sscr = new SimpleSingleColourRenderer();           
+            RendererTriplet sscrt = new RendererTriplet(sscr);
+            try
+            {
+            	RendererHelper.addRendererTriplet("sscr",sscrt);
             }
             catch(Exception e){System.out.println(e.getMessage());}
             

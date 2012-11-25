@@ -14,10 +14,10 @@ import java.awt.image.MemoryImageSource;
  */
 
 import javax.swing.*;
-import java.awt.*;  // needed for Dimension class
-import java.awt.image.MemoryImageSource; // for memory image source
-import nitrogen1.TexMap;
-import nitrogen1.Vert;
+// import java.awt.*;  // needed for Dimension class
+// import java.awt.image.MemoryImageSource; // for memory image source
+// import nitrogen1.TexMap;
+// import nitrogen1.Vert;
 
 public class NitrogenContext extends JButton{
 	static final int SHIFT = 20;	// shift used when rendering textures
