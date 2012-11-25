@@ -54,7 +54,6 @@ null
 1
 0xFFFF00
 sscr
-sscr
 null
 1
 no

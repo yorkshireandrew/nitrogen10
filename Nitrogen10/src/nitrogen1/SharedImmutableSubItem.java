@@ -386,16 +386,15 @@ public class SharedImmutableSubItem {
 		return (new PolygonVertexData(temp_aux1,temp_aux2,temp_aux3));
 	}
 	
-	/** reads the next line from the scanner or throws a NitrogenCreationException containing the exception text if not found */
+	/** reads the next line from the scanner or throws a NitrogenCreationException containing the exception text if not found. skips over if its a line ending */
 	final static String readLine(Scanner in, String exceptionText)throws NitrogenCreationException
 	{
 		String retval;
 		do{
 			if(in.hasNextLine()){retval = in.nextLine();}
 			else throw new NitrogenCreationException(exceptionText);
-		}while(!retval.equals("/r/n"));
-		return retval;
-		
+		}while(retval.isEmpty());
+		return retval;	
 	}
 
 	final static int readInt(Scanner in, String exceptionText)throws NitrogenCreationException
