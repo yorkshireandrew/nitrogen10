@@ -10,7 +10,7 @@
 1000
 1
 front
-res\helloworld.PNG
+/res/helloworld.PNG
 5
 topleft
 0

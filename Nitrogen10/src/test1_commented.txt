@@ -19,7 +19,7 @@
 //texturemaps
 1
 front
-helloworld.PNG
+/res/helloworld.PNG
 
 //polygonVertexData
 5
