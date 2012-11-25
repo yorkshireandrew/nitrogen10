@@ -52,7 +52,7 @@ null
 null
 null
 1
-4294901760
+0xFFFF0000
 sscr
 null
 1
