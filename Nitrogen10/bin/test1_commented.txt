@@ -1,0 +1,252 @@
+// bounding radius
+8.66
+
+// optimisation distances initially set high
+1000
+1000
+1000
+1000
+
+// normal and improved polystarts and finishes we have 6 polygons
+0
+0
+6
+6
+
+//improved detail dist
+1000
+
+//texturemaps
+1
+front
+helloworld.PNG
+
+//polygonVertexData
+5
+topleft
+0
+0
+0
+topright
+100
+0
+0
+bottomright
+100
+100
+0
+bottomleft
+0
+100
+0
+null
+0
+0
+0
+
+//polygonMax
+6
+
+// -----------------
+// Frontmost polygon (1)
+// -----------------
+0 1 3 2
+topleft
+topright
+bottomright
+bottomleft
+
+//no data
+0
+
+str
+front
+
+//backside index
+0
+
+// initially no backside culling 
+no
+// not transparent
+no
+
+// -----------------
+// righthand polygon (2)
+// -----------------
+0 4 5 3
+null
+null
+null
+null
+
+// one polydata entry colour FFFF0000 - red
+1
+4294901760
+
+sscr
+null
+
+//backside index
+1
+
+// initially no backside culling 
+no
+// not transparent
+no
+
+// -----------------
+// rear polygon (3)
+// -----------------
+4 6 7 5
+null
+null
+null
+null
+
+// one polydata entry colour FF666666 - dark grey
+1
+4284900966
+
+sscr
+null
+
+//backside index
+2
+
+// initially no backside culling 
+no
+// not transparent
+no
+
+// -----------------
+// left polygon (4)
+// -----------------
+6 0 2 7
+null
+null
+null
+null
+
+// one polydata entry colour FF00FF00 - green
+1
+4278255360
+
+sscr
+null
+
+//backside index
+3
+
+// initially no backside culling 
+no
+// not transparent
+no
+
+// -----------------
+// top polygon (5)
+// -----------------
+0 1 4 6
+null
+null
+null
+null
+
+// one polydata entry colour FF0000FF - blue
+1
+4278190335
+
+sscr
+null
+
+//backside index
+4
+
+// initially no backside culling 
+no
+// not transparent
+no
+
+// -----------------
+// bottom polygon (5)
+// -----------------
+2 3 5 7
+null
+null
+null
+null
+
+// one polydata entry colour FF0000FF - blue
+1
+4278190335
+
+sscr
+null
+
+//backside index
+5
+
+// initially no backside culling 
+no
+// not transparent
+no
+
+// --------------
+// backsides - no lighting calculation
+// --------------
+
+6
+
+// frontmost backside
+0 0 5
+0 0 1
+no
+
+// rightmost backside
+5 0 0
+1 0 0
+no
+
+// rearmost
+0 0 -5
+-1 0 0
+no
+
+// leftmost
+-5 0 0
+-1 0 0
+no
+
+// topmost
+0 5 0
+0 1 0
+no
+
+bottommost
+0 -5 0
+0 -1 0
+no
+
+// vertexs
+8
+
+-5 5 5
+5 5 5
+-5 -5 5
+5 -5 5
+
+5 5 -5
+5 -5 -5
+-5 5 -5
+-5 -5 -5
+
+
+
+
+
+
+
+
+
+
+
+
