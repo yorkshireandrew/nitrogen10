@@ -121,18 +121,16 @@ public class SharedImmutableSubItem {
     		// load all the TexMap object referenced by the SISI polygons
     		// and place them in the textureMaps map
     		if(in.hasNextInt()){textureMapMax = in.nextInt();}else throw new NitrogenCreationException("unable to find textureMapMax loading" + filename);
-    		
+			if(in.hasNextLine())in.nextLine(); // pull in line ending
+   		
     		for(int i = 0; i < textureMapMax; i++)
     		{
     			String textureMapName;
     			String textureMapResource;
     			
-    			TexMap newTextureMap;
-    			
+    			TexMap newTextureMap;    			
     			if(!in.hasNextLine())throw new NitrogenCreationException("unable to find textureMap [" + i + "] name loading " + filename);
-    			if(in.hasNextLine())in.nextLine(); // seems to just pull in line ending
-    			if(!in.hasNextLine())throw new NitrogenCreationException("unable to find textureMap [" + i + "] name loading " + filename);
-    			textureMapName = in.next(); // pulls in the text 
+    			textureMapName = in.nextLine(); // pulls in the text 
     			if(!in.hasNextLine())throw new NitrogenCreationException("unable to find textureMap [" + i + "] resource name loading " + filename);
     			textureMapResource = in.nextLine();
     			
