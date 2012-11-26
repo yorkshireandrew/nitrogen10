@@ -39,8 +39,7 @@ public class Transform{
 	 */
 	Transform(Transform parent)
 	{
-		setParent(parent);
-		if(parent != null)parent.add(this);
+		setParent(parent);		
 	}
 
 	/** Creates a new Transform with the parameter Transform as its parent
@@ -55,7 +54,6 @@ public class Transform{
 			)
 			{
 				setParent(parent);
-				if(parent != null)parent.add(this);
 				this.a11 = a11; this.a12=a12; this.a13=a13; this.a14=a14;
 				this.a21 = a21; this.a22=a22; this.a23=a13; this.a24=a14;
 				this.a31 = a31; this.a32=a32; this.a33=a13; this.a34=a14;
@@ -72,8 +70,7 @@ public class Transform{
 	{
 		// Detach from existing parent 
 		if(parent != null)
-		{
-			
+		{	
 			parent.decreaseVisibleChildrenBy(numberOfVisibleChildren);
 			parent.remove(this);			
 		}
@@ -82,7 +79,7 @@ public class Transform{
 		{
 			// Attach to new parent
 			parent = new_parent;
-			new_parent.increaseVisibleChildrenBy(numberOfVisibleChildren);
+			parent.add(this);
 		}
 		else
 		{
@@ -107,7 +104,7 @@ public class Transform{
 		return false;
 	}	
 
-	/** Adds a transform to its child transform list
+	/** Adds a transform to this transforms child transform list. Note - Does not detach the supplied transform from any parents it may already have
 	 * @param t Transform to be added as a child to the Transform being called */
 	void add(Transform t)
 	{
@@ -118,10 +115,6 @@ public class Transform{
 		// account for visible children
 		int novc = t.numberOfVisibleChildren;
 		if(novc > 0)increaseVisibleChildrenBy(novc);
-		
-		// tell the supplied transform who its parent is
-		// and break any existing parental bonds
-		t.setParent(this);
 	}
 	
 	/** Adds an Item to the transforms child item list 

@@ -26,7 +26,12 @@ public class PolygonRenderer {
 			final float lightingValue
 			)
 	{
-	    // create local copies of y coordinates for sorting
+	    a.calculateScreenSpaceCoordinate(context);
+	    b.calculateScreenSpaceCoordinate(context);
+	    c.calculateScreenSpaceCoordinate(context);
+	    d.calculateScreenSpaceCoordinate(context);
+			
+		// create local copies of y coordinates for sorting
 	    int ay = a.sy;
 	    int by = b.sy;
 	    int cy = c.sy;
@@ -232,10 +237,11 @@ public class PolygonRenderer {
 	
 	        // localise pixel buffer and texture and context width and texture width
 	        int[] p = context.pix;
-	        int[] tex = tm.tex;
 	        int[] z = context.zbuff;
 	        int bw = context.w;
-	        int tw = tm.w;
+	        int[] tex = null;
+	        int tw = 0;
+	        if(tm != null){tex = tm.tex; tw = tm.w;}
 	
 	        // set start point to a
 	        int st_x 	= ax << SHIFT;

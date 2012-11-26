@@ -65,6 +65,7 @@ public class ImmutablePolygon {
 				this.pvd_c4 = pvd_c4;
 				
 				this.polyData=polyData;
+				this.rendererTriplet = rendererTriplet;
 				this.textureMap=textureMap;
 				this.backsideIndex=backsideIndex;
 				this.isBacksideCulled=isBacksideCulled;

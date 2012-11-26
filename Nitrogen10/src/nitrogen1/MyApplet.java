@@ -39,14 +39,20 @@ final public class MyApplet extends JApplet{
             nc.cls(0xFF0000FF);
             
             // start rendering process
-            Transform t1;
+            Transform t1, t2;
             SharedImmutableSubItem sisi = null;
-            
+           
             t1	= new 	Transform(
             						null,
             						1f, 0f, 0f, 0f,
             						0f, 1f, 0f, 0f,
-            						0f, 0f, 1f, -20f);
+            						0f, 0f, 1f, 0f);
+            
+            t2	= new 	Transform(
+					t1,
+					1f, 0f, 0f, 0f,
+					0f, 1f, 0f, 0f,
+					0f, 0f, 1f, -20f);          
             
             // add renderers to RendererHelper
             SimpleTextureRenderer str = new SimpleTextureRenderer();
@@ -74,7 +80,7 @@ final public class MyApplet extends JApplet{
             	e.printStackTrace();           	
             }
             
-            Item i = new Item(sisi,t1);
+            Item i = new Item(sisi,t2);
             i.setVisibility(true);
             
             t1.render(nc);

@@ -132,12 +132,6 @@ final public void renderTrapezoid(
             // calculate line rendering fields used for stepping
             rec = NUM / srl_dx;
 
-            temp = (fin_aux1 - st_aux1);
-            srl_dtx = (int) ((temp * rec) >> SH);
-
-            temp = (fin_aux2 - st_aux2);
-            srl_dty = (int) ((temp * rec) >> SH);
-
             temp = (fin_z - st_z);
             srl_dz = ((temp * rec) >> SH);
 
@@ -173,9 +167,6 @@ final public void renderTrapezoid(
 
                 srl_st_x++;
                 srl_z   += srl_dz;
-                srl_tx  += srl_dtx;
-                srl_ty  += srl_dty;
-
             }// end of line rendering loop
             //***********************************************
             //****                                       ****
