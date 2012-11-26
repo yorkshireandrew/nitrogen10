@@ -13,6 +13,7 @@ public class SimpleSingleColourRenderer implements Renderer{
 
 static final int SH = 20;
 static final int NUM = 1 << SH;
+static final int ALPHA = -16777216; // 0xFF000000
 
 /**
  * 
@@ -90,14 +91,10 @@ final public void renderTrapezoid(
         // line rendering fields
         int srl_st_x;
         int srl_fin_x;
-        int srl_tx;
-        int srl_ty;
         long srl_z;
 
         // line rendering fields used for stepping
         int srl_dx;
-        int srl_dtx;
-        int srl_dty;
         long srl_dz;
 
         int linestart;      // value that is constant for a line - gets precalculated
@@ -108,6 +105,9 @@ final public void renderTrapezoid(
 
         long temp;          // used to do a faster divide
         int rec;
+        
+        // colour
+        int colour = ALPHA | polyData[0];
 
         while(y_counter < y_max)
         {
@@ -122,8 +122,6 @@ final public void renderTrapezoid(
             srl_st_x = (st_x >> SH);
             srl_fin_x = (fin_x >> SH);
             srl_dx = srl_fin_x - srl_st_x;
-            srl_tx = st_aux1;
-            srl_ty = st_aux2;
             srl_z = st_z;
 
             // prevent zero srl_dx case throwing div0
@@ -152,7 +150,7 @@ final public void renderTrapezoid(
 
                 if(srl_z2 >= z[index])
                 {
-                    p[index] = tex[((srl_ty >> SH)*textureBufferWidth + (srl_tx >> SH))];
+                    p[index] = colour;
                     z[index] = srl_z2;
                     //p[index] = (int)(0xFF000000 + (srl_z2));    // test
                 }
