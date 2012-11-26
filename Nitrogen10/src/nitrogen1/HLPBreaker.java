@@ -14,7 +14,7 @@ public class HLPBreaker {
 	static final int EIGHT = 8;
 	
 	/** Field used to generate Vertexs that occur at intersect points */
-	static Vert[] workingVertexs  = new Vert[12];
+	static Vert[] workingVertexs;
 	/** Field used to generate Vertexs that occur at intersect points */
 	static int workingVertexIndex = 0;
 	
@@ -44,6 +44,14 @@ public class HLPBreaker {
 	 * @param textureMap TextureMap to pass on to the renderer
 	 * @param lightingValue lighting value that may have been computed by the polygons backside to pass to the Renderer
 	 */
+	
+	static{ 
+		// DEBUG
+		int BUFFER_SIZE = 12;
+		System.out.println("HLPBreaker working vertexes initialised");
+		workingVertexs = new Vert[BUFFER_SIZE];
+		for(int i = 0 ; i < BUFFER_SIZE; i++)workingVertexs[i]= new Vert();
+		}
 	static void process(	
 			NitrogenContext context,
 			int fustrumTouchCount, 
@@ -61,6 +69,7 @@ public class HLPBreaker {
 			float lightingValue
 			)
 	{
+		prepareForNewPolygon();
 		subprocess(
 				false,					// added parameter
 				context.qualityOfHLP,	// dereference this value once
@@ -104,7 +113,18 @@ static void subprocess(
 		float lightingValue
 		)
 	{
-		if(needsHLPBreak(accelerate, context, vert1, vert2, vert3, vert4))
+    System.out.println("HLP break subprocess called");
+    if(accelerate)System.out.println("accelerate=true");
+    Vert a = vert1;
+    Vert b = vert2;
+    Vert c = vert3;
+    Vert d = vert4;
+    System.out.println("vert a = " + a.vs_x + "," + a.vs_y + "," + a.vs_z );	    
+    System.out.println("vert b = " + b.vs_x + "," + b.vs_y + "," + b.vs_z );	    
+    System.out.println("vert c = " + c.vs_x + "," + c.vs_y + "," + c.vs_z );	    
+    System.out.println("vert d = " + d.vs_x + "," + d.vs_y + "," + d.vs_z );	
+	
+	if(needsHLPBreak(accelerate, context, vert1, vert2, vert3, vert4))
 		{
 			int hlpBreakCase = 0;
 			float localThresholdDist = thresholdDist; // set by needsHLPBreak
@@ -119,6 +139,9 @@ static void subprocess(
 			}
 			if(vert3.vs_z > localThresholdDist) hlpBreakCase |= FOUR;
 			if(vert4.vs_z > localThresholdDist) hlpBreakCase |= EIGHT;
+			
+			// DEBUG 
+			System.out.println("hlpBreakCase:"+hlpBreakCase);
 			
 			hlpBreakCaseHandler(
 					context,
@@ -140,6 +163,9 @@ static void subprocess(
 		}
 		else
 		{
+			// DEBUG 
+			System.out.println("hlpBreak not required - rendering polygon");
+			
 			polygonRenderer.process(
 					context,
 					vert1, vert2, vert3, vert4,					
@@ -573,10 +599,17 @@ static void hlpBreakCaseHandler(
 			// return false if finalmaxz is more +ve (closer) than localThresholdDist
 			if(localThresholdDist < finalmaxz)
 			{
+				//DEBUG
+				System.out.println(" " + localThresholdDist + "<" + finalmaxz);
+				System.out.println("needs HLP break returns false");
 				return(false);
+				
 			}
 			else
 			{
+				//DEBUG
+				System.out.println("needs HLP break returns true, thresholdDist set to:" + localThresholdDist);
+				
 				thresholdDist = localThresholdDist; // keep the computation result for other methods 
 				return(true);
 			}
@@ -587,6 +620,8 @@ static void hlpBreakCaseHandler(
 			z2 = vert2.vs_z;
 			z3 = vert3.vs_z;
 			z4 = vert4.vs_z;
+			
+			System.out.println("for hlp break test z values are: " + z1 + "," + z2 + "," + z3+ "," + z4);
 			
 		
 			// sort first two vertexes (max = farthest from viewpoint)
@@ -608,7 +643,8 @@ static void hlpBreakCaseHandler(
 			{
 				maxbz = z4; minbz = z3;
 			}
-			
+			System.out.println("maxaz="+maxaz);
+			System.out.println("maxbz="+maxbz);
 			// sort the sorted values to find farthest distance
 			if(maxaz < maxbz)
 			{
@@ -618,23 +654,32 @@ static void hlpBreakCaseHandler(
 			{
 				finalmaxz = maxbz;
 			}
-			
+			System.out.println("finalmaxz=" + finalmaxz);
 			// sort the sorted values to find nearest distance
+			System.out.println("minaz="+minaz);
+			System.out.println("minbz="+minbz);			
 			if(minaz < minbz)
 			{
 				finalminz = minbz;
 			}
 			else
 			{
-				finalminz = maxaz;
+				finalminz = minaz;
 			}
+			System.out.println("finalminz=" + finalminz);
 			localThresholdDist = finalminz * context.qualityOfHLP;
 			if(localThresholdDist < finalmaxz)
 			{
+				//DEBUG
+				System.out.println("DEBUG2 - needs HLP break returns false");				
 				return(false);
 			}
 			else
 			{
+				//DEBUG
+				System.out.println(" " + localThresholdDist + "<" + finalmaxz);
+				System.out.println("DEBUG2 - needs HLP break returns true, thresholdDist set to:" + localThresholdDist);
+
 				thresholdDist = localThresholdDist; // keep the computation result for other methods 
 				return(true);
 			}
@@ -643,9 +688,16 @@ static void hlpBreakCaseHandler(
 	
 	static Vert calculateIntersect(Vert in, Vert out, float threshold)
 	{
+		//DEBUG
+		System.out.println("calculatingIntersect");
+		System.out.println("in = " + in.vs_x +"," + in.vs_y +","+ in.vs_z);
+		System.out.println("out = " + out.vs_x +"," + out.vs_y +","+ out.vs_z);
+		
 		float inz = in.vs_z;
 		float n = (threshold - inz)/(out.vs_z - inz);
+		System.out.println("n = " + n);
 		Vert retval = generateInbetweenVertex(in, out, n);
+		System.out.println("intersect = " + retval.vs_x +"," + retval.vs_y +","+ retval.vs_z);
 		return(retval);		
 	}
 	
@@ -657,6 +709,9 @@ static void hlpBreakCaseHandler(
 	 */
 	static final Vert generateInbetweenVertex(Vert first, Vert second, float n)
 	{
+		//DEBUG
+		System.out.println("generatingInbetweenVertex at index:"+workingVertexIndex);
+		
 		// create a new output vertex
 		Vert retval = workingVertexs[workingVertexIndex];
 		workingVertexIndex++;
@@ -678,7 +733,9 @@ static void hlpBreakCaseHandler(
 	
 	static void prepareForNewPolygon()
 	{
+		//DEBUG
+		System.out.println("HLP BREAKER PREPARING FOR NEW POLYGON");
+		
 		workingVertexIndex = 0;
-	
 	}
 }

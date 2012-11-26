@@ -77,7 +77,10 @@ public final class Vert {
     	is_z = iv.is_z;
     }
 
-    void setZ(int pz)
+    /** default constructor used by static initialiser in HLPBreaker */
+    Vert() {}
+
+	void setZ(int pz)
     {
         sz = pz;
     }

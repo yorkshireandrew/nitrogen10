@@ -190,6 +190,9 @@ public class Item {
 		
 		for(int x = polyStart; x < polyFinish; x++)
 		{
+			//DEBUG
+			System.out.println("--- RENDERING POLYGON ---"+x);
+
 			immutablePolygon = sisi.immutablePolygons[x];
 			
 			// skip the polygon if its transparency is wrong for the pass

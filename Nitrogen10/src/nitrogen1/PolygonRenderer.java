@@ -26,7 +26,13 @@ public class PolygonRenderer {
 			final float lightingValue
 			)
 	{
-	    a.calculateScreenSpaceCoordinate(context);
+	    System.out.println("PolygonRenderer called");
+	    System.out.println("vert a = " + a. vs_x + "," + a.vs_y + "," + a.vs_z );	    
+	    System.out.println("vert b = " + b. vs_x + "," + b.vs_y + "," + b.vs_z );	    
+	    System.out.println("vert c = " + c. vs_x + "," + c.vs_y + "," + c.vs_z );	    
+	    System.out.println("vert d = " + d. vs_x + "," + d.vs_y + "," + d.vs_z );	    
+		
+		a.calculateScreenSpaceCoordinate(context);
 	    b.calculateScreenSpaceCoordinate(context);
 	    c.calculateScreenSpaceCoordinate(context);
 	    d.calculateScreenSpaceCoordinate(context);
