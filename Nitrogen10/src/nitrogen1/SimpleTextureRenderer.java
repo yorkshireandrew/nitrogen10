@@ -90,10 +90,14 @@ final public void renderTrapezoid(
         // line rendering fields
         int srl_st_x;
         int srl_fin_x;
+        int srl_tx;
+        int srl_ty;
         long srl_z;
 
         // line rendering fields used for stepping
         int srl_dx;
+        int srl_dtx;
+        int srl_dty;
         long srl_dz;
 
         int linestart;      // value that is constant for a line - gets precalculated
@@ -104,7 +108,6 @@ final public void renderTrapezoid(
 
         long temp;          // used to do a faster divide
         int rec;
-        int colour = polyData[0];
 
         while(y_counter < y_max)
         {
@@ -119,6 +122,8 @@ final public void renderTrapezoid(
             srl_st_x = (st_x >> SH);
             srl_fin_x = (fin_x >> SH);
             srl_dx = srl_fin_x - srl_st_x;
+            srl_tx = st_aux1;
+            srl_ty = st_aux2;
             srl_z = st_z;
 
             // prevent zero srl_dx case throwing div0
@@ -126,6 +131,12 @@ final public void renderTrapezoid(
 
             // calculate line rendering fields used for stepping
             rec = NUM / srl_dx;
+
+            temp = (fin_aux1 - st_aux1);
+            srl_dtx = (int) ((temp * rec) >> SH);
+
+            temp = (fin_aux2 - st_aux2);
+            srl_dty = (int) ((temp * rec) >> SH);
 
             temp = (fin_z - st_z);
             srl_dz = ((temp * rec) >> SH);
@@ -147,7 +158,7 @@ final public void renderTrapezoid(
 
                 if(srl_z2 >= z[index])
                 {
-                    p[index] = colour;
+                    p[index] = tex[((srl_ty >> SH)*textureBufferWidth + (srl_tx >> SH))];
                     z[index] = srl_z2;
                     //p[index] = (int)(0xFF000000 + (srl_z2));    // test
                 }
@@ -162,6 +173,9 @@ final public void renderTrapezoid(
 
                 srl_st_x++;
                 srl_z   += srl_dz;
+                srl_tx  += srl_dtx;
+                srl_ty  += srl_dty;
+
             }// end of line rendering loop
             //***********************************************
             //****                                       ****
@@ -174,10 +188,14 @@ final public void renderTrapezoid(
             // increment local line start point (st_*) using passed in parameters
             st_x    += st_dx;
             st_z    += st_dz;
+            st_aux1   += st_daux1;
+            st_aux2   += st_daux2;
 
             // increment local line finish point (fin_*) using passed in parameters
             fin_x    += fin_dx;
             fin_z    += fin_dz;
+            fin_aux1   += fin_daux1;
+            fin_aux2   += fin_daux2;
 
             // move to next line
             y_counter++;
