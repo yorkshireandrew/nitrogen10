@@ -86,12 +86,15 @@ public class NitrogenContext extends JButton{
     	this.yClip = yClip;
     	this.nearClip = nearClip;
     	this.farClip = farClip;
+    	this.midw = (width / 2);
+    	this.midh = (height / 2);
 
-    	magnification = ((float)(width/2))/yClip;
+    	magnification = ((float)(midw)) / yClip;
     	zk = nearClip * (float)(Integer.MAX_VALUE - 2);
         
     	w = width;
     	h = height;
+    	
         // create array to store pixels
         s = w * h;
         pix = new int[s];

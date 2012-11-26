@@ -528,10 +528,11 @@ public class PolygonRenderer {
 	
 	        // localise pixel buffer and texture and context width and texture width
 	        int[] p = context.pix;
-	        int[] tex = tm.tex;
 	        int[] z = context.zbuff;
 	        int bw = context.w;
-	        int tw = tm.w;
+	        int[] tex = null;
+	        int tw = 0;
+	        if(tm != null){tex = tm.tex; tw = tm.w;}
 	
 	        // set start point to a
 	        int st_x = ax << SHIFT;
@@ -845,11 +846,11 @@ public class PolygonRenderer {
 	
 	        // localise pixel buffer and texture and context width and texture width
 	        int[] p 	= context.pix;
-	        int[] tex 	= tm.tex;
 	        int[] z 	= context.zbuff;
 	        int bw 		= context.w;
-	        int tw 		= tm.w;
-	
+	        int[] tex = null;
+	        int tw = 0;
+	        if(tm != null){tex = tm.tex; tw = tm.w;}	
 	        // set start point to a
 	        int st_x = ax << SHIFT;
 	        long st_z = az << SHIFT;    // z-buffer is 32bit so need to use a long to scale up
@@ -1161,10 +1162,11 @@ public class PolygonRenderer {
 	
 	        // localise pixel buffer and texture and context width and texture width
 	        int[] p = context.pix;
-	        int[] tex = tm.tex;
 	        int[] z = context.zbuff;
 	        int bw = context.w;
-	        int tw = tm.w;
+	        int[] tex = null;
+	        int tw = 0;
+	        if(tm != null){tex = tm.tex; tw = tm.w;}
 	
 	        // set start point to a
 	        int st_x 	= ax << SHIFT;

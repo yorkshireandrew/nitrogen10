@@ -55,8 +55,8 @@ public class Transform{
 			{
 				setParent(parent);
 				this.a11 = a11; this.a12=a12; this.a13=a13; this.a14=a14;
-				this.a21 = a21; this.a22=a22; this.a23=a13; this.a24=a14;
-				this.a31 = a31; this.a32=a32; this.a33=a13; this.a34=a14;
+				this.a21 = a21; this.a22=a22; this.a23=a23; this.a24=a24;
+				this.a31 = a31; this.a32=a32; this.a33=a33; this.a34=a34;
 			}
 	
 	/** Access method 
@@ -104,9 +104,9 @@ public class Transform{
 		return false;
 	}	
 
-	/** Adds a transform to this transforms child transform list. Note - Does not detach the supplied transform from any parents it may already have
+	/** Adds a transform to this transforms child transform list. This is an internal method that does not detach the supplied transform from any parents it may already have; external code should use the setParent method
 	 * @param t Transform to be added as a child to the Transform being called */
-	void add(Transform t)
+	private void add(Transform t)
 	{
 		// add passed in transform to childTransforms, creating it if it is null
 		if (childTransforms == null)childTransforms = new TransformVector();
@@ -397,7 +397,7 @@ public class Transform{
 		{
 			c14 = p11*la14+p12*la24+p13*la34+p14;
 			c24 = p21*la14+p22*la24+p23*la34+p24;
-			c14 = p31*la14+p32*la24+p33*la34+p34;
+			c34 = p31*la14+p32*la24+p33*la34+p34;
 			translationNeedsUpdate = false;
 		}
 
