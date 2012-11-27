@@ -14,7 +14,7 @@ public class SimpleSingleColourRenderer implements Renderer{
 static final int SH = 20;
 static final int NUM = 1 << SH;
 static final int ALPHA = -16777216; // 0xFF000000
-
+// static final int ALPHA = 0; // 0xFF000000
 /**
  * 
  * @param st_aux1	texture map x coord for line start point
@@ -107,8 +107,8 @@ final public void renderTrapezoid(
         int rec;
         
         // colour
-        int colour = ALPHA | polyData[0];
-
+        int colour = ALPHA + polyData[0];
+        
         while(y_counter < y_max)
         {
 

@@ -162,6 +162,7 @@ public final class Vert {
     	this.aux3 = aux3;
     	rotationNeedsUpdate = true;
     	translationNeedsUpdate = true;
+    	screenCoordinatesNeedUpdate = true;
     }
     
     final void calculateScreenSpaceCoordinate(NitrogenContext context)

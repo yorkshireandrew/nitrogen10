@@ -79,7 +79,7 @@ null
 null
 null
 1
-0X0000F8
+0X000000
 sscr
 null
 3
@@ -92,7 +92,7 @@ null
 null
 null
 1
-0x0000F0
+0x888888
 sscr
 null
 4
@@ -105,7 +105,7 @@ null
 null
 null
 1
-0XFF8888
+0XFFFF00
 sscr
 null
 5
