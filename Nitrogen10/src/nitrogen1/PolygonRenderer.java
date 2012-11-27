@@ -48,156 +48,234 @@ public class PolygonRenderer {
 	    int by = b.sy;
 	    int cy = c.sy;
 	    int dy = d.sy;
-	
-	    if(ay < by)
+	    
+	    // determine minimum and call next method to find max
+	    if(ay >= by)
 	    {
-	        if(ay < cy)
-	        {
-	            // ay < by,cy
-	            if(ay < dy)
-	            {
-	                // ay < by,cy,dy
-	
-	                //-----------------------------------------
-	                // ay is minimum - now find maximum
-	                if(by > cy)
-	                {
-	                    // by > ay, cy
-	                    if(by > dy)PlotCase4(context, a, b, c, d, ren, polyData, texMap, lightingValue);
-//	                    else PlotCase1(context, a, b, c, d, ren, polyData, texMap, lightingValue);
-	                    else PlotCase1(context, a, b, c, d, ren, polyData, texMap, lightingValue);
-	
-	                }
-	                else
-	                {
-	                    // cy > ay, by
-	                    if(cy > dy)
-	                    {
-	                        // cy > ay, by, dy
-	                        // now descriminate between case 2 and case 3
-	                        if(dy > by) PlotCase2(context, a, b, c, d, ren, polyData, texMap, lightingValue);
-	                        else PlotCase3(context, a, b, c, d, ren, polyData, texMap, lightingValue);
-	                    }
-	                    else
-	                    {
-	                        // dy > cy > by > ay
-	                        PlotCase1(context, a, b, c, d, ren, polyData, texMap, lightingValue);
-	                    }
-	                }
-	
-	                //-----------------------------------------
-	            }
-	            else
-	            {
-	                // dy < ay < by,cy
-	                //-----------------------------------------
-	                // dy is minimum - find maximum
-	                if(cy > by)PlotCase1(context, d, a, b, c, ren, polyData, texMap, lightingValue);
-	                else PlotCase2(context, d, a, b, c, ren, polyData, texMap, lightingValue);
-	                //-----------------------------------------
-	            }
-	
-	        }
-	        else
-	        {
-	            // cy < ay < by
-	            if(cy < dy)
-	            {
-	                // cy < ay < by
-	                // cy < dy
-	                // ------------------------------------------------------
-	                // cy is minimum - find maximum
-	                if(dy > by)PlotCase4(context, c, d, a, b, ren, polyData, texMap, lightingValue);
-	                else PlotCase1(context, c, d, a, b, ren, polyData, texMap, lightingValue);
-	                // ------------------------------------------------------
-	            }
-	            else
-	            {
-	                // dy < cy < ay < by
-	                //--------------------------------------------------
-	                PlotCase3(context, d, a, b, c, ren, polyData, texMap, lightingValue);
-	                //--------------------------------------------------
-	            }
-	        }
+	    	if(by >= cy)
+	    	{
+	    		// must be c or d
+	    		if(cy >= dy)
+	    		{
+	    			min_d(context,a, b, c, d, ren, polyData, texMap,lightingValue);
+	    		}
+	    		else
+	    		{
+	    			min_c(context,a, b, c, d, ren, polyData, texMap,lightingValue);
+	    		}	    		
+	    	}
+	    	else
+	    	{
+	    		// must be b or d
+	    		if(by >= dy)
+	    		{
+	    			min_d(context,a, b, c, d, ren, polyData, texMap,lightingValue);
+	    		}
+	    		else
+	    		{
+	    			min_b(context,a, b, c, d, ren, polyData, texMap,lightingValue);
+	    		}	  	    		
+	    	}
+	    		
 	    }
 	    else
 	    {
-	        // by < ay
-	        if( by < cy)
-	        {
-	            // by < ay,cy
-	            if(by < dy)
-	            {
-	                // by < ay,cy,dy
-	                //---------------------------------------------------
-	                // by is minimum find maximum
-	                if(ay > cy)
-	                {
-	                    if( ay > dy)
-	                    {
-	                        PlotCase1(context, b, c, d, a, ren, polyData, texMap, lightingValue);
-	                    }
-	                    else
-	                    {
-	                        // dy is max could be case 2 or 3
-	                        if(cy < ay)PlotCase2(context, b, c, d, a, ren, polyData, texMap, lightingValue);
-	                        else PlotCase3(context, b, c, d, a, ren, polyData, texMap, lightingValue);
-	                    }
-	                }
-	                else
-	                {
-	                    // by is minimum ay < cy
-	                    if ( cy < dy)
-	                    {
-	                        // by < ay < cy < dy
-	                        PlotCase3(context, b, c, d, a, ren, polyData, texMap, lightingValue);
-	                    }
-	                    else
-	                    {
-	                        // by < ay < dy < cy
-	                        PlotCase4(context, b, c, d, a, ren, polyData, texMap, lightingValue);
-	                    }
-	                }
-	                //---------------------------------------------------
-	            }
-	            // no else is requires as dy < by < ay, cy is not convex shape
-	        }
-	        else
-	        {
-	            // cy < by < ay
-	            if(cy < dy)
-	            {
-	                // cy < by < ay
-	                // cy < dy
-	                //----------------------------------------------------
-	                // cy is minimum - find maximum
-	                if(ay < dy)
-	                {
-	                    // cy < by < ay < dy
-	                    PlotCase4(context, c, d, a, b, ren, polyData, texMap, lightingValue);
-	                }
-	                else
-	                {
-	                    if(dy < by)PlotCase2(context, c, d, a, b, ren, polyData, texMap, lightingValue);
-	                    else PlotCase3(context, c, d, a, b, ren, polyData, texMap, lightingValue);
-	                }
-	                //-----------------------------------------------------
-	                
-	            }
-	            else
-	            {
-	                // dy < cy < by < ay
-	                //-------------------------------------------
-	                PlotCase4(context, d, a, b, c, ren, polyData, texMap, lightingValue);
-	                //--------------------------------------------
-	            }
-	        }
+	    	if(ay >= cy)
+	    	{
+	    		// must be c or d
+	    		if(cy >= dy)
+	    		{
+	    			min_d(context,a, b, c, d, ren, polyData, texMap,lightingValue);
+	    		}
+	    		else
+	    		{
+	    			min_c(context,a, b, c, d, ren, polyData, texMap,lightingValue);
+	    		}	 
+	    	}
+	    	else
+	    	{
+	    		// must be a or d
+	    		if(ay >= dy)
+	    		{
+	    			min_d(context,a, b, c, d, ren, polyData, texMap,lightingValue);
+	    		}
+	    		else
+	    		{
+	    			min_a(context,a, b, c, d, ren, polyData, texMap,lightingValue);
+	    		}	 
+	    	}	    	
 	    }
-	
-	
-	
-	
 	}
+	
+	static final void min_a(
+			final NitrogenContext context,
+			final Vert a, final Vert b, final Vert c, final Vert d, 
+			final Renderer ren, 
+			final int[] polyData, 
+			final TexMap texMap,
+			final float lightingValue
+			)
+	{
+		// create local copies of y coordinates for sorting
+	    int ay = a.sy;
+	    int by = b.sy;
+	    int cy = c.sy;
+	    int dy = d.sy;
+	    
+	    // now try and find max. we know its not a
+	    if(by >= cy)
+	    {
+	    	// must be by or dy
+	    	if(by >= dy)
+	    	{
+	    		// b is max, a is min
+	    	}
+	    	else
+	    	{
+	    		// d is max, a is min
+	    	}
+	    }
+	    else
+	    {
+	    	// must be cy or dy
+	    	if(cy >= dy)
+	    	{
+	    		// c is max, a is min
+	    	}
+	    	else
+	    	{
+	    		// d is max, a is min
+	    	}
+	    }
+		
+	}
+	static final void min_b(
+			final NitrogenContext context,
+			final Vert a, final Vert b, final Vert c, final Vert d, 
+			final Renderer ren, 
+			final int[] polyData, 
+			final TexMap texMap,
+			final float lightingValue
+			)
+	{
+		// create local copies of y coordinates for sorting
+	    int ay = a.sy;
+	    int by = b.sy;
+	    int cy = c.sy;
+	    int dy = d.sy;
+	    
+	    // find max we know its not b
+	    
+	    if(ay >= cy)
+	    {
+	    	// must be a or d
+	    	if(ay >= dy)
+	    	{
+	    		// a is max, b is min
+	    	}
+	    	else
+	    	{
+	    		// d is max, b is min
+	    	}
+	    }
+	    else
+	    {
+	    	// must be c or d
+	    	if(cy >= dy)
+	    	{
+	    		// c is max, b is min
+	    	}
+	    	else
+	    	{
+	    		// d is max, b is min
+	    	}
+	    }    
+	}
+	
+	static final void min_c(
+			final NitrogenContext context,
+			final Vert a, final Vert b, final Vert c, final Vert d, 
+			final Renderer ren, 
+			final int[] polyData, 
+			final TexMap texMap,
+			final float lightingValue
+			)
+	{
+		// create local copies of y coordinates for sorting
+	    int ay = a.sy;
+	    int by = b.sy;
+	    int cy = c.sy;
+	    int dy = d.sy;
+	    // find max we know its not c
+	    
+	    if(ay >= by)
+	    {
+	    	// must be a or d
+	    	if(ay >= dy)
+	    	{
+	    		// a is max, c is min
+	    	}
+	    	else
+	    	{
+	    		// d is max, c is min
+	    	}
+	    }
+	    else
+	    {
+	    	// must be b or d
+	    	if(by >= dy)
+	    	{
+	    		// b is max, c is min
+	    	}
+	    	else
+	    	{
+	    		// d is max, c is min
+	    	}
+	    }   
+	}
+	
+	static final void min_d(
+			final NitrogenContext context,
+			final Vert a, final Vert b, final Vert c, final Vert d, 
+			final Renderer ren, 
+			final int[] polyData, 
+			final TexMap texMap,
+			final float lightingValue
+			)
+	{
+		// create local copies of y coordinates for sorting
+	    int ay = a.sy;
+	    int by = b.sy;
+	    int cy = c.sy;
+	    int dy = d.sy;
+	    
+	    // find max we know its not d
+	    if (ay >= by)
+	    {
+	    	// must be a or c
+	    	if(ay >= cy)
+	    	{
+	    		// max a, min d
+	    	}
+	    	else
+	    	{
+	    		// max c, min d
+	    	}
+	    }
+	    else
+	    {
+	    	// must be b or c
+	    	if(by >= cy)
+	    	{
+	    		// max b, min d
+	    	}
+	    	else
+	    	{
+	    		// max c, min d
+	    	}
+	    }
+	}
+
 
 	//------------------------------------------------------------------------------------------------------------------------
 	    //*********************** PLOT CASE 1 ************************************
@@ -936,10 +1014,10 @@ public class PolygonRenderer {
 	    
 	    
 	    //*********************** PLOT CASE 3 *********************************
-	    /** plot case 3 a < b < d < c */
+	    /** plot case 3 a < d < b < c */
 	    static final void PlotCase3(final NitrogenContext context, final Vert a, final Vert b, final Vert c, final Vert d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
 	    {
-			System.out.println("plot case 3 where vert a < vert b < vert d < vert c");
+			System.out.println("plot case 3 where vert a < vert d < vert b < vert c");
 		    System.out.println("vert a = " + a.sx + "," + a.sy );	    
 		    System.out.println("vert b = " + b.sx + "," + b.sy );	    
 		    System.out.println("vert c = " + c.sx + "," + c.sy );	    
