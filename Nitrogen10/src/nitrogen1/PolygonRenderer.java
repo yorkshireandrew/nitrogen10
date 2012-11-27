@@ -1471,10 +1471,10 @@ public class PolygonRenderer {
 	    	
 	    	// these values localised first to catch degenerate polygons early
 	        int ay = a.sy;
-	        int dy = d.sy;
+	        int by = b.sy;
 	
 	        // catch degenerate polygons
-	        if(ay == dy)return;
+	        if(ay == by)return;
 	
 	        // localise a coordinates
 	        int ax = a.sx;
@@ -1487,7 +1487,7 @@ public class PolygonRenderer {
 	
 	        // localise b coordinates
 	        int bx = b.sx;
-	        int by = b.sy;
+//	        int by = b.sy;
 	        long bz = b.sz;
 	        
 	        int b_aux1 = (int)b.aux1;
@@ -1505,7 +1505,7 @@ public class PolygonRenderer {
 	        
 	        // localise d coordinates
 	        int dx = d.sx;
-	//        int dy = d.sy;
+	        int dy = d.sy;
 	        long dz = d.sz;
 	        
 	        int d_aux1 = (int)d.aux1;
