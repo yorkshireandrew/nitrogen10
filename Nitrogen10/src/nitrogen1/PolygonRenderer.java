@@ -107,7 +107,7 @@ public class PolygonRenderer {
 	    }
 	}
 	
-	static final void min_a(
+	private static final void min_a(
 			final NitrogenContext context,
 			final Vert a, final Vert b, final Vert c, final Vert d, 
 			final Renderer ren, 
@@ -129,10 +129,12 @@ public class PolygonRenderer {
 	    	if(by >= dy)
 	    	{
 	    		// b is max, a is min
+	    		plotCase4(context,a, b, c, d, ren, polyData, texMap,lightingValue);
 	    	}
 	    	else
 	    	{
 	    		// d is max, a is min
+	    		plotCase1(context,a, b, c, d, ren, polyData, texMap,lightingValue);
 	    	}
 	    }
 	    else
@@ -141,15 +143,27 @@ public class PolygonRenderer {
 	    	if(cy >= dy)
 	    	{
 	    		// c is max, a is min
+	    		if(by >= dy)
+	    		{
+	    			// a < d < b < c
+	    			plotCase3(context,a, b, c, d, ren, polyData, texMap,lightingValue);
+	    		}
+	    		else
+	    		{
+	    			// a < b < d < c
+	    			plotCase2(context,a, b, c, d, ren, polyData, texMap,lightingValue);
+	    		}
 	    	}
 	    	else
 	    	{
 	    		// d is max, a is min
+	    		plotCase1(context,a, b, c, d, ren, polyData, texMap,lightingValue);  		
 	    	}
 	    }
 		
 	}
-	static final void min_b(
+	
+	private static final void min_b(
 			final NitrogenContext context,
 			final Vert a, final Vert b, final Vert c, final Vert d, 
 			final Renderer ren, 
@@ -172,10 +186,22 @@ public class PolygonRenderer {
 	    	if(ay >= dy)
 	    	{
 	    		// a is max, b is min
+	    		plotCase1(context, b,c,d,a, ren, polyData, texMap,lightingValue);
+
 	    	}
 	    	else
 	    	{
 	    		// d is max, b is min
+	    		if(ay >= cy)
+	    		{
+	    			// b < c < a < d
+		    		plotCase2(context, b,c,d,a, ren, polyData, texMap,lightingValue);
+	    		}
+	    		else
+	    		{
+	    			// b < a < c < d
+		    		plotCase3(context, b,c,d,a, ren, polyData, texMap,lightingValue);
+	    		}
 	    	}
 	    }
 	    else
@@ -184,15 +210,27 @@ public class PolygonRenderer {
 	    	if(cy >= dy)
 	    	{
 	    		// c is max, b is min
+	    		plotCase4(context, b,c,d,a, ren, polyData, texMap,lightingValue);
+	    		
 	    	}
 	    	else
 	    	{
 	    		// d is max, b is min
+	    		if(ay >= cy)
+	    		{
+	    			// b < c < a < d
+		    		plotCase2(context, b,c,d,a, ren, polyData, texMap,lightingValue);
+	    		}
+	    		else
+	    		{
+	    			// b < a < c < d
+		    		plotCase3(context, b,c,d,a, ren, polyData, texMap,lightingValue);
+	    		}	    		
 	    	}
 	    }    
 	}
 	
-	static final void min_c(
+	private static final void min_c(
 			final NitrogenContext context,
 			final Vert a, final Vert b, final Vert c, final Vert d, 
 			final Renderer ren, 
@@ -214,10 +252,22 @@ public class PolygonRenderer {
 	    	if(ay >= dy)
 	    	{
 	    		// a is max, c is min
+	    		if(by >= dy)
+	    		{
+		    		// c < d < b < a
+	    			plotCase2(context, c,d,b,a, ren, polyData, texMap,lightingValue);	    			
+	    		}
+	    		else
+	    		{
+		    		// c < b < d < a
+	    			plotCase3(context, c,d,b,a, ren, polyData, texMap,lightingValue);	    				    			
+	    		}
 	    	}
 	    	else
 	    	{
 	    		// d is max, c is min
+    			plotCase4(context, c,d,b,a, ren, polyData, texMap,lightingValue);	    			
+	    		
 	    	}
 	    }
 	    else
@@ -226,15 +276,18 @@ public class PolygonRenderer {
 	    	if(by >= dy)
 	    	{
 	    		// b is max, c is min
+    			plotCase1(context, c,d,b,a, ren, polyData, texMap,lightingValue);	    			
+
 	    	}
 	    	else
 	    	{
 	    		// d is max, c is min
+    			plotCase4(context, c,d,b,a, ren, polyData, texMap,lightingValue);	    			
 	    	}
 	    }   
 	}
 	
-	static final void min_d(
+	private static final void min_d(
 			final NitrogenContext context,
 			final Vert a, final Vert b, final Vert c, final Vert d, 
 			final Renderer ren, 
@@ -256,10 +309,12 @@ public class PolygonRenderer {
 	    	if(ay >= cy)
 	    	{
 	    		// max a, min d
+    			plotCase4(context, d,a,b,c, ren, polyData, texMap,lightingValue);	    			
 	    	}
 	    	else
 	    	{
 	    		// max c, min d
+    			plotCase1(context, d,a,b,c, ren, polyData, texMap,lightingValue);	    			
 	    	}
 	    }
 	    else
@@ -268,10 +323,21 @@ public class PolygonRenderer {
 	    	if(by >= cy)
 	    	{
 	    		// max b, min d
+	    		if( cy >= ay)
+	    		{
+	    			// d < a < c < b
+	       			plotCase2(context, d,a,b,c, ren, polyData, texMap,lightingValue);	    				    			
+	    		}
+	    		else
+	    		{
+	    			// d < c < a < b
+	       			plotCase3(context, d,a,b,c, ren, polyData, texMap,lightingValue);	    				    						
+	    		}	    		
 	    	}
 	    	else
 	    	{
 	    		// max c, min d
+	   			plotCase1(context, d,a,b,c, ren, polyData, texMap,lightingValue);	    				    		
 	    	}
 	    }
 	}
@@ -280,7 +346,7 @@ public class PolygonRenderer {
 	//------------------------------------------------------------------------------------------------------------------------
 	    //*********************** PLOT CASE 1 ************************************
 		/** case where vert a < vert b < vert c < vert d */
-		static final void PlotCase1(final NitrogenContext context, final Vert a, final Vert b, final Vert c, final Vert d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
+		private static final void plotCase1(final NitrogenContext context, final Vert a, final Vert b, final Vert c, final Vert d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
 	    {
 			System.out.println(" plot case 1 where vert a < vert b < vert c < vert d");
 		    System.out.println("vert a = " + a.sx + "," + a.sy );	    
@@ -633,7 +699,7 @@ public class PolygonRenderer {
 	    
 		//************************ PLOT CASE 2 ***********************************************
 		/** case where vert a < vert b < vert d < vert c */
-	    static final void PlotCase2(final NitrogenContext context, final Vert a, final Vert b, final Vert c, final Vert d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
+	    private static final void plotCase2(final NitrogenContext context, final Vert a, final Vert b, final Vert c, final Vert d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
 	    {
 			System.out.println("plot case 2 where vert a < vert b < vert d < vert c");
 		    System.out.println("vert a = " + a.sx + "," + a.sy );	    
@@ -1015,7 +1081,7 @@ public class PolygonRenderer {
 	    
 	    //*********************** PLOT CASE 3 *********************************
 	    /** plot case 3 a < d < b < c */
-	    static final void PlotCase3(final NitrogenContext context, final Vert a, final Vert b, final Vert c, final Vert d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
+	    private static final void plotCase3(final NitrogenContext context, final Vert a, final Vert b, final Vert c, final Vert d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
 	    {
 			System.out.println("plot case 3 where vert a < vert d < vert b < vert c");
 		    System.out.println("vert a = " + a.sx + "," + a.sy );	    
@@ -1395,7 +1461,7 @@ public class PolygonRenderer {
 
 	    //*********************** PLOT CASE 4 *********************************
 	    /** plot case 4 a < d < c < b */	    
-	    static final void PlotCase4(final NitrogenContext context, final Vert a, final Vert b, final Vert c, final Vert d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
+	    private static final void plotCase4(final NitrogenContext context, final Vert a, final Vert b, final Vert c, final Vert d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
 	    {
 			System.out.println(" plot case 4 where vert a < vert d < vert c < vert b");
 		    System.out.println("vert a = " + a.sx + "," + a.sy );	    
