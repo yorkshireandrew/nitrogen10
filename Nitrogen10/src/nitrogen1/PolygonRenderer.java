@@ -255,18 +255,18 @@ public class PolygonRenderer {
 	    		if(by >= dy)
 	    		{
 		    		// c < d < b < a
-	    			plotCase2(context, c,d,b,a, ren, polyData, texMap,lightingValue);	    			
+	    			plotCase2(context, c,d,a,b, ren, polyData, texMap,lightingValue);	    			
 	    		}
 	    		else
 	    		{
 		    		// c < b < d < a
-	    			plotCase3(context, c,d,b,a, ren, polyData, texMap,lightingValue);	    				    			
+	    			plotCase3(context, c,d,a,b, ren, polyData, texMap,lightingValue);	    				    			
 	    		}
 	    	}
 	    	else
 	    	{
 	    		// d is max, c is min
-    			plotCase4(context, c,d,b,a, ren, polyData, texMap,lightingValue);	    			
+    			plotCase4(context, c,d,a,b, ren, polyData, texMap,lightingValue);	    			
 	    		
 	    	}
 	    }
@@ -276,13 +276,13 @@ public class PolygonRenderer {
 	    	if(by >= dy)
 	    	{
 	    		// b is max, c is min
-    			plotCase1(context, c,d,b,a, ren, polyData, texMap,lightingValue);	    			
+    			plotCase1(context, c,d,a,b, ren, polyData, texMap,lightingValue);	    			
 
 	    	}
 	    	else
 	    	{
 	    		// d is max, c is min
-    			plotCase4(context, c,d,b,a, ren, polyData, texMap,lightingValue);	    			
+    			plotCase4(context, c,d,a,b, ren, polyData, texMap,lightingValue);	    			
 	    	}
 	    }   
 	}

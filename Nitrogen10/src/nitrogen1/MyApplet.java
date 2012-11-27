@@ -13,7 +13,9 @@ package nitrogen1;
  */
 
 import javax.swing.*;
+import javax.swing.event.*;
 import java.awt.*;  // needed for Dimension class
+import java.awt.event.*;  // needed for ActionListener
 
 final public class MyApplet extends JApplet{
     /**
@@ -24,14 +26,23 @@ final public class MyApplet extends JApplet{
     static final int APP_HEIGHT =501;
     static final Renderer simpleTextureRenderer = new SimpleTextureRenderer();
 
-    	public void init()
+    Transform t4;
+    NitrogenContext cnc;
+    float rot = 0.0f;
+    
+    public void init()
 	{
             getContentPane().setLayout(new BorderLayout());
             Box box_image = Box.createHorizontalBox();
 
-            NitrogenContext nc = new NitrogenContext(510,510,1,1,1,1000);
+            final NitrogenContext nc = new NitrogenContext(510,510,1,1,1,1000);
             box_image.add(nc);
-
+            
+            JButton turnit = new JButton("turn");
+            JButton turnit2 = new JButton("turn2");
+         
+            box_image.add(turnit);
+            box_image.add(turnit2);
             getContentPane().add(box_image);
             getContentPane().validate();
             getContentPane().setVisible(true);
@@ -39,7 +50,7 @@ final public class MyApplet extends JApplet{
             nc.cls(0xFF0000FF);
             
             // start rendering process
-            Transform t1, t2;
+            final Transform t1, t2, t3;
             SharedImmutableSubItem sisi = null;
            
             t1	= new 	Transform(
@@ -53,7 +64,12 @@ final public class MyApplet extends JApplet{
 					1f, 0f, 0f, 0f,
 					0f, 1f, 0f, 0f,
 					0f, 0f, 1f, -20f);
-            t2.setRoll(0.3f);
+            
+            t3	= new 	Transform(
+					t2,
+					1f, 0f, 0f, 0f,
+					0f, 1f, 0f, 0f,
+					0f, 0f, 1f, 0f);
             
             // add renderers to RendererHelper
             SimpleTextureRenderer str = new SimpleTextureRenderer();
@@ -81,11 +97,39 @@ final public class MyApplet extends JApplet{
             	e.printStackTrace();           	
             }
             
-            Item i = new Item(sisi,t2);
+            this.t4 = t3;           
+            Item i = new Item(sisi,t4);
             i.setVisibility(true);
             
             t1.render(nc);
             nc.repaint();
+            this.cnc = nc;
+            
+            turnit.addActionListener(
+            		new ActionListener(){
+
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							rot += 0.05f;
+							t4.setTurn(rot);
+							cnc.cls(0xFF0000FF);
+							t1.render(nc);
+							nc.repaint();						
+						}}
+            		);
+            
+            turnit2.addActionListener(
+            		new ActionListener(){
+
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							rot -= 0.05f;
+							t4.setTurn(rot);
+							cnc.cls(0xFF0000FF);
+							t1.render(nc);
+							nc.repaint();						
+						}}
+            		);  
             
             
             
