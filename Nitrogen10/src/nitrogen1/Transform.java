@@ -1,4 +1,5 @@
 package nitrogen1;
+import java.lang.Math;
 
 /** component of the scene graph that encapsulates translation and orientation */
 public class Transform{
@@ -439,6 +440,37 @@ public class Transform{
 		c31=0;c32=0;c33=1;c34=0;
 		rotationNeedsUpdate = false;
 		translationNeedsUpdate = false;
+	}
+	
+	final void setRoll(float theta)
+	{
+		a11 = (float)Math.cos(theta);
+		a12 = (float)-Math.sin(theta);
+		a13 = 0.0f;
+		a21 = (float)Math.sin(theta);
+		a22 = (float)Math.cos(theta);
+		a23 = 0.0f;
+		a31 = 0.0f;
+		a32 = 0.0f;
+		a33 = 1.0f;
+		setNeedsTotallyUpdating();
+	}
+	
+	final void setTurn(float theta)
+	{
+		a11 = (float)Math.cos(theta);
+		a12 = 0.0f;
+		a13 = (float)-Math.sin(theta);
+		
+		a21 = 0.0f;
+		a22 = 1.0f;
+		a23 = 0.0f;		
+		
+		a31 = (float)Math.sin(theta);
+		a32 = 0.0f;
+		a33 = (float)Math.cos(theta);
+
+		setNeedsTotallyUpdating();
 	}
 	
 	

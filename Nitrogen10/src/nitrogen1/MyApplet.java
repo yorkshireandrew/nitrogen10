@@ -52,7 +52,8 @@ final public class MyApplet extends JApplet{
 					t1,
 					1f, 0f, 0f, 0f,
 					0f, 1f, 0f, 0f,
-					0f, 0f, 1f, -20f);          
+					0f, 0f, 1f, -20f);
+            t2.setRoll(0.3f);
             
             // add renderers to RendererHelper
             SimpleTextureRenderer str = new SimpleTextureRenderer();
