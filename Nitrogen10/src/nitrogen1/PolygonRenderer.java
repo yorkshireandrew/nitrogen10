@@ -36,6 +36,12 @@ public class PolygonRenderer {
 	    b.calculateScreenSpaceCoordinate(context);
 	    c.calculateScreenSpaceCoordinate(context);
 	    d.calculateScreenSpaceCoordinate(context);
+	    
+	    System.out.println("vert a = " + a.sx + "," + a.sy );	    
+	    System.out.println("vert b = " + b.sx + "," + b.sy );	    
+	    System.out.println("vert c = " + c.sx + "," + c.sy );	    
+	    System.out.println("vert d = " + d.sx + "," + d.sy );	    
+
 			
 		// create local copies of y coordinates for sorting
 	    int ay = a.sy;
@@ -198,7 +204,13 @@ public class PolygonRenderer {
 		/** case where vert a < vert b < vert c < vert d */
 		static final void PlotCase1(final NitrogenContext context, final Vert a, final Vert b, final Vert c, final Vert d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
 	    {
-	        // these values localised first to catch degenerate polygons early
+			System.out.println(" plot case 1 where vert a < vert b < vert c < vert d");
+		    System.out.println("vert a = " + a.sx + "," + a.sy );	    
+		    System.out.println("vert b = " + b.sx + "," + b.sy );	    
+		    System.out.println("vert c = " + c.sx + "," + c.sy );	    
+		    System.out.println("vert d = " + d.sx + "," + d.sy );	    
+
+			// these values localised first to catch degenerate polygons early
 	        int ay = a.sy;
 	        int dy = d.sy;
 	
@@ -280,7 +292,7 @@ public class PolygonRenderer {
 	        fin_daux1 = (d_aux1 - a_aux1) * rec;
 	        fin_daux2 = (d_aux2 - a_aux2) * rec;
 	        fin_daux3 = (d_aux3 - a_aux3) * rec;
-	
+	        System.out.println("step a to b");
 	        // ----------------------- step from a to b -------------------
 	        if(by > ay)
 	        {
@@ -295,6 +307,25 @@ public class PolygonRenderer {
 	            st_daux3 = (b_aux3 - a_aux3) * rec;
 	
 	         // render from ay to by
+	            renderDebugTrapezoid(
+	                    st_x,       st_z,
+	                    st_aux1, 	st_aux2,	st_aux3,
+	                    st_dx,      st_dz,
+	                    st_daux1, 	st_daux2, 	st_daux3,                    
+	                    fin_x,      fin_z,
+	                    fin_aux1, 	fin_aux2, 	fin_aux3,
+	                    fin_dx,     fin_dz,
+	                    fin_daux1, 	fin_daux2, 	fin_daux3,
+	                    ay,         by,         
+	                    p,      
+	                    z,    	
+	                    tex,      
+	                    bw,     
+	                    tw,      
+	                    polyData,
+	                    lightingValue
+	                    );
+	            
 	            ren.renderTrapezoid(
 	                    st_x,       st_z,
 	                    st_aux1, 	st_aux2,	st_aux3,
@@ -357,6 +388,25 @@ public class PolygonRenderer {
 	            st_daux3 = (c_aux3 - b_aux3) * rec;
 	
 	         // render from by to cy
+	            System.out.println("render from by to cy");
+	            renderDebugTrapezoid(	
+	                    st_x, 		st_z,
+	                    st_aux1, 	st_aux2,	st_aux3,
+	                    st_dx, 		st_dz,
+	                    st_daux1, 	st_daux2, 	st_daux3,
+	                    fin_x, 		fin_z,
+	                    fin_aux1, 	fin_aux2, 	fin_aux3,
+	                    fin_dx, 	fin_dz,
+	                    fin_daux1, 	fin_daux2, 	fin_daux3,	                    
+	                    by, cy,        
+	                    p,      
+	                    z,    
+	                    tex,      
+	                    bw,     
+	                    tw,      
+	                    polyData,
+	                    lightingValue
+	                    );
 	            ren.renderTrapezoid(	
 	                    st_x, 		st_z,
 	                    st_aux1, 	st_aux2,	st_aux3,
@@ -406,6 +456,7 @@ public class PolygonRenderer {
 	        }
 	
 	        // ----------------------- step from c to d -------------------
+	        System.out.println("step from c to d");
 	        if(dy > cy)
 	        {
 	            // initialise start stepper
@@ -417,7 +468,24 @@ public class PolygonRenderer {
 	            st_daux1 = (d_aux1 - c_aux1) * rec;
 	            st_daux2 = (d_aux2 - c_aux2) * rec;
 	            st_daux3 = (d_aux3 - c_aux3) * rec;
-	
+	            renderDebugTrapezoid(
+	                    st_x, 		st_z,
+	                    st_aux1, 	st_aux2,	st_aux3,
+	                    st_dx, 		st_dz,
+	                    st_daux1,	st_daux2,	st_daux3,	                    
+	                    fin_x, 		fin_z,
+	                    fin_aux1, 	fin_aux2, 	fin_aux3,
+	                    fin_dx, 	fin_dz,
+	                    fin_daux1, 	fin_daux2, 	fin_daux3,
+	                    cy, dy,                          
+	                    p,      
+	                    z,    
+	                    tex,      
+	                    bw,     
+	                    tw,      
+	                    polyData,
+	                    lightingValue
+	                    );	
 	            // render from cy to dy	 
 	            ren.renderTrapezoid(
 	                    st_x, 		st_z,
@@ -489,7 +557,13 @@ public class PolygonRenderer {
 		/** case where vert a < vert b < vert d < vert c */
 	    static final void PlotCase2(final NitrogenContext context, final Vert a, final Vert b, final Vert c, final Vert d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
 	    {
-	        // these values localised first to catch degenerate polygons early
+			System.out.println("plot case 2 where vert a < vert b < vert d < vert c");
+		    System.out.println("vert a = " + a.sx + "," + a.sy );	    
+		    System.out.println("vert b = " + b.sx + "," + b.sy );	    
+		    System.out.println("vert c = " + c.sx + "," + c.sy );	    
+		    System.out.println("vert d = " + d.sx + "," + d.sy );	 
+		    
+	    	// these values localised first to catch degenerate polygons early
 	        int ay = a.sy;
 	        int cy = c.sy;
 	
@@ -600,6 +674,25 @@ public class PolygonRenderer {
 	            st_daux3 = (b_aux3 - a_aux3) * rec;
 	            
 	            // render from ay to by
+	            System.out.println("render from ay to by");
+	            renderDebugTrapezoid(	
+	                    st_x,       st_z,
+	                    st_aux1, 	st_aux2, 	st_aux3,
+	                    st_dx,      st_dz,
+	                    st_daux1, 	st_daux2, 	st_daux3,	                    
+	                    fin_x,      fin_z,
+	                    fin_aux1, 	fin_aux2, 	fin_aux3,
+	                    fin_dx,     fin_dz,
+	                    fin_daux1, 	fin_daux2, 	fin_daux3,
+	                    ay,			by,                            
+	                    p,      	
+	                    z,    		
+	                    tex,		
+	                    bw,     	
+	                    tw,			
+	                    polyData,
+	                    lightingValue
+	                    );
 	            ren.renderTrapezoid(	
 	                    st_x,       st_z,
 	                    st_aux1, 	st_aux2, 	st_aux3,
@@ -668,6 +761,25 @@ public class PolygonRenderer {
 	            fustrum_height = dy - by;
 	            
 	            // render from by to dy
+	            System.out.println("render from by to dy");
+	        	renderDebugTrapezoid(
+	                    st_x,       st_z,
+	                    st_aux1, 	st_aux2, 	st_aux3,
+	                    st_dx,      st_dz,
+	                    st_daux1, 	st_daux2, 	st_daux3,	                    
+	                    fin_x,      fin_z,
+	                    fin_aux1, 	fin_aux2, 	fin_aux3,
+	                    fin_dx,     fin_dz,
+	                    fin_daux1, 	fin_daux2, 	fin_daux3,
+	                    by,         dy,         
+	                    p,      
+	                    z,    
+	                    tex,      
+	                    bw,     
+	                    tw,     
+	                    polyData,
+	                    lightingValue
+	                    );	            
 	        	ren.renderTrapezoid(
 	                    st_x,       st_z,
 	                    st_aux1, 	st_aux2, 	st_aux3,
@@ -730,6 +842,26 @@ public class PolygonRenderer {
 	            fin_daux3 = (c_aux3 - d_aux3) * rec;
 	
 	            // render from dy to cy
+	            System.out.println("render from dy to cy");
+	            renderDebugTrapezoid(
+	            		
+	                    st_x,		st_z,
+	                    st_aux1,	st_aux2,	st_aux3,
+	                    st_dx,      st_dz,
+	                    st_daux1,	st_daux2,	st_daux3,	                    
+	                    fin_x,      fin_z,
+	                    fin_aux1, 	fin_aux2, 	fin_aux3,
+	                    fin_dx,     fin_dz,
+	                    fin_daux1, 	fin_daux2, 	fin_daux3,
+	                    dy,         cy,         
+	                    p,      
+	                    z,    
+	                    tex,      
+	                    bw,     
+	                    tw,     
+	                    polyData,
+	                    lightingValue
+	                    );	            
 	            ren.renderTrapezoid(
 	
 	                    st_x,		st_z,
@@ -807,7 +939,13 @@ public class PolygonRenderer {
 	    /** plot case 3 a < b < d < c */
 	    static final void PlotCase3(final NitrogenContext context, final Vert a, final Vert b, final Vert c, final Vert d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
 	    {
-	        // these values localised first to catch degenerate polygons early
+			System.out.println("plot case 3 where vert a < vert b < vert d < vert c");
+		    System.out.println("vert a = " + a.sx + "," + a.sy );	    
+		    System.out.println("vert b = " + b.sx + "," + b.sy );	    
+		    System.out.println("vert c = " + c.sx + "," + c.sy );	    
+		    System.out.println("vert d = " + d.sx + "," + d.sy );	 
+		    
+		    // these values localised first to catch degenerate polygons early
 	        int ay = a.sy;
 	        int cy = c.sy;
 	
@@ -917,6 +1055,25 @@ public class PolygonRenderer {
 	            fin_daux3 = (d_aux3 - a_aux3) * rec;
 	            
 	            // render from ay to dy
+	            System.out.println("render from ay to dy");
+	            renderDebugTrapezoid(	
+	                    st_x,       st_z,
+	                    st_aux1, 	st_aux2, 	st_aux3,
+	                    st_dx,      st_dz,
+	                    st_daux1, 	st_daux2, 	st_daux3,	                    
+	                    fin_x,      fin_z,
+	                    fin_aux1, 	fin_aux2, 	fin_aux3,
+	                    fin_dx,     fin_dz,
+	                    fin_daux1, 	fin_daux2, 	fin_daux3,
+	                    ay,			dy,                            
+	                    p,      	
+	                    z,    		
+	                    tex,		
+	                    bw,     	
+	                    tw,			
+	                    polyData,
+	                    lightingValue
+	                    );	            
 	            ren.renderTrapezoid(	
 	                    st_x,       st_z,
 	                    st_aux1, 	st_aux2, 	st_aux3,
@@ -985,6 +1142,25 @@ public class PolygonRenderer {
 	        {
 	        	fustrum_height = by - dy;
 	            // render from dy to by 
+	            System.out.println("render from dy to by"); 
+	        	renderDebugTrapezoid(
+	                    st_x,       st_z,
+	                    st_aux1, 	st_aux2, 	st_aux3,
+	                    st_dx,      st_dz,
+	                    st_daux1, 	st_daux2, 	st_daux3,	                    
+	                    fin_x,      fin_z,
+	                    fin_aux1, 	fin_aux2, 	fin_aux3,
+	                    fin_dx,     fin_dz,
+	                    fin_daux1, 	fin_daux2, 	fin_daux3,
+	                    dy,         by,         
+	                    p,      
+	                    z,    
+	                    tex,      
+	                    bw,     
+	                    tw,     
+	                    polyData,
+	                    lightingValue
+	                    );	            
 	        	ren.renderTrapezoid(
 	                    st_x,       st_z,
 	                    st_aux1, 	st_aux2, 	st_aux3,
@@ -1047,6 +1223,26 @@ public class PolygonRenderer {
 	            st_daux3 = (c_aux3 - b_aux3) * rec;
 	
 	            // render from by to cy
+	            System.out.println("render from by to cy");
+	            renderDebugTrapezoid(
+	            		
+	                    st_x,		st_z,
+	                    st_aux1,	st_aux2,	st_aux3,
+	                    st_dx,      st_dz,
+	                    st_daux1,	st_daux2,	st_daux3,	                    
+	                    fin_x,      fin_z,
+	                    fin_aux1, 	fin_aux2, 	fin_aux3,
+	                    fin_dx,     fin_dz,
+	                    fin_daux1, 	fin_daux2, 	fin_daux3,
+	                    by,         cy,         
+	                    p,      
+	                    z,    
+	                    tex,      
+	                    bw,     
+	                    tw,     
+	                    polyData,
+	                    lightingValue
+	                    );	            
 	            ren.renderTrapezoid(
 	
 	                    st_x,		st_z,
@@ -1123,7 +1319,13 @@ public class PolygonRenderer {
 	    /** plot case 4 a < d < c < b */	    
 	    static final void PlotCase4(final NitrogenContext context, final Vert a, final Vert b, final Vert c, final Vert d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
 	    {
-	        // these values localised first to catch degenerate polygons early
+			System.out.println(" plot case 4 where vert a < vert d < vert c < vert b");
+		    System.out.println("vert a = " + a.sx + "," + a.sy );	    
+		    System.out.println("vert b = " + b.sx + "," + b.sy );	    
+		    System.out.println("vert c = " + c.sx + "," + c.sy );	    
+		    System.out.println("vert d = " + d.sx + "," + d.sy );	 
+	    	
+	    	// these values localised first to catch degenerate polygons early
 	        int ay = a.sy;
 	        int dy = d.sy;
 	
@@ -1198,18 +1400,18 @@ public class PolygonRenderer {
 	        int fustrum_height;
 	
 	        // initialise start stepper
-	        rec = NUM / (dy - ay);
-	        st_dx = (dx - ax) * rec;
-	        st_dz = (dz - az) * rec;
+	        rec = NUM / (by - ay);
+	        st_dx = (bx - ax) * rec;
+	        st_dz = (bz - az) * rec;
 	        
-	        st_daux1 = (d_aux1 - a_aux1) * rec;
-	        st_daux2 = (d_aux2 - a_aux2) * rec;
-	        st_daux3 = (d_aux3 - a_aux3) * rec;
+	        st_daux1 = (b_aux1 - a_aux1) * rec;
+	        st_daux2 = (b_aux2 - a_aux2) * rec;
+	        st_daux3 = (b_aux3 - a_aux3) * rec;
 	
 	        // ----------------------- step from a to d -------------------
 	        if(dy > ay)
 	        {
-	            // initialise start stepper
+	            // initialise finish stepper
 	            fustrum_height = dy - ay;
 	            rec = NUM / fustrum_height;
 	            fin_dx = (dx - ax) * rec;
@@ -1219,8 +1421,28 @@ public class PolygonRenderer {
 	            fin_daux2 = (d_aux2 - a_aux2) * rec;
 	            fin_daux3 = (d_aux3 - a_aux3) * rec;
 	
-	         // render from ay to dy
-	            ren.renderTrapezoid(
+		         // render from ay to dy
+		         System.out.println("render from ay to dy");
+		          renderDebugTrapezoid(
+		                    st_x,       st_z,
+		                    st_aux1, 	st_aux2,	st_aux3,
+		                    st_dx,      st_dz,
+		                    st_daux1, 	st_daux2, 	st_daux3,                    
+		                    fin_x,      fin_z,
+		                    fin_aux1, 	fin_aux2, 	fin_aux3,
+		                    fin_dx,     fin_dz,
+		                    fin_daux1, 	fin_daux2, 	fin_daux3,
+		                    ay,         dy,         
+		                    p,      
+		                    z,    	
+		                    tex,      
+		                    bw,     
+		                    tw,      
+		                    polyData,
+		                    lightingValue
+		                    );
+		
+		         ren.renderTrapezoid(
 	                    st_x,       st_z,
 	                    st_aux1, 	st_aux2,	st_aux3,
 	                    st_dx,      st_dz,
@@ -1281,8 +1503,27 @@ public class PolygonRenderer {
 	            fin_daux2 = (c_aux2 - d_aux2) * rec;
 	            fin_daux3 = (c_aux3 - d_aux3) * rec;
 	
-	         // render from dy to cy
-	            ren.renderTrapezoid(	
+		         // render from dy to cy
+		         System.out.println("render from dy to cy");
+		            renderDebugTrapezoid(	
+		                    st_x, 		st_z,
+		                    st_aux1, 	st_aux2,	st_aux3,
+		                    st_dx, 		st_dz,
+		                    st_daux1, 	st_daux2, 	st_daux3,
+		                    fin_x, 		fin_z,
+		                    fin_aux1, 	fin_aux2, 	fin_aux3,
+		                    fin_dx, 	fin_dz,
+		                    fin_daux1, 	fin_daux2, 	fin_daux3,	                    
+		                    dy, cy,        
+		                    p,      
+		                    z,    
+		                    tex,      
+		                    bw,     
+		                    tw,      
+		                    polyData,
+		                    lightingValue
+		                    );
+		         ren.renderTrapezoid(	
 	                    st_x, 		st_z,
 	                    st_aux1, 	st_aux2,	st_aux3,
 	                    st_dx, 		st_dz,
@@ -1344,6 +1585,25 @@ public class PolygonRenderer {
 	            fin_daux3 = (b_aux3 - c_aux3) * rec;
 	
 	            // render from cy to by	 
+	            System.out.println("render from cy to by");
+	            renderDebugTrapezoid(
+	                    st_x, 		st_z,
+	                    st_aux1, 	st_aux2,	st_aux3,
+	                    st_dx, 		st_dz,
+	                    st_daux1,	st_daux2,	st_daux3,	                    
+	                    fin_x, 		fin_z,
+	                    fin_aux1, 	fin_aux2, 	fin_aux3,
+	                    fin_dx, 	fin_dz,
+	                    fin_daux1, 	fin_daux2, 	fin_daux3,
+	                    cy, by,                          
+	                    p,      
+	                    z,    
+	                    tex,      
+	                    bw,     
+	                    tw,      
+	                    polyData,
+	                    lightingValue
+	                    );	            
 	            ren.renderTrapezoid(
 	                    st_x, 		st_z,
 	                    st_aux1, 	st_aux2,	st_aux3,
@@ -1406,5 +1666,94 @@ public class PolygonRenderer {
 	        		polyData,
 	        		lightingValue
 	                );	    	
+	    }
+	    
+	   static final public void renderDebugTrapezoid(
+
+	            // line start point
+	            int st_x,   long st_z,
+	            int st_aux1,
+	            int st_aux2,
+	            int st_aux3,
+	            
+	            // start point increment
+	            int st_dx,   long st_dz,
+	            int st_daux1,
+	            int st_daux2,
+	            int st_daux3,
+	            
+	            // line finish point
+	            int fin_x,   long fin_z,
+	            int fin_aux1,
+	            int fin_aux2,
+	            int fin_aux3,                    
+
+	            // finish point increment
+	            int fin_dx,   long fin_dz,
+	            int fin_daux1,
+	            int fin_daux2,
+	            int fin_daux3,
+	            
+	            // start and finish y values
+	            // note the last line y_max is not rendered
+	            int y_counter,   int y_max,
+
+	            // pixel buffer
+	            int[] p,
+	            
+	            // z buffer
+	            int[] z,
+
+	            // texture buffer
+	            int[] tex,
+
+	            // output image width
+	            int pixelBufferWidth,
+
+	            // input texture width
+	            int textureBufferWidth,
+	            
+	            // global parameters array - eg. the colour for a single colour polygon
+	            int[] polyData,
+	            float lightingValue
+	            )
+	    {
+	    	System.out.println("------------------------------");
+	    	System.out.println("line start point");
+            System.out.println("st_x" + st_x + "(" + (st_x >> 20));  
+            System.out.println("st_z" + st_z + "(" + (st_z >> 20));           
+            System.out.println("st_aux1" + st_aux1 + "(" + (st_aux1 >> 20));
+            System.out.println("st_aux2" + st_aux2 + "(" + (st_aux2 >> 20));
+            System.out.println("st_aux3" + st_aux3 + "(" + (st_aux3 >> 20));
+            
+            System.out.println("start point increment");
+            System.out.println("st_dx" + st_dx); 
+            System.out.println("st_dz" + st_dz); 
+            System.out.println("st_daux1" + st_daux1);             
+            System.out.println("st_daux2" + st_daux2);             
+            System.out.println("st_daux3" + st_daux3);             
+            
+	    	System.out.println("line finish point");
+            System.out.println("fin_x" + fin_x + "(" + (fin_x >> 20));  
+            System.out.println("fin_z" + fin_z + "(" + (fin_z >> 20));           
+            System.out.println("fin_aux1" + fin_aux1 + "(" + (fin_aux1 >> 20));
+            System.out.println("fin_aux2" + fin_aux2 + "(" + (fin_aux2 >> 20));
+            System.out.println("fin_aux3" + fin_aux3 + "(" + (fin_aux3 >> 20));
+                  
+
+            System.out.println("finish point increment");
+            System.out.println("fin_dx" + fin_dx); 
+            System.out.println("fin_dz" + fin_dz); 
+            System.out.println("fin_daux1" + fin_daux1);             
+            System.out.println("fin_daux2" + fin_daux2);             
+            System.out.println("fin_daux3" + fin_daux3); 
+            
+            System.out.println("start and finish y values");
+            System.out.println("start y = " + y_counter);
+            System.out.println("y_max = " + y_max);
+            System.out.println("pixelBufferWidth = " + pixelBufferWidth);
+            System.out.println("textureBufferWidth = " + textureBufferWidth); 	
+	    	System.out.println("------------------------------");
+
 	    }
 }
