@@ -112,6 +112,7 @@ final public class MyApplet extends JApplet{
 						public void actionPerformed(ActionEvent arg0) {
 							rot += 0.05f;
 							t4.setTurn(rot);
+							System.out.println("rot:"+rot);
 							cnc.cls(0xFF0000FF);
 							t1.render(nc);
 							nc.repaint();						
@@ -124,6 +125,7 @@ final public class MyApplet extends JApplet{
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
 							rot -= 0.05f;
+							System.out.println("rot:"+rot);
 							t4.setTurn(rot);
 							cnc.cls(0xFF0000FF);
 							t1.render(nc);

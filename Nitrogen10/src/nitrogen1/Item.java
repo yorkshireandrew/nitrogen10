@@ -191,8 +191,10 @@ public class Item {
 		for(int x = polyStart; x < polyFinish; x++)
 		{
 			//DEBUG
+			System.out.println("--- ******************---");			
 			System.out.println("--- RENDERING POLYGON ---"+x);
-
+			System.out.println("--- ******************---");	
+			
 			immutablePolygon = sisi.immutablePolygons[x];
 			
 			// skip the polygon if its transparency is wrong for the pass
@@ -411,7 +413,7 @@ public class Item {
 				b.rotationNeedsUpdate = true;
 				b.translationNeedsUpdate = true;
 			}
-			int vertexsLength = backsides.length;
+			int vertexsLength = vertexs.length;
 			for(int x =0; x < vertexsLength; x++)
 			{
 				v = vertexs[x];
@@ -430,7 +432,7 @@ public class Item {
 			int backsidesLength = backsides.length;
 			for(int x =0; x < backsidesLength; x++) backsides[x].translationNeedsUpdate = true;
 
-			int vertexsLength = backsides.length;
+			int vertexsLength = vertexs.length;
 			for(int x =0; x < vertexsLength; x++)vertexs[x].translationNeedsUpdate = true;
 			// clear the flag
 			translationNeedsUpdate = false;
@@ -504,7 +506,7 @@ public class Item {
 	public final void setNeedsTotallyUpdating()
 	{
 		// this causes updating of the offset of the vertexes from the Items origin
-		// It also results in the tanslationNeedsUpdate flag on all backsides and vertexs being set
+		// It also results in the translationNeedsUpdate flag on all backsides and vertexs being set
 		rotationNeedsUpdate = true;		
 		translationNeedsUpdate = true;		//lets selectWhichRenderer know that it has to do something
 	}
