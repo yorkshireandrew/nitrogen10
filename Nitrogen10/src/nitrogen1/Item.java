@@ -184,6 +184,7 @@ public class Item {
 		Backside backside;
 		boolean transparentPolygon;
 		boolean transparencyPass = context.transparencyPass;
+		boolean useHLPBreaking = isUsingHLPBreaking;
 		
 		/** True unless the Items SharedImmutableSubItem nearPlaneCrashBacksideOverride is true and the Item has also crashed into near Plane */
 		boolean noBacksideOverride = (!sisi.nearPlaneCrashBacksideOverride) ||(!touchedNear);
@@ -251,7 +252,8 @@ public class Item {
 						immutablePolygon.getRenderer(whichRenderer),
 						immutablePolygon.polyData,
 						immutablePolygon.textureMap,						
-						backside.lightingValue
+						backside.lightingValue,
+						useHLPBreaking
 						
 					);				
 			}
@@ -293,7 +295,8 @@ public class Item {
 					immutablePolygon.getRenderer(whichRenderer),					
 					immutablePolygon.polyData,
 					immutablePolygon.textureMap,
-					backside.lightingValue
+					backside.lightingValue,
+					useHLPBreaking
 				);
 			} //end of backside facing viewer if-else
 		} //end of polygon rendering loop	

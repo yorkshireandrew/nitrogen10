@@ -74,7 +74,8 @@ public class PolygonClipper {
 			Renderer renderer,
 			int[] polyData,
 			TexMap textureMap,
-			float lightingValue
+			float lightingValue,
+			boolean useHLPBreak
 			)
 	{
 		if(fustrumTouchCount == 0)
@@ -84,7 +85,7 @@ public class PolygonClipper {
 					context,
 					fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,
 					vert1, vert2, vert3, vert4,									
-					renderer, polyData, textureMap, lightingValue
+					renderer, polyData, textureMap, lightingValue, useHLPBreak
 					);
 		}
 		else
@@ -96,7 +97,7 @@ public class PolygonClipper {
 					context,
 					fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,
 					vert1, vert2, vert3, vert4,					
-					renderer, polyData, textureMap, lightingValue 
+					renderer, polyData, textureMap, lightingValue, useHLPBreak 
 					);
 		}
 	}
@@ -149,7 +150,8 @@ public class PolygonClipper {
 			Renderer renderer,
 			int[] polyData,
 			TexMap textureMap,
-			float lightingValue
+			float lightingValue,
+			boolean useHLPBreak
 			)
 		{
 			if((fustrumTouchCount == 0)||(pass == RENDER_PASS))
@@ -159,7 +161,7 @@ public class PolygonClipper {
 						context,
 						fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,						
 						vert1, vert2, vert3, vert4,
-						renderer, polyData, textureMap, lightingValue 
+						renderer, polyData, textureMap, lightingValue, useHLPBreak
 						);
 			}
 			else
@@ -179,7 +181,7 @@ public class PolygonClipper {
 							context,
 							fustrumTouchCount, touchedNear, touchedRight, touchedLeft,touchedTop,touchedBottom,							
 							vert1, vert2, vert3, vert4,							
-							renderer,polyData,textureMap,lightingValue); 							
+							renderer,polyData,textureMap,lightingValue,useHLPBreak); 							
 				}
 				else
 				{
@@ -212,7 +214,7 @@ public class PolygonClipper {
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									vert1, vert2, vert3, vert4,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							return;
 						
@@ -224,14 +226,14 @@ public class PolygonClipper {
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									vertb, vert2, vert3, verta,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									verta, verta, vert3, vert4,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							return;
 							
@@ -243,14 +245,14 @@ public class PolygonClipper {
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									verta, vertb, vert3, vert4,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									verta, verta, vert4, vert1,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);							
 							return;
 							
@@ -262,7 +264,7 @@ public class PolygonClipper {
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									verta, vertb, vert3, vert4,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);					
 							return;
 							
@@ -274,14 +276,14 @@ public class PolygonClipper {
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									verta, vertb, vert4, vert1,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									verta, verta, vert1, vert2,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);							
 							return;
 							
@@ -295,14 +297,14 @@ public class PolygonClipper {
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									verta, vertb, vert2, vertc,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									verta, vertc, vertd, vert4,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);							
 							return;
 
@@ -314,7 +316,7 @@ public class PolygonClipper {
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									vert1, verta, vertb, vert4,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);						
 							return;
 							
@@ -326,7 +328,7 @@ public class PolygonClipper {
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									verta, verta, vertb, vert4,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);						
 							return;
 							
@@ -338,14 +340,14 @@ public class PolygonClipper {
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									vert1, vert2, vert3, verta,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									verta, verta, vertb, vert1,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);							
 							return;
 							
@@ -357,7 +359,7 @@ public class PolygonClipper {
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									verta, vert2, vert3, vertb,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);						
 							return;
 							
@@ -371,14 +373,14 @@ public class PolygonClipper {
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									vert1, verta, vertb, vertd,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									vertd, vertb, vert3, vertc,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							return;
 						
@@ -390,7 +392,7 @@ public class PolygonClipper {
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									verta, verta, vert3, vertb,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);						
 							return;
 							
@@ -402,7 +404,7 @@ public class PolygonClipper {
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									vert1, vert2, verta, vertb,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);						
 							return;
 							
@@ -414,7 +416,7 @@ public class PolygonClipper {
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									verta, verta, vert2, vertb,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);						
 							return;
 							
@@ -426,7 +428,7 @@ public class PolygonClipper {
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
 									vert1, vert1, verta, vertb,							
-									renderer, polyData,textureMap,lightingValue
+									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);						
 							return;
 							

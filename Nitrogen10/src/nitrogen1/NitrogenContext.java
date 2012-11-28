@@ -90,7 +90,7 @@ public class NitrogenContext extends JButton{
     	this.midh = (height / 2);
 
     	magnification = ((float)(midw)) / yClip;
-    	zk = nearClip * (float)(Integer.MAX_VALUE - 2);
+    	zk = 0.5f * nearClip * (float)(Integer.MAX_VALUE - 2);
         
     	w = width;
     	h = height;

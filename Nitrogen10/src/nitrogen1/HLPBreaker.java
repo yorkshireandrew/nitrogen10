@@ -65,9 +65,24 @@ public class HLPBreaker {
 			Renderer renderer,
 			int[] polyData,
 			TexMap textureMap,
-			float lightingValue
+			float lightingValue,
+			boolean useHLPBreak
 			)
 	{
+		// skip HLP breaking if Item being rendered
+		// or the polygons renderer says we can 
+		if(!useHLPBreak || renderer.usesHLPBreak)
+		{
+			polygonRenderer.process(							
+					context,
+					vert1, vert2, vert3, vert4,					
+					renderer,
+					polyData,
+					textureMap, lightingValue 
+					);			
+		}
+		
+		
 		prepareForNewPolygon();
 		subprocess(
 				false,					// added parameter

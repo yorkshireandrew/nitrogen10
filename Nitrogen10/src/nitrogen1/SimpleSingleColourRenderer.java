@@ -14,6 +14,7 @@ public class SimpleSingleColourRenderer implements Renderer{
 static final int SH = 20;
 static final int NUM = 1 << SH;
 static final int ALPHA = -16777216; // 0xFF000000
+static final boolean usesHLPBreak = false;
 // static final int ALPHA = 0; // 0xFF000000
 /**
  * 

@@ -13,6 +13,7 @@ public class SimpleTextureRenderer implements Renderer{
 
 static final int SH = 20;
 static final int NUM = 1 << SH;
+static final boolean usesHLPBreak = true;
 
 /**
  * 

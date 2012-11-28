@@ -172,7 +172,16 @@ public final class Vert {
     		
     		// close to view-point is more positive
     		// vs_z gets more -ve as you move away from view-point
-    		sz = Integer.MIN_VALUE - (int)(context.zk/vs_z);
+    		
+    		// The function below ensures a linear sx-sz and sy-sz
+    		// relationship is maintained, so if high perspective
+    		// polygons are rendered (with a renderer that does 
+    		// not use HLP breaking) correct visibility is maintained
+    		// otherwise if walking a long corridor then things close
+    		// to walls in adjacent rooms would show through.
+    		sz = Integer.MIN_VALUE - (int)(context.zk/vs_z); 
+    		
+   // 		sz = (int)(vs_z * 100000); // simple sz calculation z must be less than 220 000
     		 		
     		sx = (int)((m * vs_x)/(-vs_z)) + context.midw;
     		
