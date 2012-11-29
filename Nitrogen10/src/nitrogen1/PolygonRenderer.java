@@ -26,7 +26,8 @@ public class PolygonRenderer {
 			final float lightingValue
 			)
 	{
-	    System.out.println("PolygonRenderer called");
+	    context.polygonRendererCalls++;
+		System.out.println("PolygonRenderer called");
 	    System.out.println("vert a = " + a. vs_x + "," + a.vs_y + "," + a.vs_z );	    
 	    System.out.println("vert b = " + b. vs_x + "," + b.vs_y + "," + b.vs_z );	    
 	    System.out.println("vert c = " + c. vs_x + "," + c.vs_y + "," + c.vs_z );	    
@@ -364,7 +365,7 @@ public class PolygonRenderer {
 	
 	        // catch degenerate polygons
 	        if(ay == dy)return;
-	
+			 context.linesRendered += (dy - ay);	
 	        // localise a coordinates
 	        int ax = a.sx;
 	//        int ay = a.sy;
@@ -717,7 +718,7 @@ public class PolygonRenderer {
 	
 	        // catch degenerate polygons
 	        if(ay == cy)return;
-	
+	        context.linesRendered += (cy - ay);
 	        // localise a coordinates
 	        int ax = a.sx;
 	//        int ay = a.sy;
@@ -1099,6 +1100,7 @@ public class PolygonRenderer {
 	
 	        // catch degenerate polygons
 	        if(ay == cy)return;
+	        context.linesRendered += (cy - ay);
 	
 	        // localise a coordinates
 	        int ax = a.sx;
@@ -1479,6 +1481,7 @@ public class PolygonRenderer {
 	
 	        // catch degenerate polygons
 	        if(ay == by)return;
+	        context.linesRendered += (by - ay);
 	
 	        // localise a coordinates
 	        int ax = a.sx;

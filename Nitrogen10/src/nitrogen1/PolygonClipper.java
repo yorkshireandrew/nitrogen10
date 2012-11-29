@@ -78,6 +78,8 @@ public class PolygonClipper {
 			boolean useHLPBreak
 			)
 	{
+		context.polygonsRendered++;
+		
 		if(fustrumTouchCount == 0)
 		{
 			// the polygon does not need clipping so pass it on

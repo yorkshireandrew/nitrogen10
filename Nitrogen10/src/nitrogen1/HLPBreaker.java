@@ -69,6 +69,8 @@ public class HLPBreaker {
 			boolean useHLPBreak
 			)
 	{
+		context.clippedPolygonsRendered++;
+		
 		// skip HLP breaking if Item being rendered
 		// or the polygons renderer says we can
 		if(!useHLPBreak || !renderer.usesHLPBreak())

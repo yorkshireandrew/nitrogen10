@@ -43,7 +43,7 @@ public class NitrogenContext extends JButton{
 	/** Value setting the quality of high level perspective (HLP) breaking. 
 	 * Setting this to a value closer to one improves quality but also slows the rendering of HLP polygons 
 	 */
-	float qualityOfHLP = 1.05f;
+	float qualityOfHLP = 1.2f;
 	boolean debug = false;
 	
 	/** width in pixels of the NitrogenContext */
@@ -71,6 +71,13 @@ public class NitrogenContext extends JButton{
     
     /** If true only transparent polygons are rendered, otherwise only non-transparent polygons are rendered. Used for double pass rendering where the scene contains transparent polygons */
     boolean transparencyPass = false;
+    
+    /** Stuff added for performance evaluation */
+    int itemsRendered = 0;
+    int polygonsRendered = 0;
+    int clippedPolygonsRendered = 0;
+    int polygonRendererCalls = 0;
+    long linesRendered = 0;
     
     /** Constructs a Nitrogen Context to render things into 
      * 
@@ -167,6 +174,17 @@ public Dimension getMaximumSize()
 {
     //System.out.printf("getMaximumSize");
     return new Dimension(w,h);
+}
+
+
+
+public void zeroPerformanceCounts()
+{
+    itemsRendered = 0;
+    polygonsRendered = 0;
+    clippedPolygonsRendered = 0;
+    polygonRendererCalls = 0;
+    linesRendered = 0;
 }
 
 }

@@ -105,6 +105,8 @@ public class Item {
 		
 		// return if the Item is fustrum culled
 		if(isItemFustrumCulled(v14,v24,v34,context))return;
+
+		context.itemsRendered++;
 		
 		//Cache values needed for rendering locally
 		SharedImmutableSubItem 	sisiCache 				= sisi;
