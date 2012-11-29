@@ -40,9 +40,11 @@ final public class MyApplet extends JApplet{
             
             JButton turnit = new JButton("turn");
             JButton turnit2 = new JButton("turn2");
+            JButton debug = new JButton("debug");
          
             box_image.add(turnit);
             box_image.add(turnit2);
+            box_image.add(debug);
             getContentPane().add(box_image);
             getContentPane().validate();
             getContentPane().setVisible(true);
@@ -130,6 +132,15 @@ final public class MyApplet extends JApplet{
 							cnc.cls(0xFF0000FF);
 							t1.render(nc);
 							nc.repaint();						
+						}}
+            		);  
+            
+            debug.addActionListener(
+            		new ActionListener(){
+
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							nc.debug = true;
 						}}
             		);  
             

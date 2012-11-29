@@ -52,7 +52,6 @@ public interface Renderer {
 			 * @param polyData polygon data from the immutable polygon. Containing colour data etc
 			 * @param lightingValue value used for lighting that may have been computed by the polygons associated backside
 			 */
-			static final boolean usesHLPBreak = true;
             public void renderTrapezoid(
 
                     // line start point
@@ -102,5 +101,7 @@ public interface Renderer {
                     int[] polyData,
                     float lightingValue
                     );
+            
+            boolean usesHLPBreak();
 
 }

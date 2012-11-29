@@ -47,7 +47,7 @@ public class HLPBreaker {
 	
 	static{ 
 		// DEBUG
-		int BUFFER_SIZE = 24;
+		int BUFFER_SIZE = 240;
 		workingVertexs = new Vert[BUFFER_SIZE];
 		for(int i = 0 ; i < BUFFER_SIZE; i++)workingVertexs[i]= new Vert();
 		}
@@ -70,8 +70,8 @@ public class HLPBreaker {
 			)
 	{
 		// skip HLP breaking if Item being rendered
-		// or the polygons renderer says we can 
-		if(!useHLPBreak || renderer.usesHLPBreak)
+		// or the polygons renderer says we can
+		if(!useHLPBreak || !renderer.usesHLPBreak())
 		{
 			polygonRenderer.process(							
 					context,
@@ -79,7 +79,8 @@ public class HLPBreaker {
 					renderer,
 					polyData,
 					textureMap, lightingValue 
-					);			
+					);
+			return;
 		}
 		
 		

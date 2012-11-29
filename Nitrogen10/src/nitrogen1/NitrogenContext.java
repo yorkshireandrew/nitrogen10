@@ -43,7 +43,8 @@ public class NitrogenContext extends JButton{
 	/** Value setting the quality of high level perspective (HLP) breaking. 
 	 * Setting this to a value closer to one improves quality but also slows the rendering of HLP polygons 
 	 */
-	float qualityOfHLP = 1.2f;
+	float qualityOfHLP = 1.05f;
+	boolean debug = false;
 	
 	/** width in pixels of the NitrogenContext */
     int w = 0;		// width

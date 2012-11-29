@@ -13,7 +13,6 @@ public class SimpleTextureRenderer implements Renderer{
 
 static final int SH = 20;
 static final int NUM = 1 << SH;
-static final boolean usesHLPBreak = true;
 
 /**
  * 
@@ -202,5 +201,7 @@ final public void renderTrapezoid(
             y_counter++;
     }//end of y_counter while loop
 }
+
+public boolean usesHLPBreak(){return true;}
 
 }// end of class

@@ -480,7 +480,7 @@ public class Item {
 		}
 		else
 		{
-			if(itemDist <sisi.improvedDetailDist)isImprovedDetail = true;
+			if(itemDist < sisi.improvedDetailDist)isImprovedDetail = true;
 		}
 		
 		if(isUsingHLPBreaking)
@@ -489,7 +489,7 @@ public class Item {
 		}
 		else
 		{
-			if(itemDist > sisi.hlpBreakingDist)isUsingHLPBreaking = true;
+			if(itemDist < sisi.hlpBreakingDist)isUsingHLPBreaking = true;
 		}
 	}
 	

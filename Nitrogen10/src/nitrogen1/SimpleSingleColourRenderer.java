@@ -192,4 +192,6 @@ final public void renderTrapezoid(
     }//end of y_counter while loop
 }
 
+public boolean usesHLPBreak(){return false;}
+
 }// end of class
