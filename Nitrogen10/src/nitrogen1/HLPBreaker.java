@@ -47,7 +47,7 @@ public class HLPBreaker {
 	
 	static{ 
 		// DEBUG
-		int BUFFER_SIZE = 12;
+		int BUFFER_SIZE = 24;
 		workingVertexs = new Vert[BUFFER_SIZE];
 		for(int i = 0 ; i < BUFFER_SIZE; i++)workingVertexs[i]= new Vert();
 		}
@@ -236,7 +236,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							verta, vertb, vert2, vert4,
+							verta, vertb, vert2, vert3,
 							renderer,polyData,textureMap,lightingValue
 							);
 					subprocess(
@@ -244,7 +244,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert2, vert2, vert3, vert4,
+							verta, verta, vert3, vert4,
 							renderer,polyData,textureMap, lightingValue
 							);
 					return;
@@ -265,7 +265,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							verta, vertb, vert3, vert1,
+							verta, vertb, vert4, vert1,
 							renderer, polyData, textureMap, lightingValue
 							);
 					subprocess(
@@ -273,10 +273,11 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert1, vert1, vert3, vert4,
+							vertb, vertb, vert3, vert4,
 							renderer, polyData, textureMap, lightingValue
 							);
 					return;
+					
 					
 				case 3:
 					verta = calculateIntersect(vert1, vert4, thresholdDist);
@@ -315,7 +316,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							verta, vertb, vert4, vert2,
+							verta, vertb, vert4, vert1,
 							renderer, polyData, textureMap, lightingValue
 							);
 					subprocess(
@@ -323,7 +324,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert2, vert2, vert4, vert1,
+							vert1, vert2, verta, verta,
 							renderer, polyData, textureMap, lightingValue
 							);
 					return;
@@ -413,7 +414,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							verta, vertb, vert1, vert3,
+							verta, vertb, vert2, vert3,
 							renderer, polyData, textureMap, lightingValue
 							);
 					subprocess(
@@ -421,7 +422,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert1, vert1, vert2, vert3,
+							vert1, vert1, vert2, vertb,
 							renderer,polyData,textureMap, lightingValue
 							);
 					return;
