@@ -117,7 +117,8 @@ final public class MyApplet extends JApplet{
 							System.out.println("rot:"+rot);
 							cnc.cls(0xFF0000FF);
 							t1.render(nc);
-							nc.repaint();						
+							nc.repaint();
+							outputPerformanceData(nc);
 						}}
             		);
             
@@ -131,7 +132,8 @@ final public class MyApplet extends JApplet{
 							t4.setTurn(rot);
 							cnc.cls(0xFF0000FF);
 							t1.render(nc);
-							nc.repaint();						
+							nc.repaint();
+							outputPerformanceData(nc);
 						}}
             		);  
             
@@ -217,4 +219,15 @@ final public class MyApplet extends JApplet{
         System.out.printf("getMaximumSize");
         return new Dimension(APP_WIDTH,APP_HEIGHT);
     }
+    
+    public void outputPerformanceData(NitrogenContext nc)
+    {
+    	System.out.println("items rendered ............" + nc.itemsRendered);
+    	System.out.println("polygonsRendered rendered ." + nc.polygonsRendered);
+    	System.out.println("clippedPolygonsRendered ..." + nc.clippedPolygonsRendered);
+    	System.out.println("polygonRendererCalls ......" + nc.polygonRendererCalls);
+    	System.out.println("linesRendered ............." + nc.linesRendered);
+    }
+
+    
 }// end of MyApplet
