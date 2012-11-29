@@ -634,7 +634,7 @@ static void splitOneFour(
 			contextQualityOfHLP,
 			context,
 			fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-			vert1, vert2, verta, vertb,
+			vert1, vert2, vertb, verta,
 			renderer,polyData,textureMap,lightingValue
 			);
 	subprocess(

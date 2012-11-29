@@ -83,7 +83,7 @@ public class PolygonClipper {
 		if(fustrumTouchCount == 0)
 		{
 			// the polygon does not need clipping so pass it on
-			HLPBreaker.process(
+			HLPBinaryBreaker.process(
 					context,
 					fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,
 					vert1, vert2, vert3, vert4,									
@@ -159,7 +159,7 @@ public class PolygonClipper {
 			if((fustrumTouchCount == 0)||(pass == RENDER_PASS))
 			{
 				// if no further clipping is needed then pass the polygon on to the next process
-				HLPBreaker.process(
+				HLPBinaryBreaker.process(
 						context,
 						fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,						
 						vert1, vert2, vert3, vert4,
