@@ -26,25 +26,35 @@ final public class MyApplet extends JApplet{
     static final int APP_HEIGHT =501;
     static final Renderer simpleTextureRenderer = new SimpleTextureRenderer();
 
-    Transform t4;
+    Transform t4_class;
+    Transform t3_class;
     NitrogenContext cnc;
-    float rot = 0.0f;
+    float rot = 0.0f;	// linked to t4
+    float climb = 0.0f;	// linked to t3
     
     public void init()
 	{
             getContentPane().setLayout(new BorderLayout());
             Box box_image = Box.createHorizontalBox();
+            Box button_box = Box.createVerticalBox();
 
             final NitrogenContext nc = new NitrogenContext(510,510,1,1,1,1000);
-            box_image.add(nc);
             
             JButton turnit = new JButton("turn");
             JButton turnit2 = new JButton("turn2");
+            JButton climbit = new JButton("climb");
+            JButton climbit2 = new JButton("climb2");
             JButton debug = new JButton("debug");
          
-            box_image.add(turnit);
-            box_image.add(turnit2);
-            box_image.add(debug);
+            button_box.add(turnit);
+            button_box.add(turnit2);
+            button_box.add(climbit);
+            button_box.add(climbit2);
+            button_box.add(debug);
+            
+            box_image.add(nc);
+            box_image.add(button_box);
+            
             getContentPane().add(box_image);
             getContentPane().validate();
             getContentPane().setVisible(true);
@@ -52,7 +62,7 @@ final public class MyApplet extends JApplet{
             nc.cls(0xFF0000FF);
             
             // start rendering process
-            final Transform t1, t2, t3;
+            final Transform t1, t2, t3, t4;
             SharedImmutableSubItem sisi = null;
            
             t1	= new 	Transform(
@@ -69,6 +79,12 @@ final public class MyApplet extends JApplet{
             
             t3	= new 	Transform(
 					t2,
+					1f, 0f, 0f, 0f,
+					0f, 1f, 0f, 0f,
+					0f, 0f, 1f, 0f);            
+            
+            t4	= new 	Transform(
+					t3,
 					1f, 0f, 0f, 0f,
 					0f, 1f, 0f, 0f,
 					0f, 0f, 1f, 0f);
@@ -99,8 +115,9 @@ final public class MyApplet extends JApplet{
             	e.printStackTrace();           	
             }
             
-            this.t4 = t3;           
-            Item i = new Item(sisi,t4);
+            this.t3_class = t3;                  
+            this.t4_class = t4;           
+            Item i = new Item(sisi,t4_class);
             i.setVisibility(true);
             
             t1.render(nc);
@@ -113,7 +130,7 @@ final public class MyApplet extends JApplet{
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
 							rot += 0.05f;
-							t4.setTurn(rot);
+							t4_class.setTurn(rot);
 							System.out.println("rot:"+rot);
 							cnc.cls(0xFF0000FF);
 							t1.render(nc);
@@ -129,13 +146,42 @@ final public class MyApplet extends JApplet{
 						public void actionPerformed(ActionEvent arg0) {
 							rot -= 0.05f;
 							System.out.println("rot:"+rot);
-							t4.setTurn(rot);
+							t4_class.setTurn(rot);
 							cnc.cls(0xFF0000FF);
 							t1.render(nc);
 							nc.repaint();
 							outputPerformanceData(nc);
 						}}
             		);  
+            
+            climbit.addActionListener(
+            		new ActionListener(){
+
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							climb += 0.05f;
+							System.out.println("climb:"+climb);
+							t3_class.setClimb(climb);
+							cnc.cls(0xFF0000FF);
+							t1.render(nc);
+							nc.repaint();
+							outputPerformanceData(nc);
+						}}
+            		);              
+            climbit2.addActionListener(
+            		new ActionListener(){
+
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							climb -= 0.05f;
+							System.out.println("climb:"+climb);
+							t3_class.setClimb(climb);
+							cnc.cls(0xFF0000FF);
+							t1.render(nc);
+							nc.repaint();
+							outputPerformanceData(nc);
+						}}
+            		);              
             
             debug.addActionListener(
             		new ActionListener(){

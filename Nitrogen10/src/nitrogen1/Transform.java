@@ -473,5 +473,22 @@ public class Transform{
 		setNeedsTotallyUpdating();
 	}
 	
+	final void setClimb(float theta)
+	{
+		a11 = 1.0f;
+		a12 = 0.0f;
+		a13 = 0.0f;
+		
+		a21 = 0.0f;
+		a22 = (float)Math.cos(theta);
+		a23 = (float)-Math.sin(theta);;		
+		
+		a31 = 0.0f;
+		a32 = (float)Math.sin(theta);
+		a33 = (float)Math.cos(theta);
+
+		setNeedsTotallyUpdating();
+	}
+	
 	
 }
