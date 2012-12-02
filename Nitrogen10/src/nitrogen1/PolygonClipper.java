@@ -28,9 +28,15 @@ public class PolygonClipper {
 	static final int EIGHT = 8;
 	
 	/** Field used to generate Vertexs that occur at intersect points */
-	static Vert[] workingVertexs  = new Vert[12];
+	static Vert[] workingVertexs;
 	/** Field used to generate Vertexs that occur at intersect points */
 	static int workingVertexIndex = 0;
+	
+	static{ 
+		int BUFFER_SIZE = 64;
+		workingVertexs = new Vert[BUFFER_SIZE];
+		for(int i = 0 ; i < BUFFER_SIZE; i++)workingVertexs[i]= new Vert();
+		}
 	
 	
 	/** Clips a polygon against view fustrum. Then passes the clipped polygons on to the nextProcess
@@ -79,7 +85,7 @@ public class PolygonClipper {
 			)
 	{
 		context.polygonsRendered++;
-		
+		if(touchedNear)System.out.println("touchedNear");
 		if(fustrumTouchCount == 0)
 		{
 			// the polygon does not need clipping so pass it on
@@ -207,6 +213,16 @@ public class PolygonClipper {
 					if(isVertexCulled(vert2, context, pass))clipCase |= TWO;
 					if(isVertexCulled(vert3, context, pass))clipCase |= FOUR;
 					if(isVertexCulled(vert4, context, pass))clipCase |= EIGHT;
+					
+					System.out.println("CLIP POLYGON");
+					System.out.println("PASS:"+pass);
+					System.out.println("CLIPCASE:"+clipCase);
+				    System.out.println("vert 1 = " + (vert1.vs_x / -vert1.vs_z) + "," + (vert1.vs_y / -vert1.vs_z));	    
+				    System.out.println("vert 2 = " + (vert2.vs_x / -vert2.vs_z) + "," + (vert2.vs_y / -vert2.vs_z));	    
+				    System.out.println("vert 3 = " + (vert3.vs_x / -vert3.vs_z) + "," + (vert3.vs_y / -vert3.vs_z));	    
+				    System.out.println("vert 4 = " + (vert4.vs_x / -vert4.vs_z) + "," + (vert4.vs_y / -vert4.vs_z));
+
+					
 					
 					switch(clipCase)
 					{
@@ -468,12 +484,13 @@ public class PolygonClipper {
 			return(-vertex.vs_x > (deapth_from_viewpoint * context.xClip));
 			
 			case TOP_PASS:
-			return(vertex.vs_y > (deapth_from_viewpoint * context.yClip));	
+			return(-vertex.vs_y > (deapth_from_viewpoint * context.yClip));	
 			
 			case BOTTOM_PASS:
-			return(-vertex.vs_y > (deapth_from_viewpoint * context.yClip));
+			return(vertex.vs_y > (deapth_from_viewpoint * context.yClip));
 			
 			case RENDER_PASS:
+
 			return(false);
 			
 			default:
@@ -525,12 +542,12 @@ public class PolygonClipper {
 				n = (k * in_deapth + in.vs_x) / ((in.vs_x - out.vs_x) - k * (out_deapth - in_deapth));
 				return(generateInbetweenVertex(in,out,n));	
 			
-			case TOP_PASS:
+			case BOTTOM_PASS:
 				k = context.yClip;
 				n = (k * in_deapth - in.vs_y) / ((out.vs_y - in.vs_y) - k * (out_deapth - in_deapth));
 				return(generateInbetweenVertex(in,out,n));	
 			
-			case BOTTOM_PASS:
+			case TOP_PASS:
 				k = context.yClip;
 				
 				// calculation similar to TOP_PASS above, but the y coordinates are inverted

@@ -1869,8 +1869,10 @@ public class PolygonRenderer {
 	            float lightingValue
 	            )
 	    {
+	    	System.out.println("Printed polygon");
+	    	return;
 	    	/*
-		   System.out.println("------------------------------");
+		    System.out.println("------------------------------");
 	    	System.out.println("line start point");
             System.out.println("st_x" + st_x + "(" + (st_x >> 20));  
             System.out.println("st_z" + st_z + "(" + (st_z >> 20));           
@@ -1906,6 +1908,6 @@ public class PolygonRenderer {
             System.out.println("pixelBufferWidth = " + pixelBufferWidth);
             System.out.println("textureBufferWidth = " + textureBufferWidth); 	
 	    	System.out.println("------------------------------");
-*/
+	    	*/
 	    }
 }

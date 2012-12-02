@@ -45,7 +45,7 @@ public class HLPBinaryBreaker {
 	
 	static{ 
 		// DEBUG
-		int BUFFER_SIZE = 240;
+		int BUFFER_SIZE = 1000;
 		workingVertexs = new Vert[BUFFER_SIZE];
 		for(int i = 0 ; i < BUFFER_SIZE; i++)workingVertexs[i]= new Vert();
 		}
