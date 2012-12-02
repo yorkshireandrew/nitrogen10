@@ -1,7 +1,10 @@
 package nitrogen1;
 
+import java.io.Serializable;
+
 /** A class that contains a near,mid and far renderer */
-public class RendererTriplet {
+public class RendererTriplet implements Serializable{
+	private static final long serialVersionUID = -8579367069627809713L;
 	// Enumerations for whichRenderer
 	static final int NEAR_RENDERER = 0;
 	static final int MID_RENDERER = 1;

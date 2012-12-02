@@ -16,6 +16,12 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;  // needed for Dimension class
 import java.awt.event.*;  // needed for ActionListener
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 final public class MyApplet extends JApplet{
     /**
@@ -90,7 +96,44 @@ final public class MyApplet extends JApplet{
             {
             	e.printStackTrace();           	
             }
-            Item i = new Item(testItemSISI,t4);
+            
+            // output sisi
+            try {
+				ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("test"));
+				out.writeObject(testItemSISI);
+				out.close();
+            } catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
+            // input sisi
+            // output sisi
+            SharedImmutableSubItem newsisi;
+            try {
+				ObjectInputStream in = new ObjectInputStream(new FileInputStream("test"));
+				newsisi = (SharedImmutableSubItem) in.readObject();
+				in.close();
+            } catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			}          
+            
+            
+            
+            Item i = new Item(newsisi,t4);
             i.setVisibility(true);             
             
             // create user interface

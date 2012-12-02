@@ -15,15 +15,33 @@ import java.awt.Image;
 //import java.awt.Component;
 import java.awt.image.BufferedImage;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
-public class TexMap {
-    int[] tex;
-    int w, h;
+public class TexMap implements Serializable{
+	private static final long serialVersionUID = 3915774142992302906L;
 
-    TexMap(String st) throws NitrogenCreationException
+	private static Map<String,TexMap> textures;
+	
+	private String resourceName;
+	transient int[] tex;
+    transient int w, h;
+    
+    static{ textures = new HashMap<String,TexMap>();}
+    
+    final static TexMap getTexture(String st) throws NitrogenCreationException
     {
-        URL url = getClass().getResource(st);
+    	if(textures.containsKey(st))return(textures.get(st));
+    	return(new TexMap(st));
+    }
+
+    private TexMap(String st) throws NitrogenCreationException
+    { 	
+    	URL url = getClass().getResource(st);
         if(url == null)throw new NitrogenCreationException("TexMap resource " + st + " could not be found");
     	Image ii = new javax.swing.ImageIcon(getClass().getResource(st)).getImage();
         BufferedImage i = new BufferedImage(ii.getWidth(null),ii.getHeight(null),BufferedImage.TYPE_INT_ARGB);
@@ -32,7 +50,7 @@ public class TexMap {
         h = i.getHeight();
         w = i.getWidth();
         tex = i.getRGB(0, 0, w, h, null, 0, w);
-
+        resourceName = st;   
     }
     
     final int getRGB(int x, int y)
@@ -53,6 +71,29 @@ public class TexMap {
     final int getHeight()
     {
         return h;
+    }
+    
+    final private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+    	in.defaultReadObject();
+    	if(textures.containsKey(resourceName))return; // we already have loaded the texture
+    	URL url = getClass().getResource(resourceName);
+        if(url == null)throw new IOException("TexMap resource " + resourceName + " could not be found");
+    	Image ii = new javax.swing.ImageIcon(getClass().getResource(resourceName)).getImage();
+        BufferedImage i = new BufferedImage(ii.getWidth(null),ii.getHeight(null),BufferedImage.TYPE_INT_ARGB);
+        Graphics2D osg = i.createGraphics();
+        osg.drawImage(ii, 0, 0, null);
+        h = i.getHeight();
+        w = i.getWidth();
+        tex = i.getRGB(0, 0, w, h, null, 0, w);
+        textures.put(resourceName, this);
+    }
+    
+    /** Purges the collection of loaded textures, All SharedImmutableSubItems that use textures must be reloaded */ 
+    final public void purgeTextures()
+    {
+    	// create a new empty hashmap
+    	textures = new HashMap<String,TexMap>();
     }
 
 

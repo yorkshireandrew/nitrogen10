@@ -3,6 +3,7 @@ package nitrogen1;
 //imports to read input files
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -16,8 +17,9 @@ import java.util.HashMap;
  * <br/><br/>
  * Also contains the default values for an Items mutable fields 
  */
-public class SharedImmutableSubItem {
-	
+public class SharedImmutableSubItem implements Serializable{
+	private static final long serialVersionUID = 4481701769213207490L;
+
 	static final float hysteresis = (float) 1.02;
 	
 	/** The radius of a sphere containing the item completely */
@@ -132,7 +134,7 @@ public class SharedImmutableSubItem {
     			textureMapResource = readLine(in, "unable to find textureMap [" + i + "] resource name loading " + filename);
     			
     			try{
-    				newTextureMap = new TexMap(textureMapResource);
+    				newTextureMap = TexMap.getTexture(textureMapResource);
     				textureMaps.put(textureMapName, newTextureMap);
     			}
     			catch(NitrogenCreationException e){

@@ -1,8 +1,10 @@
 package nitrogen1;
 
-public class ImmutableBackside {
-	
-	
+import java.io.Serializable;
+
+public class ImmutableBackside implements Serializable{
+	private static final long serialVersionUID = -7547901468152037764L;
+
 	// view-space offset from the Items origin
 	final float ix, iy, iz;
 	

@@ -1,7 +1,11 @@
 package nitrogen1;
+
+import java.io.Serializable;
+
 /** Encapsulates the immutable details about a polygon so that they can be shared across several Item instances */
-public class ImmutablePolygon {
-	
+public class ImmutablePolygon implements Serializable{
+	private static final long serialVersionUID = 3401874576594754016L;
+
 	/** index of first vertex of polygon */
 	int c1;	
 	/** index of second vertex of polygon */

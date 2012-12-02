@@ -5,11 +5,15 @@
 
 package nitrogen1;
 
+import java.io.Serializable;
+
 /**
  *
  * @author andrew
  */
-public class SimpleTextureRenderer implements Renderer{
+public class SimpleTextureRenderer implements Renderer,Serializable{
+
+private static final long serialVersionUID = -9205815146173706598L;
 
 static final int SH = 20;
 static final int NUM = 1 << SH;
