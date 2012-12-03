@@ -3,6 +3,8 @@ import java.lang.Math;
 
 /** component of the scene graph that encapsulates translation and orientation */
 public class Transform{
+	private static final float[]	sinTable;
+	private static final float[]	cosTable;
 	
 	/** The actual values of this transform */
 	float 			a11,a12,a13,a14;
@@ -15,30 +17,45 @@ public class Transform{
 	float 			c31,c32,c33,c34;
 	
 	/** Flag indicating if the transforms translation needs to be computed */
-	boolean 		translationNeedsUpdate = true;
+	private boolean 		translationNeedsUpdate = true;
 	
 	/** Flag indicating the transforms rotation needs to be computed */	
-	boolean 		rotationNeedsUpdate = true;
+	private boolean 		rotationNeedsUpdate = true;
 	
 	// Counter to ensure the view-space transform only gets calculated
 	// if this transform has visible children 
 	/** Number of visible children */
-	int 			numberOfVisibleChildren = 0;
+	private int 			numberOfVisibleChildren = 0;
 	
 	/** The Parent Transform of this transform */
-	Transform 		parent;
+	private Transform 		parent;
 	
 	/** Holds any child transforms of this transform - can be null */
-	TransformVector childTransforms;
+	private TransformVector childTransforms;
 	
 	/** child items of this transform - always an ItemVector but it may be empty */
-	ItemVector		childItems = new ItemVector();		
+	private final ItemVector		childItems = new ItemVector();		
 	
-	/** Creates a new Transform with the parameter Transform as its parent
+	/** outer name */
+	private String outerName;
+	/** inner name */
+	private String innerName;
+	
+	static{
+		sinTable = new float[3601];
+		cosTable = new float[3601];
+		double degToRad = (Math.PI/1800);
+		for(int i = 0; i <=3600; i++)
+		{
+			sinTable[i] = (float)Math.sin(i*degToRad);
+			cosTable[i] = (float)Math.cos(i*degToRad);
+		}
+	}
+	/** Creates a new unity Transform with the parameter Transform as its parent
 	 * 
 	 * @param parent The parent of the created Transform. Use null if the Transform is the root of a scene graph
 	 */
-	Transform(Transform parent)
+	public Transform(Transform parent)
 	{
 		setParent(parent);		
 	}
@@ -48,7 +65,7 @@ public class Transform{
 	 * @param parent The parent of the created Transform. Use null if the Transform is the root of a scene graph.
 	 * @param a11-a34 floating point values representing the transform.
 	 */
-	Transform(	Transform parent,
+	public Transform(	Transform parent,
 			float a11, float a12, float a13, float a14,
 			float a21, float a22, float a23, float a24,
 			float a31, float a32, float a33, float a34
@@ -62,12 +79,12 @@ public class Transform{
 	
 	/** Access method 
 	 * @return The parent of the called  Transform, or null if it is the scenegraph root*/
-	Transform getParent() {return(parent);}
+	final public Transform getParent() {return(parent);}
 	
 	/** Access method setting the parent of the called Transform, breaking any existing parental bond
 	 * if it exists. 
 	 * @param new_parent The Transform to be set as the parent of the called Transform*/
-	void setParent(Transform new_parent) 
+	final public void setParent(Transform new_parent) 
 	{
 		// Detach from existing parent 
 		if(parent != null)
@@ -95,7 +112,7 @@ public class Transform{
 	 * @param t The transform to remove
 	 * @return Returns true if the transform was found and removed 
 	 * */
-	boolean remove(Transform t)
+	final public boolean remove(Transform t)
 	{
 		if(childTransforms.removeElement(t) == true)
 		{
@@ -120,11 +137,11 @@ public class Transform{
 	
 	/** Adds an Item to the transforms child item list 
 	 *  @param i Item to be added as a child to the Transform being called */
-	void add(Item i)
+	final public void add(Item i)
 	{
 		childItems.addElement(i);
 		
-		if(i.visibility)increaseVisibleChildrenBy(1);
+		if(i.isVisible())increaseVisibleChildrenBy(1);
 	}
 	
 	
@@ -132,11 +149,11 @@ public class Transform{
 	 * @param i The transform to remove
 	 * @return Returns true if the transform was found and removed 
 	 * */
-	boolean remove(Item i)
+	final public boolean remove(Item i)
 	{
 		if(childItems.removeElement(i) == true)
 		{
-			if(i.visibility)decreaseVisibleChildrenBy(1);
+			if(i.isVisible())decreaseVisibleChildrenBy(1);
 			return true;
 		}
 		return false;
@@ -146,7 +163,7 @@ public class Transform{
 	 *  as well as any above it in the scenegraph, by n
 	 * @param n How much to increase the count by
 	 */
-	void increaseVisibleChildrenBy(int n)
+	final void increaseVisibleChildrenBy(int n)
 	{
 		numberOfVisibleChildren += n;
 		if(parent != null)parent.increaseVisibleChildrenBy(n);
@@ -156,7 +173,7 @@ public class Transform{
 	 *  as well as any above it in the scenegraph, by n
 	 * @param n How much to decrease the count by
 	 */
-	void decreaseVisibleChildrenBy(int n)
+	final void decreaseVisibleChildrenBy(int n)
 	{
 		numberOfVisibleChildren -= n;
 		if(parent != null)parent.decreaseVisibleChildrenBy(n);
@@ -168,7 +185,7 @@ public class Transform{
 	 * Needs to be called if the transform matrix (a) has been replaced or matrix (a)
 	 * has both been both rotated and translated.
 	 */
-	void setNeedsTotallyUpdating()
+	final public void setNeedsTotallyUpdating()
 	{
 		translationNeedsUpdate = true;
 		rotationNeedsUpdate = true;
@@ -191,7 +208,7 @@ public class Transform{
 	 * <br /><br />
 	 * Needs to be called if the transform matrix (a) has rotated.
 	 */
-	void setNeedsRotationUpdating()
+	final public void setNeedsRotationUpdating()
 	{
 		// this Transform need only update its calculated rotation
 		rotationNeedsUpdate = true;
@@ -214,7 +231,7 @@ public class Transform{
 	 * <br /><br />
 	 * Needs to be called if the transform matrix (a) has translated (moved about) but not rotated.
 	 */
-	void setNeedsTranslationUpdating()
+	final public void setNeedsTranslationUpdating()
 	{
 		// this Transform need only update its calculated translation
 		translationNeedsUpdate = true;
@@ -238,7 +255,7 @@ public class Transform{
 	 * using the passed in context
 	 * @param context The NitrogenContext to render Items into
 	 */
-	void render(NitrogenContext context){
+	final public void render(NitrogenContext context){
 		updateSelf();
 		
 		// copy this transforms c values locally for speed
@@ -273,7 +290,7 @@ public class Transform{
 	 *  this method causes updates the called transform as well as all 
 	 *  (parent)transforms between it and the root of the scene graph
 	 */
-	void updateSelf()
+	final private void updateSelf()
 	{
 		if(parent != null)
 		{
@@ -332,9 +349,9 @@ public class Transform{
 			{
 				c14 = p11*la14+p12*la24+p13*la34+p14;
 				c24 = p21*la14+p22*la24+p23*la34+p24;
-				c14 = p31*la14+p32*la24+p33*la34+p34;
+				c34 = p31*la14+p32*la24+p33*la34+p34;
 				translationNeedsUpdate = false;
-			}			
+			}	
 		}
 		else
 		{
@@ -352,7 +369,7 @@ public class Transform{
 	 * @param p11 to p12 are the calculated parent transform values that must be passed in.
 	 * @param context The NitrogenContext to render Items into. 
 	 */
-	void render(
+	private final void render(
 			NitrogenContext context,
 			float p11, float p12, float p13, float p14,
 			float p21, float p22, float p23, float p24,
@@ -431,7 +448,7 @@ public class Transform{
 		}
 	}
 		
-	final void setSelfAsRoot()
+	final private void setSelfAsRoot()
 	{
 		// This is the root of the scene graph 
 		// so its value is the unity matrix at origin
@@ -442,7 +459,11 @@ public class Transform{
 		translationNeedsUpdate = false;
 	}
 	
-	final void setRoll(float theta)
+	/** Makes the transform a roll rotation about its z axis
+	 * 
+	 * @param theta Radian value for roll
+	 */
+	final public void setRoll(float theta)
 	{
 		a11 = (float)Math.cos(theta);
 		a12 = (float)-Math.sin(theta);
@@ -456,7 +477,11 @@ public class Transform{
 		setNeedsTotallyUpdating();
 	}
 	
-	final void setTurn(float theta)
+	/** Makes the transform a turn rotation about its y axis
+	 * 
+	 * @param theta Radian value for turn
+	 */
+	final public void setTurn(float theta)
 	{
 		a11 = (float)Math.cos(theta);
 		a12 = 0.0f;
@@ -473,7 +498,11 @@ public class Transform{
 		setNeedsTotallyUpdating();
 	}
 	
-	final void setClimb(float theta)
+	/** Makes the transform a climb rotation about its x axis
+	 * 
+	 * @param theta Radian value for climb
+	 */	
+	final public void setClimb(float theta)
 	{
 		a11 = 1.0f;
 		a12 = 0.0f;
@@ -488,7 +517,196 @@ public class Transform{
 		a33 = (float)Math.cos(theta);
 
 		setNeedsTotallyUpdating();
+	}	
+	
+	
+	/** Makes the transform a roll rotation about its z axis, using a lookup table
+	 * 
+	 * @param theta integer value indicating the roll in degrees x 10
+	 */
+	final public void setRoll(int theta)
+	{
+		// normalise the angle
+		while(theta < 0)theta +=3600;
+		while(theta > 3600)theta -=3600;
+		
+		a11 = cosTable[theta];
+		a12 = -sinTable[theta];
+		a13 = 0.0f;
+		a21 = sinTable[theta];
+		a22 = cosTable[theta];
+		a23 = 0.0f;
+		a31 = 0.0f;
+		a32 = 0.0f;
+		a33 = 1.0f;
+		setNeedsTotallyUpdating();
 	}
 	
+	/** Makes the transform a turn rotation about its y axis, using a lookup table
+	 * 
+	 * @param theta integer value indicating the turn in degrees x 10
+	 */
+	final public void setTurn(int theta)
+	{
+		// normalise the angle
+		while(theta < 0)theta +=3600;
+		while(theta > 3600)theta -=3600;
+		
+		a11 = cosTable[theta];
+		a12 = 0.0f;
+		a13 = -sinTable[theta];
+		
+		a21 = 0.0f;
+		a22 = 1.0f;
+		a23 = 0.0f;		
+		
+		a31 = sinTable[theta];
+		a32 = 0.0f;
+		a33 = cosTable[theta];
+
+		setNeedsTotallyUpdating();
+	}
 	
+	/** Makes the transform a climb rotation about its x axis, using a lookup table
+	 * 
+	 * @param theta integer value indicating the turn in degrees x 10
+	 */
+	final public void setClimb(int theta)
+	{
+		// normalise the angle
+		while(theta < 0)theta +=3600;
+		while(theta > 3600)theta -=3600;
+		
+		a11 = 1.0f;
+		a12 = 0.0f;
+		a13 = 0.0f;
+		
+		a21 = 0.0f;
+		a22 = cosTable[theta];
+		a23 = -sinTable[theta];		
+		
+		a31 = 0.0f;
+		a32 = sinTable[theta];
+		a33 = cosTable[theta];
+
+		setNeedsTotallyUpdating();
+	}
+	
+	final public float xAxisScalarProduct(Transform target)
+	{
+		updateSelf();
+		target.updateSelf();
+		
+		float dx = target.c14 - this.c14;
+		float dy = target.c24 - this.c24;
+		float dz = target.c34 - this.c34;
+		
+		return ((dx * this.c11)+(dy * this.c21)+ (dz * this.c31));	
+	}
+	
+	final public float yAxisScalarProduct(Transform target)
+	{
+		updateSelf();
+		target.updateSelf();
+		
+		float dx = target.c14 - this.c14;
+		float dy = target.c24 - this.c24;
+		float dz = target.c34 - this.c34;
+		
+		return ((dx * this.c21)+(dy * this.c22)+ (dz * this.c23));	
+	}
+	
+	final public float zAxisScalarProduct(Transform target)
+	{
+		updateSelf();
+		target.updateSelf();
+		
+		float dx = target.c14 - this.c14;
+		float dy = target.c24 - this.c24;
+		float dz = target.c34 - this.c34;
+		
+		return ((dx * this.c31)+(dy * this.c32)+ (dz * this.c33));	
+	}
+	
+	final public float dist(Transform target)
+	{
+		updateSelf();
+		target.updateSelf();
+		
+		float dx = target.c14 - this.c14;
+		float dy = target.c24 - this.c24;
+		float dz = target.c34 - this.c34;
+		return ((float)Math.sqrt(dx*dx+dy*dy+dz*dz));
+	}
+
+	public String getOuterName() {
+		return outerName;
+	}
+
+	final public void setOuterName(String outerName) {
+		this.outerName = outerName;
+	}
+
+	final public String getInnerName() {
+		return innerName;
+	}
+
+	final public void setInnerName(String innerName) {
+		this.innerName = innerName;
+	}
+	
+	final public Transform findTransformNamed(String target)
+	{
+		Transform retval;
+		if(this.outerName.equals(target))return(this);
+		if(childTransforms != null)
+		{
+			int cts = childTransforms.size();
+			for(int i = 0; i < cts; i++)
+			{
+				retval = childTransforms.elementAt(i).findTransformNamed(target);
+				if(retval != null)return(retval);
+			}
+		}
+		return(null);
+	}
+	
+	final public Transform findTransformInnerNamed(String target)
+	{
+		Transform retval;
+		if(this.innerName.equals(target))return(this);
+		if(childTransforms != null)
+		{
+			int cts = childTransforms.size();
+			for(int i = 0; i < cts; i++)
+			{
+				retval = childTransforms.elementAt(i).findTransformNamed(target);
+				if(retval != null)return(retval);
+			}
+		}
+		return(null);
+	}
+	
+	final public Item findItemNamed(String target)
+	{
+		Item retval;
+		
+		int maxItems = childItems.size();
+		for(int i = 0; i < maxItems; i++)
+		{
+			retval = childItems.elementAt(i);
+			if(retval.getName().equals(target))return(retval);
+		}
+		
+		if(childTransforms != null)
+		{
+			int cts = childTransforms.size();
+			for(int i = 0; i < cts; i++)
+			{
+				retval = childTransforms.elementAt(i).findItemNamed(target);
+				if(retval != null)return(retval);
+			}
+		}
+		return(null);
+	}
 }

@@ -13,60 +13,62 @@ public class Item {
 	static final int FAR_RENDERER = 2;
 	
 	/** Class used to encapsulate polygon clipping */
-	static PolygonClipper polygonClipper = new PolygonClipper();
+	static final PolygonClipper polygonClipper = new PolygonClipper();
 
 	/** Class used to encapsulate polygon breaking into lower perspective levels */
-	static HLPBreaker  hlpBreaker = new HLPBreaker();
+	static final HLPBreaker  hlpBreaker = new HLPBreaker();
 	
 	/** Parent transform of this Item in the scene graph */
-	Transform parent = null;
+	private Transform parent = null; //TO DO - encapsulate this better */
 	
 	/** The immutable part of an Item that can be shared across many identical Items that differ only by scene graph position and visibility. */
-	SharedImmutableSubItem sisi;
+	private SharedImmutableSubItem sisi;
 		
 	/** The Items computed Backsides. A Backsides consists of a position, view space coordinate and a direction vector, 
 	 * they are used by polygons to determine visibility and which of their two faces is being viewed */
-	Backside backsides[];
+	private Backside backsides[];
 	
 	/** The Items vertexes */
-	Vert vertexs[];
+	private Vert vertexs[];
 	
 	// ************************************************
 	// ********************** FLAGS *******************
 	// ************************************************
 	
 	/** Set true if the item is visible, or false if the Item is invisible*/
-	protected boolean visibility = false;
+	private boolean visibility = false;
 	
 	/** Set true by scene graph if rotation has occurred since last render call */
-	boolean rotationNeedsUpdate = true;
+	private boolean rotationNeedsUpdate = true;
 	
 	/** Set true by scene graph if rotation or translation has occurred since last render call */
-	boolean translationNeedsUpdate = true;
+	private boolean translationNeedsUpdate = true;
 	
 	/** Count of how many fustrum planes the item may touch */
-	int fustrumTouchCount;
+	private int fustrumTouchCount;
 	
 	/** Enumerated value that determines which renderer to use based on distance */
-	int whichRenderer = NEAR_RENDERER;
-	
-	
+	private int whichRenderer = NEAR_RENDERER;
+		
 	// Which fustrum planes the item may touch, used to improve efficiency of polygon clipping
 	// note: Items remain visible then clip entirely once they cross the fustrum farClip distance
-	boolean touchedNear;
-	boolean touchedRight;
-	boolean touchedLeft;
-	boolean touchedTop;
-	boolean touchedBottom;
+	private boolean touchedNear;
+	private boolean touchedRight;
+	private boolean touchedLeft;
+	private boolean touchedTop;
+	private boolean touchedBottom;
 	
 	/** Flag to render using improved detail polygons. This is a state field used to apply hysteresis */
-	boolean isImprovedDetail = false;
+	private boolean isImprovedDetail = false;
 	
 	/** Flag to use hlp breaking. This is a state field used to apply hysteresis */
-	boolean isUsingHLPBreaking = false;
+	private boolean isUsingHLPBreaking = false;
 	
 	/** Flag to use billboard Orientation. This is a state field used to apply hysteresis */
-	boolean isUsingBillboardOriention = false;
+	private boolean isUsingBillboardOriention = false;
+	
+	/** name of the Item */
+	private String name;
 	
 	/** Creates a new Item and attaches it to a transform */
 	Item(SharedImmutableSubItem in_sisi, Transform t)
@@ -516,7 +518,7 @@ public class Item {
 		translationNeedsUpdate = true;		//lets selectWhichRenderer know that it has to do something
 	}
 	
-	void setVisibility(boolean in)
+	final public void setVisibility(boolean in)
 	{
 		if(visibility == in)return;
 		if(visibility)
@@ -531,6 +533,46 @@ public class Item {
 			if(parent != null)parent.increaseVisibleChildrenBy(1);
 			visibility = true;			
 		}
+	}
+	
+	/** Access method 
+	 * @return The parent of the called  Transform, or null if it is the scenegraph root*/
+	final public Transform getParent() {return(parent);}
+	
+	/** Access method setting the parent of the called Transform, breaking any existing parental bond
+	 * if it exists. 
+	 * @param new_parent The Transform to be set as the parent of the called Transform*/
+	final public void setParent(Transform new_parent) 
+	{
+		// Detach from existing parent 
+		if(parent != null)
+		{			
+			parent.remove(this);			
+		}
+		
+		if(new_parent != null)
+		{
+			// Attach to new parent
+			parent = new_parent;
+			parent.add(this);
+		}
+		else
+		{
+			parent = null;
+		}
+		
+		// Ensure the resulting scene-graph branch gets updated on the next render
+		setNeedsTotallyUpdating();
+	}
+	
+	final public boolean isVisible(){return visibility;}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	

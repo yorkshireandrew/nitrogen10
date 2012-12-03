@@ -49,6 +49,21 @@ final public class MyApplet extends JApplet{
             			1f, 0f, 0f, 0f,
             			0f, 1f, 0f, 0f,
             			0f, 0f, 1f, 0f);
+            
+            Transform looker= new Transform(t1,
+            		1,0,0,1,
+            		0,1,0,0,
+            		0,0,1,0);
+            
+            Transform target = new Transform(t1,
+            		1,0,0,10,
+            		0,1,0,20,
+            		0,0,1,30);
+            looker.setTurn(900);
+            System.out.println("x scalar = " + looker.xAxisScalarProduct(target));
+            System.out.println("y scalar = " + looker.yAxisScalarProduct(target));
+            System.out.println("z scalar = " + looker.zAxisScalarProduct(target));
+            System.out.println("dist scalar = " + looker.dist(target));
 
             t2	= new 	Transform(
             			t1,
@@ -171,7 +186,16 @@ final public class MyApplet extends JApplet{
 							cnc.debug = true;
 						}}
             		);  
-    }
+            
+
+	}
+    
+    //***************************************************************
+    //***************************************************************    
+    //***************************************************************
+    //****************** END OF INIT ********************************
+    //***************************************************************
+    //***************************************************************
 
 
     @Override
@@ -383,4 +407,5 @@ final public class MyApplet extends JApplet{
 					}}
         		);
     }     
+    
 }// end of MyApplet
