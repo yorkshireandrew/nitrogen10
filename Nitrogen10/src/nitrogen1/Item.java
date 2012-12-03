@@ -70,6 +70,8 @@ public class Item {
 	/** name of the Item */
 	private String name;
 	
+	boolean wasRendered = false;
+	
 	/** Creates a new Item and attaches it to a transform */
 	Item(SharedImmutableSubItem in_sisi, Transform t)
 	{
@@ -109,6 +111,9 @@ public class Item {
 		if(isItemFustrumCulled(v14,v24,v34,context))return;
 
 		context.itemsRendered++;
+		
+		// remember we were rendered in case anyone asks
+		wasRendered = true;
 		
 		//Cache values needed for rendering locally
 		SharedImmutableSubItem 	sisiCache 				= sisi;
@@ -567,13 +572,46 @@ public class Item {
 	
 	final public boolean isVisible(){return visibility;}
 
-	public String getName() {
+	final public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	final public void setName(String name) {
 		this.name = name;
 	}
+	
+	/** returns true if the Item was rendered (not fustrum culled)
+	 * since the last call to clearWasRenderedFlags() higher up the scene graph
+	 */
+	final public boolean wasRendered(){return wasRendered;}
+	
+	
+	/** if the item is visible it returns a VertEnumeration of the Items Vertexes, 
+	 * otherwise it returns an empty VertEnumeration. The returned Object is not thread safe
+	 */
+	/*
+	final public VertEnumeration getVertexes()
+	{
+		return (new VertEnumeration(){
+			private int index = 0;
+			private int vertMax = vertexs.length;
+
+			@Override
+			public Vert next() {
+				return vertexs[index++];
+			}
+			
+			@Override
+			public boolean hasNext() {
+				
+				// we only have vertexes if we are visible
+				if(!isVisible())return false;
+				if(index < vertMax)return true;
+				return false;			
+			}		
+		});
+	}
+	*/	
 	
 	
 	

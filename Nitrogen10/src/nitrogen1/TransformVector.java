@@ -85,7 +85,7 @@ package nitrogen1;
          return(new TransformEnumeration(){
             private int index = 0;
             
-            public Transform nextElement(){
+            public Transform next(){
                 if(index < position)
                 {
                     index++;
@@ -97,7 +97,7 @@ package nitrogen1;
                 }
             } // end of nextElement
            
-            public boolean hasMoreElements()
+            public boolean hasNext()
             {
                 if(index < position)
                 {

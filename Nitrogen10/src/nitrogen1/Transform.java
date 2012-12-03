@@ -256,7 +256,7 @@ public class Transform{
 	 * @param context The NitrogenContext to render Items into
 	 */
 	final public void render(NitrogenContext context){
-		updateSelf();
+		updateViewSpace();
 		
 		// copy this transforms c values locally for speed
 		float n11 = c11;
@@ -290,12 +290,12 @@ public class Transform{
 	 *  this method causes updates the called transform as well as all 
 	 *  (parent)transforms between it and the root of the scene graph
 	 */
-	final private void updateSelf()
+	final public void updateViewSpace()
 	{
 		if(parent != null)
 		{
 			// ensure parents are uptodate
-			parent.updateSelf();
+			parent.updateViewSpace();
 			
 			// copy parents c values locally for speed
 			float p11 = parent.c11;
@@ -594,8 +594,8 @@ public class Transform{
 	
 	final public float xAxisScalarProduct(Transform target)
 	{
-		updateSelf();
-		target.updateSelf();
+		updateViewSpace();
+		target.updateViewSpace();
 		
 		float dx = target.c14 - this.c14;
 		float dy = target.c24 - this.c24;
@@ -606,8 +606,8 @@ public class Transform{
 	
 	final public float yAxisScalarProduct(Transform target)
 	{
-		updateSelf();
-		target.updateSelf();
+		updateViewSpace();
+		target.updateViewSpace();
 		
 		float dx = target.c14 - this.c14;
 		float dy = target.c24 - this.c24;
@@ -618,8 +618,8 @@ public class Transform{
 	
 	final public float zAxisScalarProduct(Transform target)
 	{
-		updateSelf();
-		target.updateSelf();
+		updateViewSpace();
+		target.updateViewSpace();
 		
 		float dx = target.c14 - this.c14;
 		float dy = target.c24 - this.c24;
@@ -630,8 +630,8 @@ public class Transform{
 	
 	final public float dist(Transform target)
 	{
-		updateSelf();
-		target.updateSelf();
+		updateViewSpace();
+		target.updateViewSpace();
 		
 		float dx = target.c14 - this.c14;
 		float dy = target.c24 - this.c24;
@@ -708,5 +708,27 @@ public class Transform{
 			}
 		}
 		return(null);
+	}
+	
+	/** returns view-space X coordinate; to ensure it is not stale call updateViewSpace() */
+	final float getX(){return c14;}
+	/** returns view-space Y coordinate; to ensure it is not stale call updateViewSpace() */	
+	final float getY(){return c24;}
+	/** returns view-space Z coordinate; to ensure it is not stale call updateViewSpace() */	
+	final float getZ(){return c34;}
+	
+	/** clear wasRendered flags on Items, this flag could be used to halt animation on Items that are off screen*/
+	final void clearWasRenderedFlags()
+	{
+		// first clear our own child Items
+		int ci = childItems.size();
+		for(int i = 0; i < ci; i++)childItems.elementAt(i).wasRendered = false;
+		
+		// now instruct child transforms to clear themselves
+		if(childTransforms != null)
+		{
+			int ct = childTransforms.size();
+			for(int i = 0; i < ct; i++)childTransforms.elementAt(i).clearWasRenderedFlags();
+		}
 	}
 }
