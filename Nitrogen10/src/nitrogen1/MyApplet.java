@@ -43,6 +43,7 @@ final public class MyApplet extends JApplet{
             // Create nitrogen context and transforms
             final NitrogenContext cnc = new NitrogenContext(510,510,1,1,1,1000);
             final Transform t1, t2, t3, t4;
+            final Transform t2b; // new transform for pick testing
             
             t1	= new 	Transform(
             			null,
@@ -70,6 +71,12 @@ final public class MyApplet extends JApplet{
             			1f, 0f, 0f, 0f,
             			0f, 1f, 0f, 0f,
             			0f, 0f, 1f, -20f);
+            
+            t2b	= new 	Transform(
+        			t1,
+        			1f, 0f, 0f, 2f,
+        			0f, 1f, 0f, 2f,
+        			0f, 0f, 1f, -20f);
 
             t3	= new 	Transform(
             			t2,
@@ -149,7 +156,12 @@ final public class MyApplet extends JApplet{
             
             
             Item i = new Item(newsisi,t4);
-            i.setVisibility(true);             
+            i.setVisibility(true); 
+            Item i2 = new Item(newsisi,t2b);
+            i2.setVisibility(true); 
+            i2.setName("blogs boxes");
+            
+            
             
             // create user interface
             getContentPane().setLayout(new BorderLayout());
@@ -186,6 +198,36 @@ final public class MyApplet extends JApplet{
 							cnc.debug = true;
 						}}
             		);  
+            
+            // ********* OK Add stuff for picking *****
+            i.setName("box1");
+            RendererTriplet.pickingRenderer = new PickingRenderer();
+            class MyMouseListener extends MouseInputAdapter
+            {
+            	@Override
+            	public void mouseClicked(MouseEvent e)
+            	{
+            		System.out.println("CLICK AT "+e.getX()+"," + e.getY());
+            		cnc.isPicking = true;
+            		cnc.pickDetected = false;
+            		cnc.pickX = e.getX();
+            		cnc.pickY = e.getY();
+                    cnc.clearZBuffer();        
+                    t1.render(cnc);
+                    if(cnc.pickDetected)
+                    {
+                    	System.out.println("picked " + cnc.pickedItem.getName() );
+                    }
+                    else
+                    {
+                    	System.out.println("nothing picked" );
+                    }
+            		cnc.isPicking = false;
+            		
+            	}
+            	      	
+            }
+            cnc.addMouseListener( new MyMouseListener());
             
 
 	}

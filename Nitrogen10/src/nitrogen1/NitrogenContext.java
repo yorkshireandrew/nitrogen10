@@ -163,6 +163,27 @@ public class NitrogenContext extends JButton{
 
     }
     
+    final public void clearZBuffer()
+    {
+        int[] zloc = zbuff;
+        int y;
+
+        for(int x = 0; x < w; x++)   
+        {
+            
+            zloc[x] = Integer.MIN_VALUE;
+        }
+        y = 1;
+
+        // copy the first line over remaining lines
+        while(y < h)
+        {
+           System.arraycopy(zloc, 0, zloc, (y * w), w);
+           y++;
+        }
+
+    }    
+    
 @Override
 public Dimension getMinimumSize()
 {
