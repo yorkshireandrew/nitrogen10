@@ -76,6 +76,10 @@ public class SharedImmutableSubItem implements Serializable{
 	/** Vertex Data */
 	final ImmutableVertex[] immutableVertexs;
 	
+	/** Collision Data */
+	final boolean hasCollisionVertexes;
+	final ImmutableCollisionVert[] immutableCollisionVertexes;
+	
 	/**
 	 * Constructs a SharedImmutableSubItem from a text file
 	 * @param filename The name of text file used to initialise the SharedImmutableSubItem
@@ -95,7 +99,8 @@ public class SharedImmutableSubItem implements Serializable{
             int textureMapMax; 	// number of texture maps the file indicates it references
             Map<String,TexMap> textureMaps = new HashMap<String,TexMap>();
             int backsideMax;	// number of ImmutableBacksides the file indicates it contains       
-            int vertexMax; 		// number of ImmutableVertexs
+            int vertexMax; 			// number of ImmutableVertexs
+            int collisionVertexMax; // number of ImmutableCollisionVertexs
             
             // read bounding radius
         	boundingRadius 	= readFloat(in, " unable to find boundingRadius loading " + filename);
@@ -192,7 +197,7 @@ public class SharedImmutableSubItem implements Serializable{
         	
         	
         	// load all the ImmutableVertexs
-        	vertexMax = readInt( in, "unable to find backsideMax loading " + filename);    		
+        	vertexMax = readInt( in, "unable to find vertexMax loading " + filename);    		
         	immutableVertexs = new ImmutableVertex[vertexMax];
         	for(int i = 0; i < vertexMax; i++)
         	{		
@@ -204,7 +209,31 @@ public class SharedImmutableSubItem implements Serializable{
         		{
         			throw new NitrogenCreationException("Exception occured reading " + filename +" on ImmutableVertex" + i + " caused by: " + e.getMessage());
         		}
-        	} 
+        	}
+        	
+        	// load all the ImmutableVertexs
+        	collisionVertexMax = readInt( in, "unable to find collisionVertexMax loading " + filename);    		
+        	if(collisionVertexMax > 0)
+        	{
+        		hasCollisionVertexes = true;
+            	immutableCollisionVertexes = new ImmutableCollisionVert[vertexMax];
+            	for(int i = 0; i < vertexMax; i++)
+            	{		
+            		try
+            		{
+            			immutableCollisionVertexes[i] = buildImmutableCollisionVert(in);
+            		}
+            		catch(NitrogenCreationException e)
+            		{
+            			throw new NitrogenCreationException("Exception occured reading " + filename +" on ImmutableVertex" + i + " caused by: " + e.getMessage());
+            		}
+            	}           
+        	}
+        	else
+        	{ 
+        		hasCollisionVertexes = false;
+        		immutableCollisionVertexes = new ImmutableCollisionVert[0];
+        	}
         }
         catch(NoSuchElementException nsee)
         {
@@ -374,6 +403,28 @@ public class SharedImmutableSubItem implements Serializable{
 				temp_is_x,
 				temp_is_y,
 				temp_is_z
+				);		
+	}
+	
+	/** Creates an ImmutableVertex using text from a scanner */ 
+	ImmutableCollisionVert buildImmutableCollisionVert(Scanner in) throws NitrogenCreationException
+	{
+		float temp_is_x;
+		float temp_is_y;
+		float temp_is_z;
+		float temp_radius;
+		
+		
+		temp_is_x = readFloat(in, "Unable to find is_x");
+		temp_is_y = readFloat(in, "Unable to find is_y");
+		temp_is_z = readFloat(in, "Unable to find is_z");
+		temp_radius = readFloat(in, "Unable to radius");
+
+		return new ImmutableCollisionVert(
+				temp_is_x,
+				temp_is_y,
+				temp_is_z,
+				temp_radius
 				);		
 	}
 	

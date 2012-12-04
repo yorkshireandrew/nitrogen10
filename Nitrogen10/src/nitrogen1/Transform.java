@@ -292,70 +292,73 @@ public class Transform{
 	 */
 	final public void updateViewSpace()
 	{
-		if(parent != null)
+		Transform parentL = parent;
+		if(parentL != null)
 		{
 			// ensure parents are uptodate
-			parent.updateViewSpace();
+			parentL.updateViewSpace();
 			
 			// copy parents c values locally for speed
-			float p11 = parent.c11;
-			float p12 = parent.c12;
-			float p13 = parent.c13;			
-			float p14 = parent.c14;
+			float p11 = parentL.c11;
+			float p12 = parentL.c12;
+			float p13 = parentL.c13;			
+			float p14 = parentL.c14;
 			
-			float p21 = parent.c21;
-			float p22 = parent.c22;
-			float p23 = parent.c23;
-			float p24 = parent.c24;	
+			float p21 = parentL.c21;
+			float p22 = parentL.c22;
+			float p23 = parentL.c23;
+			float p24 = parentL.c24;	
 			
-			float p31 = parent.c31;
-			float p32 = parent.c32;
-			float p33 = parent.c33;
-			float p34 = parent.c34;
+			float p31 = parentL.c31;
+			float p32 = parentL.c32;
+			float p33 = parentL.c33;
+			float p34 = parentL.c34;
 			
 			// copy this transforms a values locally for speed
-			float la11 = a11;
-			float la12 = a12;
-			float la13 = a13;
-			float la14 = a14;
+			float a11L = a11;
+			float a12L = a12;
+			float a13L = a13;
+			float a14L = a14;
 			
-			float la21 = a21;
-			float la22 = a22;
-			float la23 = a23;
-			float la24 = a24;
+			float a21L = a21;
+			float a22L = a22;
+			float a23L = a23;
+			float a24L = a24;
 			
-			float la31 = a31;
-			float la32 = a32;
-			float la33 = a33;
-			float la34 = a34;
+			float a31L = a31;
+			float a32L = a32;
+			float a33L = a33;
+			float a34L = a34;
 			
 			if(rotationNeedsUpdate)
 			{
-				c11 = p11*la11+p12*la21+p13*la31;
-				c12 = p11*la12+p12*la22+p13*la32;
-				c13 = p11*la13+p12*la23+p13*la33;
+				c11 = p11*a11L+p12*a21L+p13*a31L;
+				c12 = p11*a12L+p12*a22L+p13*a32L;
+				c13 = p11*a13L+p12*a23L+p13*a33L;
 
-				c21 = p21*la11+p22*la21+p23*la31;
-				c22 = p21*la12+p22*la22+p23*la32;
-				c23 = p21*la13+p22*la23+p23*la33;
+				c21 = p21*a11L+p22*a21L+p23*a31L;
+				c22 = p21*a12L+p22*a22L+p23*a32L;
+				c23 = p21*a13L+p22*a23L+p23*a33L;
 
-				c31 = p31*la11+p32*la21+p33*la31;
-				c32 = p31*la12+p32*la22+p33*la32;
-				c33 = p31*la13+p32*la23+p33*la33;
+				c31 = p31*a11L+p32*a21L+p33*a31L;
+				c32 = p31*a12L+p32*a22L+p33*a32L;
+				c33 = p31*a13L+p32*a23L+p33*a33L;
 				
 				rotationNeedsUpdate = false;		
 			}
 			if(translationNeedsUpdate)
 			{
-				c14 = p11*la14+p12*la24+p13*la34+p14;
-				c24 = p21*la14+p22*la24+p23*la34+p24;
-				c34 = p31*la14+p32*la24+p33*la34+p34;
+				c14 = p11*a14L+p12*a24L+p13*a34L+p14;
+				c24 = p21*a14L+p22*a24L+p23*a34L+p24;
+				c34 = p31*a14L+p32*a24L+p33*a34L+p34;
 				translationNeedsUpdate = false;
 			}	
 		}
 		else
 		{
 			setSelfAsRoot();
+			rotationNeedsUpdate = false;
+			translationNeedsUpdate = false;
 			return;			
 		}
 	}

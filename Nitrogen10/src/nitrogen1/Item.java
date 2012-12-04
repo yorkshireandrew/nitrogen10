@@ -1,4 +1,7 @@
 package nitrogen1;
+
+import java.util.Iterator;
+
 /** An Item comprised of several polygons, TexMaps, Colour data, BSPPlanes 
  * that can be attached to a Transform object and thereby rendered into a 
  * NitrogenContext.
@@ -30,6 +33,10 @@ public class Item {
 	
 	/** The Items vertexes */
 	private Vert vertexs[];
+	
+	/** The Items collision vertexes */
+	private boolean hasCollisionVertexes;
+	private CollisionVert collisionVertexes[];
 	
 	// ************************************************
 	// ********************** FLAGS *******************
@@ -86,11 +93,19 @@ public class Item {
 		backsides = new Backside[backsideMax];
 		for(int x = 0; x < backsideMax; x++)backsides[x] = new Backside();
 
-		// create the vertexs array from the sisi ImmutableVertexs
+		// create the vertexes array from the sisi ImmutableVertexs
 		ImmutableVertex[] iva = in_sisi.immutableVertexs;
 		int vertexMax = iva.length;
 		vertexs = new Vert[vertexMax];
 		for(int x = 0; x < vertexMax; x++)vertexs[x] = new Vert(iva[x]);
+		
+		// create the collision vertex array from the sisi ImmutableCollisionVertexes
+		ImmutableCollisionVert[] icva = in_sisi.immutableCollisionVertexes;
+		int collisionVertexMax = icva.length;
+		if(collisionVertexMax > 0){hasCollisionVertexes = true;}
+		else{hasCollisionVertexes = false;}
+		collisionVertexes = new CollisionVert[vertexMax];
+		for(int x = 0; x < collisionVertexMax; x++)collisionVertexes[x] = new CollisionVert(icva[x]);
 	}
 	
 	/** called to render the Item 
@@ -432,6 +447,18 @@ public class Item {
 				v.rotationNeedsUpdate = true;
 				v.translationNeedsUpdate = true;
 			}
+			
+			if(hasCollisionVertexes)
+			{
+				CollisionVert cv;
+				int collisionVertexesLength = collisionVertexes.length;
+				for(int x =0; x < collisionVertexesLength; x++)
+				{
+					cv = collisionVertexes[x];
+					cv.rotationNeedsUpdate = true;
+					cv.translationNeedsUpdate = true;
+				}
+			}
 			// clear the flag
 			rotationNeedsUpdate = false;
 			translationNeedsUpdate = false;
@@ -446,6 +473,17 @@ public class Item {
 
 			int vertexsLength = vertexs.length;
 			for(int x =0; x < vertexsLength; x++)vertexs[x].translationNeedsUpdate = true;
+
+			if(hasCollisionVertexes)
+			{
+				CollisionVert cv;
+				int collisionVertexesLength = collisionVertexes.length;
+				for(int x =0; x < collisionVertexesLength; x++)
+				{
+					cv = collisionVertexes[x];
+					cv.translationNeedsUpdate = true;
+				}
+			}			
 			// clear the flag
 			translationNeedsUpdate = false;
 		}
@@ -585,20 +623,52 @@ public class Item {
 	 */
 	final public boolean wasRendered(){return wasRendered;}
 	
-	
-	/** if the item is visible it returns a VertEnumeration of the Items Vertexes, 
-	 * otherwise it returns an empty VertEnumeration. The returned Object is not thread safe
-	 */
-	/*
-	final public VertEnumeration getVertexes()
+	final private void calculateCollisionVertexes()
 	{
-		return (new VertEnumeration(){
+		if(!hasCollisionVertexes)return;
+		if(rotationNeedsUpdate || translationNeedsUpdate)
+		{
+			Transform parentL = parent;
+			// ensure parent Transform is up to date
+			parentL.updateViewSpace();			
+			
+			// mark the collisionVertexes for computation
+			lazyComputeBacksidesAndVertexs();
+			
+			float pc11 = parentL.c11;
+			float pc12 = parentL.c12;
+			float pc13 = parentL.c13;
+			float pc14 = parentL.c14;
+			
+			float pc21 = parentL.c21;
+			float pc22 = parentL.c22;
+			float pc23 = parentL.c23;
+			float pc24 = parentL.c24;
+			
+			float pc31 = parentL.c31;
+			float pc32 = parentL.c32;
+			float pc33 = parentL.c33;
+			float pc34 = parentL.c34;
+			
+			CollisionVert[] collisionVertexesL = collisionVertexes;
+			int collisionVertexLength = collisionVertexesL.length;
+			for(int i = 0; i < collisionVertexLength; i++)
+			{
+				collisionVertexesL[i].calculateViewSpaceCoordinates(pc11,pc12,pc13,pc14,pc21,pc22,pc23,pc24,pc31,pc32,pc33,pc34);
+			}
+		}
+	}
+	
+	final public Iterator<CollisionVert> getCollisionVertexes()
+	{
+		calculateCollisionVertexes();
+		return (new Iterator<CollisionVert>(){
 			private int index = 0;
-			private int vertMax = vertexs.length;
+			private int collisionVertexesMax = collisionVertexes.length;
 
 			@Override
-			public Vert next() {
-				return vertexs[index++];
+			public CollisionVert next() {
+				return collisionVertexes[index++];
 			}
 			
 			@Override
@@ -606,14 +676,15 @@ public class Item {
 				
 				// we only have vertexes if we are visible
 				if(!isVisible())return false;
-				if(index < vertMax)return true;
+				if(index < collisionVertexesMax)return true;
 				return false;			
+			}
+
+			@Override
+			public void remove() {
+				// TODO Auto-generated method stub
+				
 			}		
 		});
 	}
-	*/	
-	
-	
-	
-
 }

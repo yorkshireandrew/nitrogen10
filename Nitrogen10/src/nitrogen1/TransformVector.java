@@ -2,6 +2,8 @@
 
 package nitrogen1;
 
+import java.util.Iterator;
+
 /**
  *
  * @author andrew
@@ -80,9 +82,9 @@ package nitrogen1;
         capacity = position;         
     }
     
-     final TransformEnumeration elements()
+     final Iterator<Transform> elements()
      {
-         return(new TransformEnumeration(){
+         return(new Iterator<Transform>(){
             private int index = 0;
             
             public Transform next(){
@@ -108,6 +110,9 @@ package nitrogen1;
                     return(false);
                 }
             } // end of hasMoreElements
+
+			@Override
+			public void remove(){}
          }); // end of anonymous class and return statement   
      }
      

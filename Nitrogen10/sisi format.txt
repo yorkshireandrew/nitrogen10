@@ -59,6 +59,11 @@ vertexMax
 	x	y	z
 }
 
+collisionVertexMax
+{
+	x y z radius
+}
+
 
 
 
