@@ -9,12 +9,13 @@ public class RendererTriplet implements Serializable{
 	static final int NEAR_RENDERER = 0;
 	static final int MID_RENDERER = 1;
 	static final int FAR_RENDERER = 2;
+	static RendererInterface pickingRenderer;
 	
-	Renderer nearRenderer;
-	Renderer midRenderer;
-	Renderer farRenderer;
+	RendererInterface nearRenderer;
+	RendererInterface midRenderer;
+	RendererInterface farRenderer;
 	
-	RendererTriplet(Renderer nearRenderer, Renderer midRenderer, Renderer farRenderer)
+	RendererTriplet(RendererInterface nearRenderer, RendererInterface midRenderer, RendererInterface farRenderer)
 	{
 		this.nearRenderer = nearRenderer;
 		this.midRenderer = midRenderer;
@@ -22,14 +23,14 @@ public class RendererTriplet implements Serializable{
 	}
 	
 	/** Simple constructor that sets near-mid-far renderers all to be the passed in one */
-	RendererTriplet(Renderer theRenderer)
+	RendererTriplet(RendererInterface theRenderer)
 	{
 		this.nearRenderer = theRenderer;
 		this.midRenderer = theRenderer;
 		this.farRenderer = theRenderer;
 	}
 	
-	Renderer getRenderer(int whichRenderer)
+	RendererInterface getRenderer(int whichRenderer)
 	{
 		switch(whichRenderer)
 		{
@@ -42,6 +43,11 @@ public class RendererTriplet implements Serializable{
 			default:
 				return(farRenderer);				
 		}
+	}
+	
+	void setPickingRenderer(RendererInterface in)
+	{
+		pickingRenderer =in;
 	}
 	
 	

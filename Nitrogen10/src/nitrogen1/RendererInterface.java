@@ -11,7 +11,7 @@ package nitrogen1;
  * 
  * 
  */
-public interface Renderer {
+public interface RendererInterface {
 
 			/**
 			 * Renders a trapezoid with a horizontal top and bottom. 
@@ -99,7 +99,8 @@ public interface Renderer {
                     
                     // global parameters array - eg. the colour for a single colour polygon
                     int[] polyData,
-                    float lightingValue
+                    float lightingValue,
+                    NitrogenContext context
                     );
             
             boolean usesHLPBreak();

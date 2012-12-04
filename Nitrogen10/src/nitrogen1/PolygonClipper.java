@@ -77,7 +77,7 @@ public class PolygonClipper {
 			Vert vert3, 
 			Vert vert4,
 		
-			Renderer renderer,
+			RendererInterface renderer,
 			int[] polyData,
 			TexMap textureMap,
 			float lightingValue,
@@ -155,7 +155,7 @@ public class PolygonClipper {
 			Vert vert3, 
 			Vert vert4,
 			
-			Renderer renderer,
+			RendererInterface renderer,
 			int[] polyData,
 			TexMap textureMap,
 			float lightingValue,

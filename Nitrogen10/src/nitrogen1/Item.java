@@ -273,12 +273,11 @@ public class Item {
 						v3, 
 						v4, 									
 
-						immutablePolygon.getRenderer(whichRenderer),
+						immutablePolygon.getRenderer(whichRenderer, context.isPicking),
 						immutablePolygon.polyData,
 						immutablePolygon.textureMap,						
 						backside.lightingValue,
-						useHLPBreaking
-						
+						useHLPBreaking						
 					);				
 			}
 			else
@@ -316,7 +315,7 @@ public class Item {
 					v3, 
 					v2, 
 					v1,
-					immutablePolygon.getRenderer(whichRenderer),					
+					immutablePolygon.getRenderer(whichRenderer,context.isPicking),					
 					immutablePolygon.polyData,
 					immutablePolygon.textureMap,
 					backside.lightingValue,
@@ -493,6 +492,7 @@ public class Item {
 	 * be used at a distance to render using a fixed colour instead of texture for speed and to reduce aliasing artifacts. </br></br>This method also providing some hysteresis to prevent flickering*/
 	private void selectWhichRenderer(float dist, SharedImmutableSubItem sisiCache)
 	{
+		
 		int whichRendererCache = whichRenderer;
 		
 		if(whichRendererCache == NEAR_RENDERER)
@@ -682,8 +682,7 @@ public class Item {
 
 			@Override
 			public void remove() {
-				// TODO Auto-generated method stub
-				
+				// TODO Auto-generated method stub		
 			}		
 		});
 	}

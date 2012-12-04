@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author andrew
  */
-public class SimpleSingleColourRenderer implements Renderer,Serializable{
+public class SimpleSingleColourRenderer implements RendererInterface,Serializable{
 
 private static final long serialVersionUID = -7435141406825586043L;
 
@@ -85,7 +85,8 @@ final public void renderTrapezoid(
         
         // global parameters array - eg. the colour for a single colour polygon
         int[] polyData,
-        float lightingValue
+        float lightingValue,
+        NitrogenContext context
         )
 
 

@@ -72,6 +72,13 @@ public class NitrogenContext extends JButton{
     /** If true only transparent polygons are rendered, otherwise only non-transparent polygons are rendered. Used for double pass rendering where the scene contains transparent polygons */
     boolean transparencyPass = false;
     
+    /** Stuff added for picking */
+    boolean isPicking = false;
+    boolean pickDetected = false;
+    Item pickedItem = null;
+    int pickX;
+    int pickY;
+    
     /** Stuff added for performance evaluation */
     int itemsRendered = 0;
     int polygonsRendered = 0;
