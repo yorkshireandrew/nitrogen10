@@ -130,6 +130,9 @@ public class Item {
 		// remember we were rendered in case anyone asks
 		wasRendered = true;
 		
+		// inform context we are being rendered for PickingRenderer
+		context.currentItem = this;
+		
 		//Cache values needed for rendering locally
 		SharedImmutableSubItem 	sisiCache 				= sisi;
 		int 					fustrumTouchCountCache	= fustrumTouchCount;

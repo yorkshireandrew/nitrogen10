@@ -76,6 +76,7 @@ public class NitrogenContext extends JButton{
     boolean isPicking = false;
     boolean pickDetected = false;
     Item pickedItem = null;
+    Item currentItem = null;
     int pickX;
     int pickY;
     
