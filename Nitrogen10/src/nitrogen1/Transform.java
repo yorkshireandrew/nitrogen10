@@ -734,4 +734,65 @@ public class Transform{
 			for(int i = 0; i < ct; i++)childTransforms.elementAt(i).clearWasRenderedFlags();
 		}
 	}
+	
+	/** seeks up the scene graph for an outerNamed Transform
+	 * 
+	 * @return Itself if it has an outerName, or the first outerNamed Transform that it finds whilst traversing up the scene graph. If no outerNamed Transform is found it returns null
+	 */
+	final Transform seekOuterNamedTransform()
+	{
+		if(outerName != null)return this;
+		Transform parentL = parent;
+		Transform retval;
+		if(parentL != null)
+		{
+			retval = parentL.seekOuterNamedTransform();
+			return retval;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	/** seeks up the scene graph for an outerNamed Transform then returns the outerName
+	 * 
+	 * @return its own outerName if has one, or the outerName of the first outerNamed Transform that it finds whilst traversing up the scene graph. If no outerNamed Transform is found it returns null
+	 */
+	final String seekOuterName()
+	{
+		Transform t = seekOuterNamedTransform();
+		if(t == null){return null;}
+		else{return t.outerName;}
+	}
+	
+	/** seeks up the scene graph for an innerNamed Transform
+	 * 
+	 * @return Itself if it has an innerName, or the first innerNamed Transform that it finds whilst traversing up the scene graph. If no innerNamed Transform is found it returns null
+	 */
+	final Transform seekInnerNamedTransform()
+	{
+		if(innerName != null)return this;
+		Transform parentL = parent;
+		Transform retval;
+		if(parentL != null)
+		{
+			retval = parentL.seekInnerNamedTransform();
+			return retval;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	/** seeks up the scene graph for an innerNamed Transform then returns the innerName
+	 * 
+	 * @return its own innerName if has one, or the innerName of the first innerNamed Transform that it finds whilst traversing up the scene graph. If no innerNamed Transform is found it returns null
+	 */
+	final String seekInnerName()
+	{
+		Transform t = seekInnerNamedTransform();
+		if(t == null){return null;}
+		else{return t.innerName;}
+	}
 }
