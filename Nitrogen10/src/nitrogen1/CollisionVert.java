@@ -9,7 +9,7 @@ package nitrogen1;
  *
  * @author andrew
  */
-public final class CollisionVert {
+public final class CollisionxxVert {
     
 	// Item-space coordinates
 	/** Item space x coordinate. The containing Items orientation transform gets applied to the (usually fixed) Item space coordinates of the vertex in order to generate the vertex's view-space coordinates. */

@@ -56,19 +56,9 @@ public final class Vert {
     float aux2;
     /**An auxiliary coordinate used by renderer (i.e. a float representing a texture or lighting coordinate)*/    
     float aux3;
-
-    Vert(int px, int py)
-    {
-        sx = px;
-        sy = py;
-    }
-
-    Vert(int px, int py, int pz)
-    {
-        sx = px;
-        sy = py;
-        sz = pz;
-    }
+    
+    /** value for when Vert is used as a collision vertex */
+    float radius;
     
     Vert(ImmutableVertex iv)
     {
@@ -76,43 +66,26 @@ public final class Vert {
     	is_y = iv.is_y;
     	is_z = iv.is_z;
     }
+    
+    /** constructor for collision vertex */
+    Vert(ImmutableCollisionVert icv)
+    {	
+    	is_x = icv.is_x;
+    	is_y = icv.is_y;
+    	is_z = icv.is_z;
+    	radius = icv.radius;
+    }
 
     /** default constructor used by static initialiser in HLPBreaker */
     Vert() {}
-
-	void setZ(int pz)
-    {
-        sz = pz;
-    }
-    
-    /** Set auxiliary variable aux1 e.g. an integer polygon colour */
-    void setAux2(float aux1)
-    {
-    	this.aux1=aux1;
-
-    }    
-
-    /** Set auxiliary variables aux1 and aux2 e.g. texture map coordinates*/
-    void setAux2(float aux1, float aux2)
-    {
-    	this.aux1=aux1;
-    	this.aux2=aux2;
-    }
-    
-    /** Set auxiliary variables aux1, aux2 & aux3 e.g. RGB values for gourad shading*/    
-    void setAux3(float aux1, float aux2, float aux3)
-    {
-    	this.aux1=aux1;
-    	this.aux2=aux2;
-    	this.aux3=aux3;
-    }
     
     void setAux(PolygonVertexData pvd)
     {
        	this.aux1 = pvd.aux1;
        	this.aux2 = pvd.aux2;
        	this.aux3 = pvd.aux3;
-           }
+    }
+    
     /** Calculate the vertex's view-space coordinates 
      * @param v11-v34  The orientation matrix computed by the scene graph (12 floating point values)*/
     void calculateViewSpaceCoordinates(			
@@ -189,6 +162,46 @@ public final class Vert {
     		sy = context.midh - (int)((m * vs_y)/(-vs_z));
     		screenCoordinatesNeedUpdate = false;  		
     }
+    
+    /** collision vertex method */
+    float distanceTo(Vert target)
+    {
+    	float dx = vs_x - target.vs_x;
+    	float dy = vs_y - target.vs_y;
+    	float dz = vs_z - target.vs_z;
+    	return (float)Math.sqrt(dx*dx+dy*dy+dz*dz);
+    }
+    
+    /** collision vertex method */
+    float distanceToSquared(Vert target)
+    {
+    	float dx = vs_x - target.vs_x;
+    	float dy = vs_y - target.vs_y;
+    	float dz = vs_z - target.vs_z;
+    	return (dx*dx+dy*dy+dz*dz);
+    }
+    
+    /** collision vertex method */
+    float gapTo(Vert target)
+    {
+    	return(distanceToSquared(target) - radius - target.radius);
+    }
+    
+    /** collision vertex method */
+    float gapToSquared(Vert target)
+    {
+    	float radiusL = radius;
+    	float targetRadius = target.radius;
+    	return(distanceToSquared(target) - radiusL*radiusL - targetRadius*targetRadius);
+   	
+    }
+    
+    boolean collidedWith(Vert target)
+    {
+    	float radiusL = radius;
+    	float targetRadius = target.radius;
+    	if((distanceToSquared(target) - radiusL*radiusL - targetRadius*targetRadius)>0){return false;}else{return true;}   	
+    }	
     		
     
 

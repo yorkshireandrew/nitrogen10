@@ -39,7 +39,7 @@ public class Item {
 	
 	/** The Items collision vertexes */
 	private boolean hasCollisionVertexes;
-	private CollisionVert collisionVertexes[];
+	private Vert collisionVertexes[];
 	
 	// ************************************************
 	// ********************** FLAGS *******************
@@ -108,8 +108,8 @@ public class Item {
 		int collisionVertexMax = icva.length;
 		if(collisionVertexMax > 0){hasCollisionVertexes = true;}
 		else{hasCollisionVertexes = false;}
-		collisionVertexes = new CollisionVert[vertexMax];
-		for(int x = 0; x < collisionVertexMax; x++)collisionVertexes[x] = factory.getCollisionVertex(icva[x]);
+		collisionVertexes = new Vert[collisionVertexMax];
+		for(int x = 0; x < collisionVertexMax; x++)collisionVertexes[x] = factory.getVertex(icva[x]);
 	}
 	
 	/** called to render the Item 
@@ -456,7 +456,7 @@ public class Item {
 			
 			if(hasCollisionVertexes)
 			{
-				CollisionVert cv;
+				Vert cv;
 				int collisionVertexesLength = collisionVertexes.length;
 				for(int x =0; x < collisionVertexesLength; x++)
 				{
@@ -482,7 +482,7 @@ public class Item {
 
 			if(hasCollisionVertexes)
 			{
-				CollisionVert cv;
+				Vert cv;
 				int collisionVertexesLength = collisionVertexes.length;
 				for(int x =0; x < collisionVertexesLength; x++)
 				{
@@ -657,7 +657,7 @@ public class Item {
 			float pc33 = parentL.c33;
 			float pc34 = parentL.c34;
 			
-			CollisionVert[] collisionVertexesL = collisionVertexes;
+			Vert[] collisionVertexesL = collisionVertexes;
 			int collisionVertexLength = collisionVertexesL.length;
 			for(int i = 0; i < collisionVertexLength; i++)
 			{
@@ -666,15 +666,15 @@ public class Item {
 		}
 	}
 	
-	final public Iterator<CollisionVert> getCollisionVertexes()
+	final public Iterator<Vert> getCollisionVertexes()
 	{
 		calculateCollisionVertexes();
-		return (new Iterator<CollisionVert>(){
+		return (new Iterator<Vert>(){
 			private int index = 0;
 			private int collisionVertexesMax = collisionVertexes.length;
 
 			@Override
-			public CollisionVert next() {
+			public Vert next() {
 				return collisionVertexes[index++];
 			}
 			

@@ -38,10 +38,10 @@ public class DefaultItemFactory implements ItemFactory{
 		return new Vert(iv);
 	}
 	
-	public CollisionVert getCollisionVertex(ImmutableCollisionVert icv)
+	public Vert getVertex(ImmutableCollisionVert icv)
 	{
 		if(++allocatedCollisionVertexes > allocatedCollisionVertexesMax)allocatedCollisionVertexesMax = allocatedCollisionVertexes;
-		return new CollisionVert(icv);
+		return new Vert(icv);
 	}
 	
 	public int getAllocatedItemCount(){return allocatedItems;}
