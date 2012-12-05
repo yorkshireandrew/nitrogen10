@@ -11,7 +11,7 @@ package nitrogen1;
  * 
  * 
  */
-public interface RendererInterface {
+public interface Renderer {
 
 			/**
 			 * Renders a trapezoid with a horizontal top and bottom. 

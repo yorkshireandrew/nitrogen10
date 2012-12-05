@@ -30,7 +30,7 @@ final public class MyApplet extends JApplet{
 	private static final long serialVersionUID = 1799576836511527595L;
 	static final int APP_WIDTH = 501;
     static final int APP_HEIGHT =501;
-    static final RendererInterface simpleTextureRenderer = new SimpleTextureRenderer();
+    static final Renderer simpleTextureRenderer = new SimpleTextureRenderer();
 
     Transform t4_class;
     Transform t3_class;
@@ -154,7 +154,7 @@ final public class MyApplet extends JApplet{
 			}          
             
             
-            ItemFactoryInterface ifi = new DefaultItemFactory();
+            ItemFactory ifi = new DefaultItemFactory();
             Item i = ifi.getItem(newsisi,t4);
             i.setVisibility(true); 
             Item i2 = ifi.getItem(newsisi,t2b);

@@ -22,7 +22,7 @@ public class Item {
 	static final HLPBreaker  hlpBreaker = new HLPBreaker();
 	
 	/** Class used to source and sink the internal components of Items*/
-	static ItemFactoryInterface itemComponentFactory;
+	static ItemFactory itemComponentFactory;
 	
 	/** Parent transform of this Item in the scene graph */
 	private Transform parent = null;
@@ -83,7 +83,7 @@ public class Item {
 	boolean wasRendered = false;
 	
 	/** Creates a new Item and attaches it to a transform */
-	void initializeItem(SharedImmutableSubItem in_sisi, Transform t, ItemFactoryInterface factory)
+	void initializeItem(SharedImmutableSubItem in_sisi, Transform t, ItemFactory factory)
 	{
 		if(t == null)return;
 		

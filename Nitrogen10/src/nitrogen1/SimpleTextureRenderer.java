@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author andrew
  */
-public class SimpleTextureRenderer implements RendererInterface,Serializable{
+public class SimpleTextureRenderer implements Renderer,Serializable{
 
 private static final long serialVersionUID = -9205815146173706598L;
 

@@ -1,7 +1,7 @@
 package nitrogen1;
 
 /** default class that implements the factory methods using the new operator */
-public class DefaultItemFactory implements ItemFactoryInterface{
+public class DefaultItemFactory implements ItemFactory{
 	
 	private int allocatedItems = 0;
 	private int allocatedBacksides = 0;

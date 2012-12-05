@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author andrew
  */
-public class SimpleSingleColourRenderer implements RendererInterface,Serializable{
+public class SimpleSingleColourRenderer implements Renderer,Serializable{
 
 private static final long serialVersionUID = -7435141406825586043L;
 

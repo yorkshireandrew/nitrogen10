@@ -62,7 +62,7 @@ public class HLPBreaker {
 			
 			Vert vert1, Vert vert2, Vert vert3, Vert vert4,
 			
-			RendererInterface renderer,
+			Renderer renderer,
 			int[] polyData,
 			TexMap textureMap,
 			float lightingValue,
@@ -124,7 +124,7 @@ static void subprocess(
 		
 		Vert vert1, Vert vert2, Vert vert3, Vert vert4,
 		
-		RendererInterface renderer,
+		Renderer renderer,
 		int[] polyData,
 		TexMap textureMap,
 		float lightingValue
@@ -197,7 +197,7 @@ static void hlpBreakCaseHandler(
 				boolean touchedTop,
 				boolean touchedBottom,		
 				Vert vert1, Vert vert2, Vert vert3, Vert vert4,	
-				RendererInterface renderer,
+				Renderer renderer,
 				int[] polyData,
 				TexMap textureMap,
 				float lightingValue,

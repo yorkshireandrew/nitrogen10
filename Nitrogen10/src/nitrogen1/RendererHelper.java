@@ -4,15 +4,15 @@ import java.util.HashMap;
 
 public class RendererHelper {
 	
-	static Map<String,RendererInterface> renderers = new HashMap<String,RendererInterface>();
+	static Map<String,Renderer> renderers = new HashMap<String,Renderer>();
 	static Map<String,RendererTriplet> rendererTriplets = new HashMap<String,RendererTriplet>();
 	
-	final static void addRenderer(String s, RendererInterface r)
+	final static void addRenderer(String s, Renderer r)
 	{
 		renderers.put(s, r);
 	}
 	
-	final static RendererInterface getRenderer(String s) throws Exception
+	final static Renderer getRenderer(String s) throws Exception
 	{
 		if(renderers.containsKey(s)){return renderers.get(s);}
 		else throw new Exception("RendererHelper could not find renderer " + s);
@@ -20,7 +20,7 @@ public class RendererHelper {
 	
 	final static void addRendererTriplet(String name, String r1name, String r2name, String r3name) throws NitrogenCreationException
 	{
-		RendererInterface r1, r2, r3;
+		Renderer r1, r2, r3;
 		try{
 			r1 = getRenderer(r1name);
 			r2 = getRenderer(r2name);

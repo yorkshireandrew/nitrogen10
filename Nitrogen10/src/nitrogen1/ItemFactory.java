@@ -1,6 +1,6 @@
 package nitrogen1;
 
-public interface ItemFactoryInterface {
+public interface ItemFactory {
 	Item getItem(SharedImmutableSubItem in_sisi, Transform t);
 	Backside getBackside();
 	Vert getVertex(ImmutableVertex iv);
