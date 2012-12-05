@@ -77,6 +77,107 @@ public class Transform{
 				this.a31 = a31; this.a32=a32; this.a33=a33; this.a34=a34;
 			}
 	
+	/** Adds a transform to this transforms child transform list. This is an internal method that does not detach the supplied transform from any parents it may already have; external code should use the setParent method
+	 * @param t Transform to be added as a child to the Transform being called */
+	private void add(Transform t)
+	{
+		// add passed in transform to childTransforms, creating it if it is null
+		if (childTransforms == null)childTransforms = new TransformVector();
+		childTransforms.addElement(t);
+		
+		// account for visible children
+		int novc = t.numberOfVisibleChildren;
+		if(novc > 0)increaseVisibleChildrenBy(novc);
+	}
+	
+	/** Causes the called Transform to first update itself using 
+	 * the calculated transform values of its parent that must be passed
+	 * in as parameters.
+	 * 
+	 * It then renders any visible Items it has before calling this
+	 * method on all of its child Transforms
+	 * @param p11 to p12 are the calculated parent transform values that must be passed in.
+	 * @param context The NitrogenContext to render Items into. 
+	 */
+	private final void render(
+			NitrogenContext context,
+			float p11, float p12, float p13, float p14,
+			float p21, float p22, float p23, float p24,
+			float p31, float p32, float p33, float p34
+			)
+	{		
+		// avoid doing any work if we can help it!
+		if(numberOfVisibleChildren < 1)return;
+		
+		// copy this transforms a values locally for speed
+		float la11 = a11;
+		float la12 = a12;
+		float la13 = a13;
+		float la14 = a14;
+		
+		float la21 = a21;
+		float la22 = a22;
+		float la23 = a23;
+		float la24 = a24;
+		
+		float la31 = a31;
+		float la32 = a32;
+		float la33 = a33;
+		float la34 = a34;
+		
+		if(rotationNeedsUpdate)
+		{
+			c11 = p11*la11+p12*la21+p13*la31;
+			c12 = p11*la12+p12*la22+p13*la32;
+			c13 = p11*la13+p12*la23+p13*la33;
+
+			c21 = p21*la11+p22*la21+p23*la31;
+			c22 = p21*la12+p22*la22+p23*la32;
+			c23 = p21*la13+p22*la23+p23*la33;
+
+			c31 = p31*la11+p32*la21+p33*la31;
+			c32 = p31*la12+p32*la22+p33*la32;
+			c33 = p31*la13+p32*la23+p33*la33;
+			
+			rotationNeedsUpdate = false;		
+		}
+		if(translationNeedsUpdate)
+		{
+			c14 = p11*la14+p12*la24+p13*la34+p14;
+			c24 = p21*la14+p22*la24+p23*la34+p24;
+			c34 = p31*la14+p32*la24+p33*la34+p34;
+			translationNeedsUpdate = false;
+		}
+
+		// copy this transforms c values locally for speed
+		// note: reusing laxx local variables
+		la11 = c11;
+		la12 = c12;
+		la13 = c13;
+		la14 = c14;
+		
+		la21 = c21;
+		la22 = c22;
+		la23 = c23;
+		la24 = c24;
+		
+		la31 = c31;
+		la32 = c32;
+		la33 = c33;
+		la34 = c34;
+		
+		// first render our own child Items
+		int ci = childItems.size();
+		for(int i = 0; i < ci; i++)childItems.elementAt(i).renderItem(context,la11,la12,la13,la14,la21,la22,la23,la24,la31,la32,la33,la34);
+		
+		// now instruct child transforms to calculate themselves and render themselves
+		if(childTransforms != null)
+		{
+			int ct = childTransforms.size();
+			for(int i = 0; i < ct; i++)childTransforms.elementAt(i).render(context,la11,la12,la13,la14,la21,la22,la23,la24,la31,la32,la33,la34);
+		}
+	}
+	
 	/** Access method 
 	 * @return The parent of the called  Transform, or null if it is the scenegraph root*/
 	final public Transform getParent() {return(parent);}
@@ -122,18 +223,7 @@ public class Transform{
 		return false;
 	}	
 
-	/** Adds a transform to this transforms child transform list. This is an internal method that does not detach the supplied transform from any parents it may already have; external code should use the setParent method
-	 * @param t Transform to be added as a child to the Transform being called */
-	private void add(Transform t)
-	{
-		// add passed in transform to childTransforms, creating it if it is null
-		if (childTransforms == null)childTransforms = new TransformVector();
-		childTransforms.addElement(t);
-		
-		// account for visible children
-		int novc = t.numberOfVisibleChildren;
-		if(novc > 0)increaseVisibleChildrenBy(novc);
-	}
+
 	
 	/** Adds an Item to the transforms child item list 
 	 *  @param i Item to be added as a child to the Transform being called */
@@ -363,93 +453,7 @@ public class Transform{
 		}
 	}
 
-	/** Causes the called Transform to first update itself using 
-	 * the calculated transform values of its parent that must be passed
-	 * in as parameters.
-	 * 
-	 * It then renders any visible Items it has before calling this
-	 * method on all of its child Transforms
-	 * @param p11 to p12 are the calculated parent transform values that must be passed in.
-	 * @param context The NitrogenContext to render Items into. 
-	 */
-	private final void render(
-			NitrogenContext context,
-			float p11, float p12, float p13, float p14,
-			float p21, float p22, float p23, float p24,
-			float p31, float p32, float p33, float p34
-			)
-	{		
-		// avoid doing any work if we can help it!
-		if(numberOfVisibleChildren < 1)return;
-		
-		// copy this transforms a values locally for speed
-		float la11 = a11;
-		float la12 = a12;
-		float la13 = a13;
-		float la14 = a14;
-		
-		float la21 = a21;
-		float la22 = a22;
-		float la23 = a23;
-		float la24 = a24;
-		
-		float la31 = a31;
-		float la32 = a32;
-		float la33 = a33;
-		float la34 = a34;
-		
-		if(rotationNeedsUpdate)
-		{
-			c11 = p11*la11+p12*la21+p13*la31;
-			c12 = p11*la12+p12*la22+p13*la32;
-			c13 = p11*la13+p12*la23+p13*la33;
 
-			c21 = p21*la11+p22*la21+p23*la31;
-			c22 = p21*la12+p22*la22+p23*la32;
-			c23 = p21*la13+p22*la23+p23*la33;
-
-			c31 = p31*la11+p32*la21+p33*la31;
-			c32 = p31*la12+p32*la22+p33*la32;
-			c33 = p31*la13+p32*la23+p33*la33;
-			
-			rotationNeedsUpdate = false;		
-		}
-		if(translationNeedsUpdate)
-		{
-			c14 = p11*la14+p12*la24+p13*la34+p14;
-			c24 = p21*la14+p22*la24+p23*la34+p24;
-			c34 = p31*la14+p32*la24+p33*la34+p34;
-			translationNeedsUpdate = false;
-		}
-
-		// copy this transforms c values locally for speed
-		// note: reusing laxx local variables
-		la11 = c11;
-		la12 = c12;
-		la13 = c13;
-		la14 = c14;
-		
-		la21 = c21;
-		la22 = c22;
-		la23 = c23;
-		la24 = c24;
-		
-		la31 = c31;
-		la32 = c32;
-		la33 = c33;
-		la34 = c34;
-		
-		// first render our own child Items
-		int ci = childItems.size();
-		for(int i = 0; i < ci; i++)childItems.elementAt(i).renderItem(context,la11,la12,la13,la14,la21,la22,la23,la24,la31,la32,la33,la34);
-		
-		// now instruct child transforms to calculate themselves and render themselves
-		if(childTransforms != null)
-		{
-			int ct = childTransforms.size();
-			for(int i = 0; i < ct; i++)childTransforms.elementAt(i).render(context,la11,la12,la13,la14,la21,la22,la23,la24,la31,la32,la33,la34);
-		}
-	}
 		
 	final private void setSelfAsRoot()
 	{
@@ -714,14 +718,14 @@ public class Transform{
 	}
 	
 	/** returns view-space X coordinate; to ensure it is not stale call updateViewSpace() */
-	final float getX(){return c14;}
+	final public float getX(){return c14;}
 	/** returns view-space Y coordinate; to ensure it is not stale call updateViewSpace() */	
-	final float getY(){return c24;}
+	final public float getY(){return c24;}
 	/** returns view-space Z coordinate; to ensure it is not stale call updateViewSpace() */	
-	final float getZ(){return c34;}
+	final public float getZ(){return c34;}
 	
 	/** clear wasRendered flags on Items, this flag could be used to halt animation on Items that are off screen*/
-	final void clearWasRenderedFlags()
+	final public void clearWasRenderedFlags()
 	{
 		// first clear our own child Items
 		int ci = childItems.size();
@@ -739,7 +743,7 @@ public class Transform{
 	 * 
 	 * @return Itself if it has an outerName, or the first outerNamed Transform that it finds whilst traversing up the scene graph. If no outerNamed Transform is found it returns null
 	 */
-	final Transform seekOuterNamedTransform()
+	final public Transform seekOuterNamedTransform()
 	{
 		if(outerName != null)return this;
 		Transform parentL = parent;
@@ -758,7 +762,7 @@ public class Transform{
 	 * 
 	 * @return its own outerName if has one, or the outerName of the first outerNamed Transform that it finds whilst traversing up the scene graph. If no outerNamed Transform is found it returns null
 	 */
-	final String seekOuterName()
+	final public String seekOuterName()
 	{
 		Transform t = seekOuterNamedTransform();
 		if(t == null){return null;}
@@ -769,7 +773,7 @@ public class Transform{
 	 * 
 	 * @return Itself if it has an innerName, or the first innerNamed Transform that it finds whilst traversing up the scene graph. If no innerNamed Transform is found it returns null
 	 */
-	final Transform seekInnerNamedTransform()
+	final public Transform seekInnerNamedTransform()
 	{
 		if(innerName != null)return this;
 		Transform parentL = parent;
@@ -789,7 +793,7 @@ public class Transform{
 	 * 
 	 * @return its own innerName if has one, or the innerName of the first innerNamed Transform that it finds whilst traversing up the scene graph. If no innerNamed Transform is found it returns null
 	 */
-	final String seekInnerName()
+	final public String seekInnerName()
 	{
 		Transform t = seekInnerNamedTransform();
 		if(t == null){return null;}

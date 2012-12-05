@@ -21,8 +21,11 @@ public class Item {
 	/** Class used to encapsulate polygon breaking into lower perspective levels */
 	static final HLPBreaker  hlpBreaker = new HLPBreaker();
 	
+	/** Class used to source and sink the internal components of Items*/
+	static ItemFactoryInterface itemComponentFactory;
+	
 	/** Parent transform of this Item in the scene graph */
-	private Transform parent = null; //TO DO - encapsulate this better */
+	private Transform parent = null;
 	
 	/** The immutable part of an Item that can be shared across many identical Items that differ only by scene graph position and visibility. */
 	private SharedImmutableSubItem sisi;
@@ -80,9 +83,10 @@ public class Item {
 	boolean wasRendered = false;
 	
 	/** Creates a new Item and attaches it to a transform */
-	Item(SharedImmutableSubItem in_sisi, Transform t)
+	void initializeItem(SharedImmutableSubItem in_sisi, Transform t, ItemFactoryInterface factory)
 	{
 		if(t == null)return;
+		
 		parent = t;
 		t.add(this);
 		
@@ -91,13 +95,13 @@ public class Item {
 		// create a blank backside array
 		int backsideMax = in_sisi.immutableBacksides.length;
 		backsides = new Backside[backsideMax];
-		for(int x = 0; x < backsideMax; x++)backsides[x] = new Backside();
+		for(int x = 0; x < backsideMax; x++)backsides[x] = factory.getBackside();
 
 		// create the vertexes array from the sisi ImmutableVertexs
 		ImmutableVertex[] iva = in_sisi.immutableVertexs;
 		int vertexMax = iva.length;
 		vertexs = new Vert[vertexMax];
-		for(int x = 0; x < vertexMax; x++)vertexs[x] = new Vert(iva[x]);
+		for(int x = 0; x < vertexMax; x++)vertexs[x] = factory.getVertex(iva[x]);
 		
 		// create the collision vertex array from the sisi ImmutableCollisionVertexes
 		ImmutableCollisionVert[] icva = in_sisi.immutableCollisionVertexes;
@@ -105,7 +109,7 @@ public class Item {
 		if(collisionVertexMax > 0){hasCollisionVertexes = true;}
 		else{hasCollisionVertexes = false;}
 		collisionVertexes = new CollisionVert[vertexMax];
-		for(int x = 0; x < collisionVertexMax; x++)collisionVertexes[x] = new CollisionVert(icva[x]);
+		for(int x = 0; x < collisionVertexMax; x++)collisionVertexes[x] = factory.getCollisionVertex(icva[x]);
 	}
 	
 	/** called to render the Item 

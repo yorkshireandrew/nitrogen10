@@ -154,14 +154,12 @@ final public class MyApplet extends JApplet{
 			}          
             
             
-            
-            Item i = new Item(newsisi,t4);
+            ItemFactoryInterface ifi = new DefaultItemFactory();
+            Item i = ifi.getItem(newsisi,t4);
             i.setVisibility(true); 
-            Item i2 = new Item(newsisi,t2b);
+            Item i2 = ifi.getItem(newsisi,t2b);
             i2.setVisibility(true); 
             i2.setName("blogs boxes");
-            
-            
             
             // create user interface
             getContentPane().setLayout(new BorderLayout());
