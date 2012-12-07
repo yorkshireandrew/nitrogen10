@@ -47,9 +47,10 @@ public final class Vert {
     int sy;
     /** screen z coordinate (which may differ from the vertexes view-space z due to perspective projection)*/
     int sz;
-    /** flag indicating if the vertex view-space coordinates need updating */
+    /** flag indicating if the vertex screen coordinates need updating */
     boolean screenCoordinatesNeedUpdate = true;
     
+    // auxiliary coordinates
     /**An auxiliary coordinate used by renderer (i.e. a float representing a texture or lighting coordinate)*/
     float aux1;
     /**An auxiliary coordinate used by renderer (i.e. a float representing a texture or lighting coordinate)*/   
@@ -60,24 +61,50 @@ public final class Vert {
     /** value for when Vert is used as a collision vertex */
     float radius;
     
+	/** package scope reference for use in factories LLL*/
+	Vert nextInList;
+    
+    /** default constructor used by static initialiser in HLPBreaker */
+    Vert() {}
+    
     Vert(ImmutableVertex iv)
+    {
+    	 is_x = iv.is_x;
+    	 is_y = iv.is_y;
+    	 is_z = iv.is_z;
+    }
+    
+    Vert(ImmutableCollisionVert icv)
+    {
+    	 is_x = icv.is_x;
+    	 is_y = icv.is_y;
+    	 is_z = icv.is_z;
+    	 radius = icv.radius;
+    }
+    
+    void initializeVertex(ImmutableVertex iv)
     {
     	is_x = iv.is_x;
     	is_y = iv.is_y;
     	is_z = iv.is_z;
+    	rotationNeedsUpdate = true;
+    	translationNeedsUpdate = true;
+        screenCoordinatesNeedUpdate = true;  
+        nextInList = null;
     }
     
     /** constructor for collision vertex */
-    Vert(ImmutableCollisionVert icv)
+    void initializeVertex(ImmutableCollisionVert icv)
     {	
     	is_x = icv.is_x;
     	is_y = icv.is_y;
     	is_z = icv.is_z;
     	radius = icv.radius;
+    	rotationNeedsUpdate = true;
+    	translationNeedsUpdate = true; 
+        screenCoordinatesNeedUpdate = false; 
+        nextInList = null;
     }
-
-    /** default constructor used by static initialiser in HLPBreaker */
-    Vert() {}
     
     void setAux(PolygonVertexData pvd)
     {

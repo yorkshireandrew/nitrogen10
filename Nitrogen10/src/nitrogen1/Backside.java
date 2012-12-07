@@ -1,6 +1,9 @@
 package nitrogen1;
 
 public class Backside {
+	
+	/** the ImmutableBackside linked to this backside */
+	ImmutableBackside linkedImmutableBackside;
 		
 	/** the backsides normal coordinates, which are recalculated if rotation occurs */
 	float nx, ny, nz;
@@ -23,6 +26,27 @@ public class Backside {
     /** flag indicating the view-space coordinates and backside value need updating */ 
     boolean translationNeedsUpdate = true;
     
+	/** package scope reference for use in factories LLL*/
+	Backside nextInList;
+    
+    /** default constructor used by factories to preallocate a Backside */
+    Backside(){}
+
+    /** constructor used by factories to generate new backsides on request*/
+    Backside(ImmutableBackside immutableBackside)
+    {
+    	this.linkedImmutableBackside = immutableBackside;
+    }
+    
+    /** used by factories when re-using a backside */
+    void initializeBackside(ImmutableBackside immutableBackside)
+    {
+    	linkedImmutableBackside = immutableBackside;
+        rotationNeedsUpdate = true;
+        translationNeedsUpdate = true;
+        nextInList = null;
+    }   
+    
     /** Calculate the backside so that subsequent facingViewer() calls return the correct value, rather than a stale one.
      *  
      * @param ib The ImmutableBackside object needed to calculate this mutable Backside object <br />(i.e. This Backside before any orientation is applied)
@@ -32,7 +56,6 @@ public class Backside {
      * @param v11-v34 The orientation matrix computed by the scene graph 
      */
     final void calculate(
-    		ImmutableBackside ib,
     		NitrogenContext context,
     		float v11, float v12, float v13, float v14,
     		float v21, float v22, float v23, float v24,
@@ -41,9 +64,11 @@ public class Backside {
     		{
     			// if the backside is not stale return its value
     			if(translationNeedsUpdate == false)return;
+    			ImmutableBackside ib = linkedImmutableBackside;
     			
     			if(rotationNeedsUpdate)
-    			{
+    			{ 
+    				
     				// cache immutable backside values for speed.
     				float ibix = ib.ix;
     				float ibiy = ib.iy;

@@ -22,8 +22,8 @@ public class Item {
 	static final HLPBreaker  hlpBreaker = new HLPBreaker();
 	
 	/** Class used to source and sink the internal components of Items*/
-	static ItemFactory itemComponentFactory;
-	
+	static ItemFactory itemFactory;
+
 	/** Parent transform of this Item in the scene graph */
 	private Transform parent = null;
 	
@@ -80,10 +80,46 @@ public class Item {
 	/** name of the Item */
 	private String name;
 	
+	/** package scope flag so we can tell if the Item was rendered if asked */
 	boolean wasRendered = false;
 	
-	/** Creates a new Item and attaches it to a transform */
-	void initializeItem(SharedImmutableSubItem in_sisi, Transform t, ItemFactory factory)
+	/** package scope reference for use in factories LLL*/
+	Item nextInList;
+	
+    /** default constructor used by factories to preallocate an Item */
+    Item(){} 
+
+    /** constructor used by factories to generate new Items on request
+	 * @param in_sisi The SharedImmutableSubItem used to compose the Item
+	 * @param t Transform the Item is to be attached to
+	 * @param factory ItemFactory that shall provide the internal parts of the Item
+	 * */
+    Item(final SharedImmutableSubItem in_sisi, final Transform t)
+    {
+    	this();
+    	this.initializeItem(in_sisi, t);
+    }
+    
+    /** create an Item from the factory */
+    final static public Item createItem(final SharedImmutableSubItem in_sisi, final Transform t)
+    {
+    	return (itemFactory.getItem(in_sisi, t));
+    }
+    
+	public static ItemFactory getItemFactory() {
+		return itemFactory;
+	}
+
+	public static void setItemFactory(ItemFactory itemFactory) {
+		Item.itemFactory = itemFactory;
+	}
+	
+    /** used by factories to re-use an Item
+	 * @param in_sisi The SharedImmutableSubItem used to compose the Item
+	 * @param t Transform the Item is to be attached to
+	 * @param factory ItemFactory that shall provide the internal parts of the Item
+	 */
+	void initializeItem(SharedImmutableSubItem in_sisi, Transform t)
 	{
 		if(t == null)return;
 		
@@ -91,17 +127,19 @@ public class Item {
 		t.add(this);
 		
 		sisi = in_sisi;
+		
+		ItemFactory itemFactoryL = itemFactory;
 
 		// create a blank backside array
 		int backsideMax = in_sisi.immutableBacksides.length;
 		backsides = new Backside[backsideMax];
-		for(int x = 0; x < backsideMax; x++)backsides[x] = factory.getBackside();
+		for(int x = 0; x < backsideMax; x++)backsides[x] = itemFactoryL.getBackside(in_sisi.immutableBacksides[x]);
 
 		// create the vertexes array from the sisi ImmutableVertexs
 		ImmutableVertex[] iva = in_sisi.immutableVertexs;
 		int vertexMax = iva.length;
 		vertexs = new Vert[vertexMax];
-		for(int x = 0; x < vertexMax; x++)vertexs[x] = factory.getVertex(iva[x]);
+		for(int x = 0; x < vertexMax; x++)vertexs[x] = itemFactoryL.getVertex(iva[x]);
 		
 		// create the collision vertex array from the sisi ImmutableCollisionVertexes
 		ImmutableCollisionVert[] icva = in_sisi.immutableCollisionVertexes;
@@ -109,7 +147,19 @@ public class Item {
 		if(collisionVertexMax > 0){hasCollisionVertexes = true;}
 		else{hasCollisionVertexes = false;}
 		collisionVertexes = new Vert[collisionVertexMax];
-		for(int x = 0; x < collisionVertexMax; x++)collisionVertexes[x] = factory.getVertex(icva[x]);
+		for(int x = 0; x < collisionVertexMax; x++)collisionVertexes[x] = itemFactoryL.getVertex(icva[x]);
+		
+		// clear other flags
+		visibility = false;
+		rotationNeedsUpdate = true;
+		translationNeedsUpdate = true;
+		whichRenderer = NEAR_RENDERER;
+		isImprovedDetail = false;	
+		isUsingHLPBreaking = false;
+		isUsingBillboardOriention = false;
+		name = null;
+		wasRendered = false;
+		nextInList = null;
 	}
 	
 	/** called to render the Item 
@@ -241,7 +291,6 @@ public class Item {
 			if(backside.translationNeedsUpdate)
 			{
 				backside.calculate(
-						sisi.immutableBacksides[backsideIndex],
 						context,
 						v11,v12,v13,v14,
 						v21,v22,v23,v24,
@@ -666,7 +715,31 @@ public class Item {
 		}
 	}
 	
-	final public Iterator<Vert> getCollisionVertexes()
+	/** package scope helper so that factories can recycle an Items Backsides */
+	final Backside[] getBacksides()
+	{
+		return backsides;
+	}
+	
+	/** package scope helper so that factories can recycle an Items Vertexes */
+	final Vert[] getVertexes()
+	{
+		return vertexs;
+	}
+	
+	/** package scope helper so that factories can recycle an Items Vertexes */
+	final Vert[] getCollisionVertexes()
+	{
+		return collisionVertexes;
+	}
+	
+	final void recycle()
+	{
+		itemFactory.recycle(this);
+	}
+	
+	/** returns an Iterator<Vert> for enumerating the Items collision vertexes */
+	final public Iterator<Vert> getCollisionVertexIterator()
 	{
 		calculateCollisionVertexes();
 		return (new Iterator<Vert>(){

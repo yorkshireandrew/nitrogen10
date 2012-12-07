@@ -1,6 +1,6 @@
 package nitrogen1;
 
-public abstract class ItemEnumeration {
+public interface ItemEnumeration {
 	abstract public Item nextElement();
 	abstract public boolean hasMoreElements();
 }

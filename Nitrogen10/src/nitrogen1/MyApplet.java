@@ -154,12 +154,50 @@ final public class MyApplet extends JApplet{
 			}          
             
             
-            ItemFactory ifi = new DefaultItemFactory();
-            Item i = ifi.getItem(newsisi,t4);
+            Item.setItemFactory(new ItemFactory_Caching());
+            Item.getItemFactory().setMaxFreeItems(100000);
+            Item.getItemFactory().setMaxFreeBacksides(600000);
+            Item.getItemFactory().setMaxFreeVertexes(600000);
+                                  
+            // factory performance test
+            int loops = 100000;
+            Item[] testOfFactory = new Item[loops];
+            long time1 = System.currentTimeMillis();
+            // creating
+            for(int x =0; x < loops ; x++)
+            {
+            	testOfFactory[x] = Item.createItem(newsisi,t4);
+            }
+            // recycling
+            long time2 = System.currentTimeMillis();
+            for(int x =0; x < loops ; x++)
+            {
+            	testOfFactory[x].recycle();
+            }
+            long time3 = System.currentTimeMillis();
+            // creating again
+            for(int x =0; x < loops ; x++)
+            {
+            	testOfFactory[x] = Item.createItem(newsisi,t4);
+            }           
+            long time4 = System.currentTimeMillis();
+            System.out.println("initial creation " + (time2-time1));
+            System.out.println("initial recycling " + (time3-time2));
+            System.out.println("re- creation " + (time4-time3));
+            
+            /* 
+            
+ //           Item test = new Item(newsisi,t4); // shouldn't do this, we can because we are in package
+            
+            Item i = Item.createItem(newsisi,t4);
             i.setVisibility(true); 
-            Item i2 = ifi.getItem(newsisi,t2b);
+            Item i2 = Item.createItem(newsisi,t2b);
             i2.setVisibility(true); 
             i2.setName("blogs boxes");
+            
+            System.out.println("allocated Items " + ((ItemFactory_Development)Item.getItemFactory()).getAllocatedItemCount());
+            System.out.println("allocated Backsides " + ((ItemFactory_Development)Item.getItemFactory()).getAllocatedBacksideCount());
+            System.out.println("allocated Backsides " + ((ItemFactory_Development)Item.getItemFactory()).getAllocatedVertexCount());
             
             // create user interface
             getContentPane().setLayout(new BorderLayout());
@@ -226,6 +264,7 @@ final public class MyApplet extends JApplet{
             	      	
             }
             cnc.addMouseListener( new MyMouseListener());
+            */
             
 
 	}
