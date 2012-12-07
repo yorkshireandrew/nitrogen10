@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author andrew
  */
-public final class ImmutableCollisionVert implements Serializable{
+public final class ImmutableCollisionVertex implements Serializable{
 	private static final long serialVersionUID = 6545349284668634779L;
 	
 	// Item-space coordinates
@@ -24,7 +24,7 @@ public final class ImmutableCollisionVert implements Serializable{
 	/** Radius of collision */
 	float radius;
     
-    ImmutableCollisionVert(
+    ImmutableCollisionVertex(
     		float is_x,
     		float is_y,
     		float is_z,

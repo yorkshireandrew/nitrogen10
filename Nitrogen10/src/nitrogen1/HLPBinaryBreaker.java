@@ -12,7 +12,7 @@ public class HLPBinaryBreaker {
 	static final int EIGHT = 8;
 	
 	/** Field used to generate Vertexs that occur at intersect points */
-	static Vert[] workingVertexs;
+	static Vertex[] workingVertexes;
 	/** Field used to generate Vertexs that occur at intersect points */
 	static int workingVertexIndex = 0;
 	
@@ -32,10 +32,10 @@ public class HLPBinaryBreaker {
 	 * @param touchedTop Item supplying the polygon may have touched top view-fustrum plane.
 	 * @param touchedBottom Item supplying the polygon may have touched bottom view-fustrum plane.
 	 * <br />
-	 * @param vert1 First Vertex of the polygon. Vertexes parameters must be given in clockwise order.
-	 * @param vert2 Second Vertex of the polygon.
-	 * @param vert3 Third Vertex of the polygon.
-	 * @param vert4 Fourth Vertex of the polygon.
+	 * @param vertex1 First  Vertex of the polygon. Vertexes parameters must be given in clockwise order.
+	 * @param vertex2 Second Vertex of the polygon.
+	 * @param vertex3 Third  Vertex of the polygon.
+	 * @param vertex4 Fourth Vertex of the polygon.
 	 * <br />
 	 * @param renderer The renderer to use to render the polygon into the supplied context.
 	 * @param polyData Polygon data to pass on to the renderer, such as its colour.
@@ -46,8 +46,8 @@ public class HLPBinaryBreaker {
 	static{ 
 		// DEBUG
 		int BUFFER_SIZE = 1000;
-		workingVertexs = new Vert[BUFFER_SIZE];
-		for(int i = 0 ; i < BUFFER_SIZE; i++)workingVertexs[i]= new Vert();
+		workingVertexes = new Vertex[BUFFER_SIZE];
+		for(int i = 0 ; i < BUFFER_SIZE; i++)workingVertexes[i]= new Vertex();
 		}
 	static void process(	
 			NitrogenContext context,
@@ -58,7 +58,7 @@ public class HLPBinaryBreaker {
 			boolean touchedTop,
 			boolean touchedBottom,
 			
-			Vert vert1, Vert vert2, Vert vert3, Vert vert4,
+			Vertex vertex1, Vertex vertex2, Vertex vertex3, Vertex vertex4,
 			
 			Renderer renderer,
 			int[] polyData,
@@ -75,7 +75,7 @@ public class HLPBinaryBreaker {
 		{
 			polygonRenderer.process(							
 					context,
-					vert1, vert2, vert3, vert4,					
+					vertex1, vertex2, vertex3, vertex4,					
 					renderer,
 					polyData,
 					textureMap, lightingValue 
@@ -94,7 +94,7 @@ public class HLPBinaryBreaker {
 				touchedTop,
 				touchedBottom,
 				
-				vert1, vert2, vert3, vert4,
+				vertex1, vertex2, vertex3, vertex4,
 				
 				renderer,
 				polyData,
@@ -117,7 +117,7 @@ static void subprocess(
 		boolean touchedTop,
 		boolean touchedBottom,
 		
-		Vert vert1, Vert vert2, Vert vert3, Vert vert4,
+		Vertex vertex1, Vertex vertex2, Vertex vertex3, Vertex vertex4,
 		
 		Renderer renderer,
 		int[] polyData,
@@ -127,24 +127,24 @@ static void subprocess(
 	{
     System.out.println("HLP break subprocess called");
 //    if(accelerate)System.out.println("accelerate=true");
-    Vert a = vert1;
-    Vert b = vert2;
-    Vert c = vert3;
-    Vert d = vert4;
+    Vertex a = vertex1;
+    Vertex b = vertex2;
+    Vertex c = vertex3;
+    Vertex d = vertex4;
     System.out.println("vert a = " + a.vs_x + "," + a.vs_y + "," + a.vs_z );	    
     System.out.println("vert b = " + b.vs_x + "," + b.vs_y + "," + b.vs_z );	    
     System.out.println("vert c = " + c.vs_x + "," + c.vs_y + "," + c.vs_z );	    
     System.out.println("vert d = " + d.vs_x + "," + d.vs_y + "," + d.vs_z );	
 	
-	if(needsHLPBreak(context, vert1, vert2, vert3, vert4))
+	if(needsHLPBreak(context, vertex1, vertex2, vertex3, vertex4))
 		{
 			int hlpBreakCase = 0;
 			float localThresholdDist = thresholdDist; // set by needsHLPBreak
 			
-			if(vert1.vs_z > localThresholdDist) hlpBreakCase |= ONE;
-			if(vert2.vs_z > localThresholdDist) hlpBreakCase |= TWO;
-			if(vert3.vs_z > localThresholdDist) hlpBreakCase |= FOUR;
-			if(vert4.vs_z > localThresholdDist) hlpBreakCase |= EIGHT;
+			if(vertex1.vs_z > localThresholdDist) hlpBreakCase |= ONE;
+			if(vertex2.vs_z > localThresholdDist) hlpBreakCase |= TWO;
+			if(vertex3.vs_z > localThresholdDist) hlpBreakCase |= FOUR;
+			if(vertex4.vs_z > localThresholdDist) hlpBreakCase |= EIGHT;
 					
 			hlpBreakCaseHandler(
 					context,
@@ -154,7 +154,7 @@ static void subprocess(
 					touchedLeft,
 					touchedTop,
 					touchedBottom,		
-					vert1, vert2, vert3, vert4,	
+					vertex1, vertex2, vertex3, vertex4,	
 					renderer,
 					polyData,
 					textureMap,
@@ -168,7 +168,7 @@ static void subprocess(
 		{			
 			polygonRenderer.process(
 					context,
-					vert1, vert2, vert3, vert4,					
+					vertex1, vertex2, vertex3, vertex4,					
 					renderer,
 					polyData,
 					textureMap, lightingValue 
@@ -185,7 +185,7 @@ static void hlpBreakCaseHandler(
 				boolean touchedLeft,
 				boolean touchedTop,
 				boolean touchedBottom,		
-				Vert vert1, Vert vert2, Vert vert3, Vert vert4,	
+				Vertex vertex1, Vertex vertex2, Vertex vertex3, Vertex vertex4,	
 				Renderer renderer,
 				int[] polyData,
 				TexMap textureMap,
@@ -195,8 +195,8 @@ static void hlpBreakCaseHandler(
 				float contextQualityOfHLP
 			)
 		{
-			Vert verta;
-			Vert vertb;	
+			Vertex vertexa;
+			Vertex vertexb;	
 			System.out.println("hlpBreakCase="+hlpBreakCase);
 			float z1,z2,z3,z4;
 			float d1, d2;
@@ -208,7 +208,7 @@ static void hlpBreakCaseHandler(
 					// for robustness if it does happen resort to low level of perspective rendering
 					polygonRenderer.process(							
 							context,
-							vert1, vert2, vert3, vert4,					
+							vertex1, vertex2, vertex3, vertex4,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
@@ -216,10 +216,10 @@ static void hlpBreakCaseHandler(
 					return;
 			
 				case 1:				
-					z1 = vert1.vs_z;
-					z2 = vert2.vs_z;
-					z3 = vert3.vs_z;
-					z4 = vert4.vs_z;
+					z1 = vertex1.vs_z;
+					z2 = vertex2.vs_z;
+					z3 = vertex3.vs_z;
+					z4 = vertex4.vs_z;
 					
 					d1 = (z1 - z2) + (z4 - z3);
 					d2 = (z1 - z4) + (z2 - z3);
@@ -232,7 +232,7 @@ static void hlpBreakCaseHandler(
 								contextQualityOfHLP,
 								context,
 								fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-								vert1, vert2, vert3, vert4,
+								vertex1, vertex2, vertex3, vertex4,
 								renderer,polyData,textureMap,lightingValue
 								);					
 					}
@@ -243,17 +243,17 @@ static void hlpBreakCaseHandler(
 								contextQualityOfHLP,
 								context,
 								fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-								vert1, vert2, vert3, vert4,
+								vertex1, vertex2, vertex3, vertex4,
 								renderer,polyData,textureMap,lightingValue
 								);					
 					}
 					return;
 					
 				case 2:
-					z1 = vert1.vs_z;
-					z2 = vert2.vs_z;
-					z3 = vert3.vs_z;
-					z4 = vert4.vs_z;
+					z1 = vertex1.vs_z;
+					z2 = vertex2.vs_z;
+					z3 = vertex3.vs_z;
+					z4 = vertex4.vs_z;
 					
 					d1 = (z2 - z3) + (z1 - z4);
 					d2 = (z2 - z1) + (z3 - z4);
@@ -265,7 +265,7 @@ static void hlpBreakCaseHandler(
 								contextQualityOfHLP,
 								context,
 								fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-								vert1, vert2, vert3, vert4,
+								vertex1, vertex2, vertex3, vertex4,
 								renderer,polyData,textureMap,lightingValue
 								);						
 					}
@@ -275,7 +275,7 @@ static void hlpBreakCaseHandler(
 								contextQualityOfHLP,
 								context,
 								fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-								vert1, vert2, vert3, vert4,
+								vertex1, vertex2, vertex3, vertex4,
 								renderer,polyData,textureMap,lightingValue
 								);				
 					}
@@ -286,16 +286,16 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert1, vert2, vert3, vert4,
+							vertex1, vertex2, vertex3, vertex4,
 							renderer, polyData, textureMap, lightingValue
 							);				
 					return;
 					
 				case 4:
-					z1 = vert1.vs_z;
-					z2 = vert2.vs_z;
-					z3 = vert3.vs_z;
-					z4 = vert4.vs_z;
+					z1 = vertex1.vs_z;
+					z2 = vertex2.vs_z;
+					z3 = vertex3.vs_z;
+					z4 = vertex4.vs_z;
 					
 					d1 = (z3 - z4) + (z2 - z1);
 					d2 = (z3 - z2) + (z4 - z1);
@@ -307,7 +307,7 @@ static void hlpBreakCaseHandler(
 								contextQualityOfHLP,
 								context,
 								fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-								vert1, vert2, vert3, vert4,
+								vertex1, vertex2, vertex3, vertex4,
 								renderer,polyData,textureMap,lightingValue
 								);		
 					}
@@ -318,7 +318,7 @@ static void hlpBreakCaseHandler(
 								contextQualityOfHLP,
 								context,
 								fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-								vert1, vert2, vert3, vert4,
+								vertex1, vertex2, vertex3, vertex4,
 								renderer,polyData,textureMap,lightingValue
 								);							
 					}
@@ -330,14 +330,14 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert1, vert1, vert2, vert4,
+							vertex1, vertex1, vertex2, vertex4,
 							renderer, polyData, textureMap, lightingValue
 							);
 					subprocess(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert3, vert3, vert4, vert2,
+							vertex3, vertex3, vertex4, vertex2,
 							renderer, polyData, textureMap, lightingValue
 							);				
 					return;
@@ -347,17 +347,17 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert1, vert2, vert3, vert4,
+							vertex1, vertex2, vertex3, vertex4,
 							renderer, polyData, textureMap, lightingValue							
 							);
 					return;
 					
 				case 7:
 					// break as if case 2, 2nd vertex nearest
-					z1 = vert1.vs_z;
-					z2 = vert2.vs_z;
-					z3 = vert3.vs_z;
-					z4 = vert4.vs_z;
+					z1 = vertex1.vs_z;
+					z2 = vertex2.vs_z;
+					z3 = vertex3.vs_z;
+					z4 = vertex4.vs_z;
 					
 					d1 = (z2 - z3) + (z1 - z4);
 					d2 = (z2 - z1) + (z3 - z4);
@@ -369,7 +369,7 @@ static void hlpBreakCaseHandler(
 								contextQualityOfHLP,
 								context,
 								fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-								vert1, vert2, vert3, vert4,
+								vertex1, vertex2, vertex3, vertex4,
 								renderer,polyData,textureMap,lightingValue
 								);						
 					}
@@ -379,17 +379,17 @@ static void hlpBreakCaseHandler(
 								contextQualityOfHLP,
 								context,
 								fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-								vert1, vert2, vert3, vert4,
+								vertex1, vertex2, vertex3, vertex4,
 								renderer,polyData,textureMap,lightingValue
 								);				
 					}
 					return;	
 						
 				case 8:
-					z1 = vert1.vs_z;
-					z2 = vert2.vs_z;
-					z3 = vert3.vs_z;
-					z4 = vert4.vs_z;
+					z1 = vertex1.vs_z;
+					z2 = vertex2.vs_z;
+					z3 = vertex3.vs_z;
+					z4 = vertex4.vs_z;
 					
 					d1 = (z4 - z3) + (z1 - z2);
 					d2 = (z4 - z1) + (z3 - z2);
@@ -401,7 +401,7 @@ static void hlpBreakCaseHandler(
 								contextQualityOfHLP,
 								context,
 								fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-								vert1, vert2, vert3, vert4,
+								vertex1, vertex2, vertex3, vertex4,
 								renderer,polyData,textureMap,lightingValue
 								);					
 					}
@@ -412,7 +412,7 @@ static void hlpBreakCaseHandler(
 								contextQualityOfHLP,
 								context,
 								fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-								vert1, vert2, vert3, vert4,
+								vertex1, vertex2, vertex3, vertex4,
 								renderer,polyData,textureMap,lightingValue
 								);					
 					}
@@ -423,7 +423,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert1, vert2, vert3, vert4,
+							vertex1, vertex2, vertex3, vertex4,
 							renderer,polyData,textureMap,lightingValue
 							);					
 				
@@ -435,23 +435,23 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert2, vert2, vert3, vert1,
+							vertex2, vertex2, vertex3, vertex1,
 							renderer, polyData, textureMap, lightingValue
 							);
 					subprocess(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert4, vert4, vert1, vert3,
+							vertex4, vertex4, vertex1, vertex3,
 							renderer, polyData, textureMap, lightingValue
 							);				
 					return;
 					
 				case 11:
-					z1 = vert1.vs_z;
-					z2 = vert2.vs_z;
-					z3 = vert3.vs_z;
-					z4 = vert4.vs_z;
+					z1 = vertex1.vs_z;
+					z2 = vertex2.vs_z;
+					z3 = vertex3.vs_z;
+					z4 = vertex4.vs_z;
 					
 					d1 = (z1 - z2) + (z4 - z3);
 					d2 = (z1 - z4) + (z2 - z3);
@@ -464,7 +464,7 @@ static void hlpBreakCaseHandler(
 								contextQualityOfHLP,
 								context,
 								fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-								vert1, vert2, vert3, vert4,
+								vertex1, vertex2, vertex3, vertex4,
 								renderer,polyData,textureMap,lightingValue
 								);					
 					}
@@ -475,7 +475,7 @@ static void hlpBreakCaseHandler(
 								contextQualityOfHLP,
 								context,
 								fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-								vert1, vert2, vert3, vert4,
+								vertex1, vertex2, vertex3, vertex4,
 								renderer,polyData,textureMap,lightingValue
 								);					
 					}
@@ -486,17 +486,17 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert1, vert2, vert3, vert4,
+							vertex1, vertex2, vertex3, vertex4,
 							renderer, polyData, textureMap, lightingValue
 							);
 					return;
 					
 				case 13:
 					// split as case 8
-					z1 = vert1.vs_z;
-					z2 = vert2.vs_z;
-					z3 = vert3.vs_z;
-					z4 = vert4.vs_z;
+					z1 = vertex1.vs_z;
+					z2 = vertex2.vs_z;
+					z3 = vertex3.vs_z;
+					z4 = vertex4.vs_z;
 					
 					d1 = (z4 - z3) + (z1 - z2);
 					d2 = (z4 - z1) + (z3 - z2);
@@ -508,7 +508,7 @@ static void hlpBreakCaseHandler(
 								contextQualityOfHLP,
 								context,
 								fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-								vert1, vert2, vert3, vert4,
+								vertex1, vertex2, vertex3, vertex4,
 								renderer,polyData,textureMap,lightingValue
 								);					
 					}
@@ -519,7 +519,7 @@ static void hlpBreakCaseHandler(
 								contextQualityOfHLP,
 								context,
 								fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-								vert1, vert2, vert3, vert4,
+								vertex1, vertex2, vertex3, vertex4,
 								renderer,polyData,textureMap,lightingValue
 								);					
 					}
@@ -527,10 +527,10 @@ static void hlpBreakCaseHandler(
 					
 				case 14:
 					// as case 4
-					z1 = vert1.vs_z;
-					z2 = vert2.vs_z;
-					z3 = vert3.vs_z;
-					z4 = vert4.vs_z;
+					z1 = vertex1.vs_z;
+					z2 = vertex2.vs_z;
+					z3 = vertex3.vs_z;
+					z4 = vertex4.vs_z;
 					
 					d1 = (z3 - z4) + (z2 - z1);
 					d2 = (z3 - z2) + (z4 - z1);
@@ -542,7 +542,7 @@ static void hlpBreakCaseHandler(
 								contextQualityOfHLP,
 								context,
 								fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-								vert1, vert2, vert3, vert4,
+								vertex1, vertex2, vertex3, vertex4,
 								renderer,polyData,textureMap,lightingValue
 								);		
 					}
@@ -553,7 +553,7 @@ static void hlpBreakCaseHandler(
 								contextQualityOfHLP,
 								context,
 								fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-								vert1, vert2, vert3, vert4,
+								vertex1, vertex2, vertex3, vertex4,
 								renderer,polyData,textureMap,lightingValue
 								);							
 					}
@@ -561,7 +561,7 @@ static void hlpBreakCaseHandler(
 				case 15:
 					polygonRenderer.process(
 							context,
-							vert1, vert2, vert3, vert4,					
+							vertex1, vertex2, vertex3, vertex4,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
@@ -580,7 +580,7 @@ static void splitOneTwo(
 		boolean touchedTop,
 		boolean touchedBottom,
 		
-		Vert vert1, Vert vert2, Vert vert3, Vert vert4,
+		Vertex vertex1, Vertex vertex2, Vertex vertex3, Vertex vertex4,
 		
 		Renderer renderer,
 		int[] polyData,
@@ -589,21 +589,21 @@ static void splitOneTwo(
 		)
 {
 	// splitting in half between 1-2 and 4-3
-	Vert verta,vertb;
-	verta = calculateIntersect(vert1, vert2);
-	vertb = calculateIntersect(vert4, vert3);
+	Vertex vertexa,vertexb;
+	vertexa = calculateIntersect(vertex1, vertex2);
+	vertexb = calculateIntersect(vertex4, vertex3);
 	subprocess(
 			contextQualityOfHLP,
 			context,
 			fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-			vert1, verta, vertb, vert4,
+			vertex1, vertexa, vertexb, vertex4,
 			renderer,polyData,textureMap,lightingValue
 			);
 	subprocess(
 			contextQualityOfHLP,
 			context,
 			fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-			verta, vert2, vert3, vertb,
+			vertexa, vertex2, vertex3, vertexb,
 			renderer,polyData,textureMap,lightingValue
 			);		
 }
@@ -618,7 +618,7 @@ static void splitOneFour(
 		boolean touchedTop,
 		boolean touchedBottom,
 		
-		Vert vert1, Vert vert2, Vert vert3, Vert vert4,
+		Vertex vertex1, Vertex vertex2, Vertex vertex3, Vertex vertex4,
 		
 		Renderer renderer,
 		int[] polyData,
@@ -627,36 +627,36 @@ static void splitOneFour(
 		)
 {
 	// splitting in half between 1-4 and 2-3
-	Vert verta,vertb;
-	verta = calculateIntersect(vert1, vert4);
-	vertb = calculateIntersect(vert2, vert3);
+	Vertex vertexa,vertexb;
+	vertexa = calculateIntersect(vertex1, vertex4);
+	vertexb = calculateIntersect(vertex2, vertex3);
 	subprocess(
 			contextQualityOfHLP,
 			context,
 			fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-			vert1, vert2, vertb, verta,
+			vertex1, vertex2, vertexb, vertexa,
 			renderer,polyData,textureMap,lightingValue
 			);
 	subprocess(
 			contextQualityOfHLP,
 			context,
 			fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-			verta, vertb, vert3, vert4,
+			vertexa, vertexb, vertex3, vertex4,
 			renderer,polyData,textureMap,lightingValue
 			);		
 }
 
 	/** Given four vertexes and a Nitrogen context containing a valid qualityofHLP determines if HLP breaking is required */ 
-	static boolean needsHLPBreak(NitrogenContext context, Vert vert1, Vert vert2, Vert vert3, Vert vert4)
+	static boolean needsHLPBreak(NitrogenContext context, Vertex vertex1, Vertex vertex2, Vertex vertex3, Vertex vertex4)
 	{
 		float maxaz, maxbz, minaz, minbz, finalminz;
 		float finalmaxz; // needs initialisation to compile
 		float localThresholdDist; // needs initialisation to compile
 		
-		float z1 = vert1.vs_z;
-		float z2 = vert2.vs_z;
-		float z3 = vert3.vs_z;
-		float z4 = vert4.vs_z;
+		float z1 = vertex1.vs_z;
+		float z2 = vertex2.vs_z;
+		float z3 = vertex3.vs_z;
+		float z4 = vertex4.vs_z;
 				
 		// sort first two vertexes (max = farthest from viewpoint)
 		if(z1 < z2)
@@ -717,13 +717,13 @@ static void splitOneFour(
 	 * @param second Second vertex
 	 * @return The vertex that lies halfway
 	 */
-	static final Vert calculateIntersect(Vert first, Vert second)
+	static final Vertex calculateIntersect(Vertex first, Vertex second)
 	{
 		//DEBUG
 //		System.out.println("generatingInbetweenVertex at index:"+workingVertexIndex);
 		float n = 0.5f;
 		// create a new output vertex
-		Vert retval = workingVertexs[workingVertexIndex];
+		Vertex retval = workingVertexes[workingVertexIndex];
 		workingVertexIndex++;
 		
 		/** The generated vertex view-space coordinates */

@@ -9,7 +9,7 @@ package nitrogen1;
  *
  * @author andrew
  */
-public final class Vert {
+public final class Vertex {
     
 	// Item-space coordinates
 	/** Item space x coordinate. The containing Items orientation transform gets applied to the (usually fixed) Item space coordinates of the vertex in order to generate the vertex's view-space coordinates. */
@@ -62,19 +62,19 @@ public final class Vert {
     float radius;
     
 	/** package scope reference for use in factories LLL*/
-	Vert nextInList;
+	Vertex nextInList;
     
     /** default constructor used by static initialiser in HLPBreaker */
-    Vert() {}
+    Vertex() {}
     
-    Vert(ImmutableVertex iv)
+    Vertex(ImmutableVertex iv)
     {
     	 is_x = iv.is_x;
     	 is_y = iv.is_y;
     	 is_z = iv.is_z;
     }
     
-    Vert(ImmutableCollisionVert icv)
+    Vertex(ImmutableCollisionVertex icv)
     {
     	 is_x = icv.is_x;
     	 is_y = icv.is_y;
@@ -94,7 +94,7 @@ public final class Vert {
     }
     
     /** constructor for collision vertex */
-    void initializeVertex(ImmutableCollisionVert icv)
+    void initializeVertex(ImmutableCollisionVertex icv)
     {	
     	is_x = icv.is_x;
     	is_y = icv.is_y;
@@ -191,7 +191,7 @@ public final class Vert {
     }
     
     /** collision vertex method */
-    float distanceTo(Vert target)
+    float distanceTo(Vertex target)
     {
     	float dx = vs_x - target.vs_x;
     	float dy = vs_y - target.vs_y;
@@ -200,7 +200,7 @@ public final class Vert {
     }
     
     /** collision vertex method */
-    float distanceToSquared(Vert target)
+    float distanceToSquared(Vertex target)
     {
     	float dx = vs_x - target.vs_x;
     	float dy = vs_y - target.vs_y;
@@ -209,13 +209,13 @@ public final class Vert {
     }
     
     /** collision vertex method */
-    float gapTo(Vert target)
+    float gapTo(Vertex target)
     {
     	return(distanceToSquared(target) - radius - target.radius);
     }
     
     /** collision vertex method */
-    float gapToSquared(Vert target)
+    float gapToSquared(Vertex target)
     {
     	float radiusL = radius;
     	float targetRadius = target.radius;
@@ -223,7 +223,7 @@ public final class Vert {
    	
     }
     
-    boolean collidedWith(Vert target)
+    boolean collidedWith(Vertex target)
     {
     	float radiusL = radius;
     	float targetRadius = target.radius;

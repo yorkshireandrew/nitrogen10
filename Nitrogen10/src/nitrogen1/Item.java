@@ -35,11 +35,11 @@ public class Item {
 	private Backside backsides[];
 	
 	/** The Items vertexes */
-	private Vert vertexs[];
+	private Vertex vertexes[];
 	
 	/** The Items collision vertexes */
 	private boolean hasCollisionVertexes;
-	private Vert collisionVertexes[];
+	private Vertex collisionVertexes[];
 	
 	// ************************************************
 	// ********************** FLAGS *******************
@@ -136,17 +136,17 @@ public class Item {
 		for(int x = 0; x < backsideMax; x++)backsides[x] = itemFactoryL.getBackside(in_sisi.immutableBacksides[x]);
 
 		// create the vertexes array from the sisi ImmutableVertexs
-		ImmutableVertex[] iva = in_sisi.immutableVertexs;
+		ImmutableVertex[] iva = in_sisi.immutableVertexes;
 		int vertexMax = iva.length;
-		vertexs = new Vert[vertexMax];
-		for(int x = 0; x < vertexMax; x++)vertexs[x] = itemFactoryL.getVertex(iva[x]);
+		vertexes = new Vertex[vertexMax];
+		for(int x = 0; x < vertexMax; x++)vertexes[x] = itemFactoryL.getVertex(iva[x]);
 		
 		// create the collision vertex array from the sisi ImmutableCollisionVertexes
-		ImmutableCollisionVert[] icva = in_sisi.immutableCollisionVertexes;
+		ImmutableCollisionVertex[] icva = in_sisi.immutableCollisionVertexes;
 		int collisionVertexMax = icva.length;
 		if(collisionVertexMax > 0){hasCollisionVertexes = true;}
 		else{hasCollisionVertexes = false;}
-		collisionVertexes = new Vert[collisionVertexMax];
+		collisionVertexes = new Vertex[collisionVertexMax];
 		for(int x = 0; x < collisionVertexMax; x++)collisionVertexes[x] = itemFactoryL.getVertex(icva[x]);
 		
 		// clear other flags
@@ -300,10 +300,10 @@ public class Item {
 			if(backside.facingViewer())
 			{
 				// Calculate the vertexes, then Pass the polygon on to the next process.
-				Vert v1 = vertexs[immutablePolygon.c1];
-				Vert v2 = vertexs[immutablePolygon.c2];
-				Vert v3 = vertexs[immutablePolygon.c3];
-				Vert v4 = vertexs[immutablePolygon.c4];				
+				Vertex v1 = vertexes[immutablePolygon.c1];
+				Vertex v2 = vertexes[immutablePolygon.c2];
+				Vertex v3 = vertexes[immutablePolygon.c3];
+				Vertex v4 = vertexes[immutablePolygon.c4];				
 				v1.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
 				v2.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
 				v3.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
@@ -342,10 +342,10 @@ public class Item {
 				if(immutablePolygon.isBacksideCulled && noBacksideOverride)continue;
 				
 				// Calculate the vertexes, then Pass the polygon on to the next process.
-				Vert v1 = vertexs[immutablePolygon.c1];
-				Vert v2 = vertexs[immutablePolygon.c2];
-				Vert v3 = vertexs[immutablePolygon.c3];
-				Vert v4 = vertexs[immutablePolygon.c4];			
+				Vertex v1 = vertexes[immutablePolygon.c1];
+				Vertex v2 = vertexes[immutablePolygon.c2];
+				Vertex v3 = vertexes[immutablePolygon.c3];
+				Vertex v4 = vertexes[immutablePolygon.c4];			
 				v1.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
 				v2.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
 				v3.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
@@ -485,7 +485,7 @@ public class Item {
 	private void lazyComputeBacksidesAndVertexs()
 	{
 		Backside b;
-		Vert v;
+		Vertex v;
 		if(rotationNeedsUpdate)
 		{
 			int backsidesLength = backsides.length;
@@ -495,17 +495,17 @@ public class Item {
 				b.rotationNeedsUpdate = true;
 				b.translationNeedsUpdate = true;
 			}
-			int vertexsLength = vertexs.length;
+			int vertexsLength = vertexes.length;
 			for(int x =0; x < vertexsLength; x++)
 			{
-				v = vertexs[x];
+				v = vertexes[x];
 				v.rotationNeedsUpdate = true;
 				v.translationNeedsUpdate = true;
 			}
 			
 			if(hasCollisionVertexes)
 			{
-				Vert cv;
+				Vertex cv;
 				int collisionVertexesLength = collisionVertexes.length;
 				for(int x =0; x < collisionVertexesLength; x++)
 				{
@@ -526,12 +526,12 @@ public class Item {
 			int backsidesLength = backsides.length;
 			for(int x =0; x < backsidesLength; x++) backsides[x].translationNeedsUpdate = true;
 
-			int vertexsLength = vertexs.length;
-			for(int x =0; x < vertexsLength; x++)vertexs[x].translationNeedsUpdate = true;
+			int vertexsLength = vertexes.length;
+			for(int x =0; x < vertexsLength; x++)vertexes[x].translationNeedsUpdate = true;
 
 			if(hasCollisionVertexes)
 			{
-				Vert cv;
+				Vertex cv;
 				int collisionVertexesLength = collisionVertexes.length;
 				for(int x =0; x < collisionVertexesLength; x++)
 				{
@@ -706,7 +706,7 @@ public class Item {
 			float pc33 = parentL.c33;
 			float pc34 = parentL.c34;
 			
-			Vert[] collisionVertexesL = collisionVertexes;
+			Vertex[] collisionVertexesL = collisionVertexes;
 			int collisionVertexLength = collisionVertexesL.length;
 			for(int i = 0; i < collisionVertexLength; i++)
 			{
@@ -722,32 +722,34 @@ public class Item {
 	}
 	
 	/** package scope helper so that factories can recycle an Items Vertexes */
-	final Vert[] getVertexes()
+	final Vertex[] getVertexes()
 	{
-		return vertexs;
+		return vertexes;
 	}
 	
 	/** package scope helper so that factories can recycle an Items Vertexes */
-	final Vert[] getCollisionVertexes()
+	final Vertex[] getCollisionVertexes()
 	{
 		return collisionVertexes;
 	}
 	
 	final void recycle()
 	{
+		// tell our parents we are going
+		if(parent != null)parent.remove(this);
 		itemFactory.recycle(this);
 	}
 	
 	/** returns an Iterator<Vert> for enumerating the Items collision vertexes */
-	final public Iterator<Vert> getCollisionVertexIterator()
+	final public Iterator<Vertex> getCollisionVertexIterator()
 	{
 		calculateCollisionVertexes();
-		return (new Iterator<Vert>(){
+		return (new Iterator<Vertex>(){
 			private int index = 0;
 			private int collisionVertexesMax = collisionVertexes.length;
 
 			@Override
-			public Vert next() {
+			public Vertex next() {
 				return collisionVertexes[index++];
 			}
 			

@@ -13,21 +13,17 @@ final public class ItemFactory_Default implements ItemFactory{
 		return new Backside(ib);
 	}
 	
-	final public Vert getVertex(final ImmutableVertex iv)
+	final public Vertex getVertex(final ImmutableVertex iv)
 	{
-		return new Vert(iv);
+		return new Vertex(iv);
 	}
 	
-	final public Vert getVertex(final ImmutableCollisionVert icv)
+	final public Vertex getVertex(final ImmutableCollisionVertex icv)
 	{
-		return new Vert(icv);
+		return new Vertex(icv);
 	}
 
 	final public void setFreeItems(final int free){}
-	
-	final public void setFreeBackside(final int free){}
-	
-	final public void setFreeVertex(final int free){}
 	
 	final public void trimToSize(){}
 

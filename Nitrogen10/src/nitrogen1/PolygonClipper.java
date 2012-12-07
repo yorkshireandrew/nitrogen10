@@ -28,14 +28,14 @@ public class PolygonClipper {
 	static final int EIGHT = 8;
 	
 	/** Field used to generate Vertexs that occur at intersect points */
-	static Vert[] workingVertexs;
+	static Vertex[] workingVertexes;
 	/** Field used to generate Vertexs that occur at intersect points */
 	static int workingVertexIndex = 0;
 	
 	static{ 
 		int BUFFER_SIZE = 64;
-		workingVertexs = new Vert[BUFFER_SIZE];
-		for(int i = 0 ; i < BUFFER_SIZE; i++)workingVertexs[i]= new Vert();
+		workingVertexes = new Vertex[BUFFER_SIZE];
+		for(int i = 0 ; i < BUFFER_SIZE; i++)workingVertexes[i]= new Vertex();
 		}
 	
 	
@@ -50,10 +50,10 @@ public class PolygonClipper {
 	 * @param touchedTop The polygon may touch the top plane
 	 * @param touchedBottom The polygon may touch the bottom plane
 	 * <br/><br/>
-	 * @param vert1 1st polygon vertex. The four Vertexes must be in clockwise order
-	 * @param vert2 2nd polygon vertex.
-	 * @param vert3 3rd polygon vertex.
-	 * @param vert4 4th polygon vertex.
+	 * @param vertex1 1st polygon vertex. The four Vertexes must be in clockwise order
+	 * @param vertex2 2nd polygon vertex.
+	 * @param vertex3 3rd polygon vertex.
+	 * @param vertex4 4th polygon vertex.
 	 * <br/><br/>
 	 * @param renderer Renderer to use to render the polygon.
 	 * @param polyData Polygon data to pass to the Renderer, such as its colour.
@@ -72,10 +72,10 @@ public class PolygonClipper {
 			boolean touchedTop,
 			boolean touchedBottom,
 			
-			Vert vert1, 
-			Vert vert2, 
-			Vert vert3, 
-			Vert vert4,
+			Vertex vertex1, 
+			Vertex vertex2, 
+			Vertex vertex3, 
+			Vertex vertex4,
 		
 			Renderer renderer,
 			int[] polyData,
@@ -92,7 +92,7 @@ public class PolygonClipper {
 			HLPBinaryBreaker.process(
 					context,
 					fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,
-					vert1, vert2, vert3, vert4,									
+					vertex1, vertex2, vertex3, vertex4,									
 					renderer, polyData, textureMap, lightingValue, useHLPBreak
 					);
 		}
@@ -104,7 +104,7 @@ public class PolygonClipper {
 					pass,
 					context,
 					fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,
-					vert1, vert2, vert3, vert4,					
+					vertex1, vertex2, vertex3, vertex4,					
 					renderer, polyData, textureMap, lightingValue, useHLPBreak 
 					);
 		}
@@ -130,10 +130,10 @@ public class PolygonClipper {
 	 * @param touchedTop 		The polygon may touch the top plane
 	 * @param touchedBottom 	The polygon may touch the bottom plane
 	 * <br/><br/>
-	 * @param vert1 			1st polygon vertex. The four Vertexes must be in clockwise order
-	 * @param vert2 			2nd polygon vertex.
-	 * @param vert3 			3rd polygon vertex.
-	 * @param vert4 			4th polygon vertex.
+	 * @param vertex1 			1st polygon vertex. The four Vertexes must be in clockwise order
+	 * @param vertex2 			2nd polygon vertex.
+	 * @param vertex3 			3rd polygon vertex.
+	 * @param vertex4 			4th polygon vertex.
 	 * <br/><br/>
 	 * @param renderer			The renderer for the polygon.
 	 * @param polyData			Polygon data to pass to the renderer such as its colour.
@@ -150,10 +150,10 @@ public class PolygonClipper {
 			boolean touchedTop,
 			boolean touchedBottom,
 			
-			Vert vert1, 
-			Vert vert2, 
-			Vert vert3, 
-			Vert vert4,
+			Vertex vertex1, 
+			Vertex vertex2, 
+			Vertex vertex3, 
+			Vertex vertex4,
 			
 			Renderer renderer,
 			int[] polyData,
@@ -168,7 +168,7 @@ public class PolygonClipper {
 				HLPBinaryBreaker.process(
 						context,
 						fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,						
-						vert1, vert2, vert3, vert4,
+						vertex1, vertex2, vertex3, vertex4,
 						renderer, polyData, textureMap, lightingValue, useHLPBreak
 						);
 			}
@@ -188,7 +188,7 @@ public class PolygonClipper {
 							(pass+1),
 							context,
 							fustrumTouchCount, touchedNear, touchedRight, touchedLeft,touchedTop,touchedBottom,							
-							vert1, vert2, vert3, vert4,							
+							vertex1, vertex2, vertex3, vertex4,							
 							renderer,polyData,textureMap,lightingValue,useHLPBreak); 							
 				}
 				else
@@ -201,26 +201,26 @@ public class PolygonClipper {
 					int clipCase = 0;
 					
 					/** local intersect vertex (abcd = clockwise)*/
-					Vert verta;
+					Vertex vertexa;
 					/** local intersect vertex (abcd = clockwise)*/
-					Vert vertb;
+					Vertex vertexb;
 					/** local intersect vertex (abcd = clockwise)*/
-					Vert vertc;
+					Vertex vertexc;
 					/** local intersect vertex (abcd = clockwise)*/
-					Vert vertd;
+					Vertex vertexd;
 					
-					if(isVertexCulled(vert1, context, pass))clipCase |= ONE;
-					if(isVertexCulled(vert2, context, pass))clipCase |= TWO;
-					if(isVertexCulled(vert3, context, pass))clipCase |= FOUR;
-					if(isVertexCulled(vert4, context, pass))clipCase |= EIGHT;
+					if(isVertexCulled(vertex1, context, pass))clipCase |= ONE;
+					if(isVertexCulled(vertex2, context, pass))clipCase |= TWO;
+					if(isVertexCulled(vertex3, context, pass))clipCase |= FOUR;
+					if(isVertexCulled(vertex4, context, pass))clipCase |= EIGHT;
 					
 					System.out.println("CLIP POLYGON");
 					System.out.println("PASS:"+pass);
 					System.out.println("CLIPCASE:"+clipCase);
-				    System.out.println("vert 1 = " + (vert1.vs_x / -vert1.vs_z) + "," + (vert1.vs_y / -vert1.vs_z));	    
-				    System.out.println("vert 2 = " + (vert2.vs_x / -vert2.vs_z) + "," + (vert2.vs_y / -vert2.vs_z));	    
-				    System.out.println("vert 3 = " + (vert3.vs_x / -vert3.vs_z) + "," + (vert3.vs_y / -vert3.vs_z));	    
-				    System.out.println("vert 4 = " + (vert4.vs_x / -vert4.vs_z) + "," + (vert4.vs_y / -vert4.vs_z));
+				    System.out.println("vert 1 = " + (vertex1.vs_x / -vertex1.vs_z) + "," + (vertex1.vs_y / -vertex1.vs_z));	    
+				    System.out.println("vert 2 = " + (vertex2.vs_x / -vertex2.vs_z) + "," + (vertex2.vs_y / -vertex2.vs_z));	    
+				    System.out.println("vert 3 = " + (vertex3.vs_x / -vertex3.vs_z) + "," + (vertex3.vs_y / -vertex3.vs_z));	    
+				    System.out.println("vert 4 = " + (vertex4.vs_x / -vertex4.vs_z) + "," + (vertex4.vs_y / -vertex4.vs_z));
 
 					
 					
@@ -231,221 +231,221 @@ public class PolygonClipper {
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									vert1, vert2, vert3, vert4,							
+									vertex1, vertex2, vertex3, vertex4,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							return;
 						
 						case 1:
-							verta = calculateIntersect(vert4, vert1, context, pass);
-							vertb = calculateIntersect(vert2, vert1, context, pass);
+							vertexa = calculateIntersect(vertex4, vertex1, context, pass);
+							vertexb = calculateIntersect(vertex2, vertex1, context, pass);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									vertb, vert2, vert3, verta,							
+									vertexb, vertex2, vertex3, vertexa,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									verta, verta, vert3, vert4,							
+									vertexa, vertexa, vertex3, vertex4,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							return;
 							
 						case 2:
-							verta = calculateIntersect(vert1, vert2, context, pass);
-							vertb = calculateIntersect(vert3, vert2, context, pass);
+							vertexa = calculateIntersect(vertex1, vertex2, context, pass);
+							vertexb = calculateIntersect(vertex3, vertex2, context, pass);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									verta, vertb, vert3, vert4,							
+									vertexa, vertexb, vertex3, vertex4,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									verta, verta, vert4, vert1,							
+									vertexa, vertexa, vertex4, vertex1,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);							
 							return;
 							
 						case 3:
-							verta = calculateIntersect(vert4, vert1, context, pass);
-							vertb = calculateIntersect(vert3, vert2, context, pass);
+							vertexa = calculateIntersect(vertex4, vertex1, context, pass);
+							vertexb = calculateIntersect(vertex3, vertex2, context, pass);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									verta, vertb, vert3, vert4,							
+									vertexa, vertexb, vertex3, vertex4,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);					
 							return;
 							
 						case 4:
-							verta = calculateIntersect(vert2, vert3, context, pass);
-							vertb = calculateIntersect(vert4, vert3, context, pass);
+							vertexa = calculateIntersect(vertex2, vertex3, context, pass);
+							vertexb = calculateIntersect(vertex4, vertex3, context, pass);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									verta, vertb, vert4, vert1,							
+									vertexa, vertexb, vertex4, vertex1,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									verta, verta, vert1, vert2,							
+									vertexa, vertexa, vertex1, vertex2,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);							
 							return;
 							
 						case 5:
-							verta = calculateIntersect(vert4, vert1, context, pass);
-							vertb = calculateIntersect(vert2, vert1, context, pass);
-							vertc = calculateIntersect(vert2, vert3, context, pass);
-							vertd = calculateIntersect(vert4, vert3, context, pass);
+							vertexa = calculateIntersect(vertex4, vertex1, context, pass);
+							vertexb = calculateIntersect(vertex2, vertex1, context, pass);
+							vertexc = calculateIntersect(vertex2, vertex3, context, pass);
+							vertexd = calculateIntersect(vertex4, vertex3, context, pass);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									verta, vertb, vert2, vertc,							
+									vertexa, vertexb, vertex2, vertexc,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									verta, vertc, vertd, vert4,							
+									vertexa, vertexc, vertexd, vertex4,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);							
 							return;
 
 						case 6:
-							verta = calculateIntersect(vert1, vert2, context, pass);
-							vertb = calculateIntersect(vert4, vert3, context, pass);
+							vertexa = calculateIntersect(vertex1, vertex2, context, pass);
+							vertexb = calculateIntersect(vertex4, vertex3, context, pass);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									vert1, verta, vertb, vert4,							
+									vertex1, vertexa, vertexb, vertex4,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);						
 							return;
 							
 						case 7:
-							verta = calculateIntersect(vert4, vert1, context, pass);
-							vertb = calculateIntersect(vert4, vert3, context, pass);
+							vertexa = calculateIntersect(vertex4, vertex1, context, pass);
+							vertexb = calculateIntersect(vertex4, vertex3, context, pass);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									verta, verta, vertb, vert4,							
+									vertexa, vertexa, vertexb, vertex4,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);						
 							return;
 							
 						case 8:
-							verta = calculateIntersect(vert3, vert4, context, pass);
-							vertb = calculateIntersect(vert1, vert4, context, pass);
+							vertexa = calculateIntersect(vertex3, vertex4, context, pass);
+							vertexb = calculateIntersect(vertex1, vertex4, context, pass);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									vert1, vert2, vert3, verta,							
+									vertex1, vertex2, vertex3, vertexa,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									verta, verta, vertb, vert1,							
+									vertexa, vertexa, vertexb, vertex1,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);							
 							return;
 							
 						case 9:
-							verta = calculateIntersect(vert2, vert1, context, pass);
-							vertb = calculateIntersect(vert3, vert4, context, pass);
+							vertexa = calculateIntersect(vertex2, vertex1, context, pass);
+							vertexb = calculateIntersect(vertex3, vertex4, context, pass);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									verta, vert2, vert3, vertb,							
+									vertexa, vertex2, vertex3, vertexb,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);						
 							return;
 							
 						case 10:
-							verta = calculateIntersect(vert1, vert2, context, pass);
-							vertb = calculateIntersect(vert3, vert2, context, pass);
-							vertc = calculateIntersect(vert3, vert4, context, pass);
-							vertd = calculateIntersect(vert1, vert4, context, pass);
+							vertexa = calculateIntersect(vertex1, vertex2, context, pass);
+							vertexb = calculateIntersect(vertex3, vertex2, context, pass);
+							vertexc = calculateIntersect(vertex3, vertex4, context, pass);
+							vertexd = calculateIntersect(vertex1, vertex4, context, pass);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									vert1, verta, vertb, vertd,							
+									vertex1, vertexa, vertexb, vertexd,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									vertd, vertb, vert3, vertc,							
+									vertexd, vertexb, vertex3, vertexc,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);
 							return;
 						
 						case 11:
-							verta = calculateIntersect(vert3, vert2, context, pass);
-							vertb = calculateIntersect(vert3, vert4, context, pass);
+							vertexa = calculateIntersect(vertex3, vertex2, context, pass);
+							vertexb = calculateIntersect(vertex3, vertex4, context, pass);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									verta, verta, vert3, vertb,							
+									vertexa, vertexa, vertex3, vertexb,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);						
 							return;
 							
 						case 12:
-							verta = calculateIntersect(vert2, vert3, context, pass);
-							vertb = calculateIntersect(vert1, vert4, context, pass);
+							vertexa = calculateIntersect(vertex2, vertex3, context, pass);
+							vertexb = calculateIntersect(vertex1, vertex4, context, pass);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									vert1, vert2, verta, vertb,							
+									vertex1, vertex2, vertexa, vertexb,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);						
 							return;
 							
 						case 13:
-							verta = calculateIntersect(vert2, vert1, context, pass);
-							vertb = calculateIntersect(vert2, vert3, context, pass);
+							vertexa = calculateIntersect(vertex2, vertex1, context, pass);
+							vertexb = calculateIntersect(vertex2, vertex3, context, pass);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									verta, verta, vert2, vertb,							
+									vertexa, vertexa, vertex2, vertexb,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);						
 							return;
 							
 						case 14:
-							verta = calculateIntersect(vert1, vert2, context, pass);
-							vertb = calculateIntersect(vert1, vert4, context, pass);
+							vertexa = calculateIntersect(vertex1, vertex2, context, pass);
+							vertexb = calculateIntersect(vertex1, vertex4, context, pass);
 							clipPolygon(
 									(pass+1),
 									context,
 									fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,							
-									vert1, vert1, verta, vertb,							
+									vertex1, vertex1, vertexa, vertexb,							
 									renderer, polyData,textureMap,lightingValue,useHLPBreak
 									);						
 							return;
@@ -469,7 +469,7 @@ public class PolygonClipper {
 	 * @param 	context The NitrogenContext that contains the view-fustrum information.
 	 * @param 	pass 	An enumerated integer used to define which plane of the view fustrum to clip against.
 	 * */
-	static final boolean isVertexCulled(Vert vertex, NitrogenContext context, int pass)
+	static final boolean isVertexCulled(Vertex vertex, NitrogenContext context, int pass)
 	{
 		float deapth_from_viewpoint = -vertex.vs_z;
 		switch(pass)
@@ -505,7 +505,7 @@ public class PolygonClipper {
 	 * @param pass 		An enumerated integer used to define which plane of the view fustrum is being processed.
 	 * @return 			A new vertex object that lies on the line where it intersects the view-fustrum plane.
 	 */
-	static final Vert calculateIntersect(Vert in, Vert out, NitrogenContext context, int pass)
+	static final Vertex calculateIntersect(Vertex in, Vertex out, NitrogenContext context, int pass)
 	{
 		float in_deapth = -in.vs_z;
 		float out_deapth = -out.vs_z;
@@ -520,7 +520,7 @@ public class PolygonClipper {
 		int va1, va2, va3;
 		
 		// create a new output vertex
-		Vert returnval = workingVertexs[workingVertexIndex];
+		Vertex returnval = workingVertexes[workingVertexIndex];
 		workingVertexIndex++;
 		
 		switch(pass)
@@ -565,10 +565,10 @@ public class PolygonClipper {
 	 * @param n The proportion parameter (expected to be in the range 0 ... 1)
 	 * @return The vertex that lies at proportion n along the line between first and second vertex parameters
 	 */
-	static final Vert generateInbetweenVertex(Vert first, Vert second, float n)
+	static final Vertex generateInbetweenVertex(Vertex first, Vertex second, float n)
 	{
 		// create a new output vertex
-		Vert retval = workingVertexs[workingVertexIndex];
+		Vertex retval = workingVertexes[workingVertexIndex];
 		workingVertexIndex++;
 		
 		/** The generated vertex view-space coordinates */

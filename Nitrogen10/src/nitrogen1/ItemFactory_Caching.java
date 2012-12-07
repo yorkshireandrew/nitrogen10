@@ -19,8 +19,8 @@ final public class ItemFactory_Caching implements ItemFactory{
 	private Backside backsideTail = backsideHead;
 	
 	private int currentFreeVertexes = 0;		
-	private final Vert vertHead = new Vert();
-	private Vert vertTail = vertHead;	
+	private final Vertex vertexHead = new Vertex();
+	private Vertex vertexTail = vertexHead;	
 	
 	
 	/** generates an Item either from the preallocated pool or constructs a new one */ 
@@ -64,13 +64,13 @@ final public class ItemFactory_Caching implements ItemFactory{
 	}
 
 	/** generates a Vertex either from the preallocated pool or constructs a new one */	
-	final public Vert getVertex(final ImmutableVertex iv)
+	final public Vertex getVertex(final ImmutableVertex iv)
 	{
-		Vert retval;
+		Vertex retval;
 		if(currentFreeVertexes > 0)
 		{
-			Vert available = vertHead.nextInList;
-			vertHead.nextInList  = available.nextInList;
+			Vertex available = vertexHead.nextInList;
+			vertexHead.nextInList  = available.nextInList;
 			retval = available;
 			retval.initializeVertex(iv);
 			currentFreeVertexes--;
@@ -79,27 +79,27 @@ final public class ItemFactory_Caching implements ItemFactory{
 		else
 		{
 			// otherwise allocate from heap
-			return new Vert(iv);
+			return new Vertex(iv);
 		}
 	}
 
 	/** generates a (collision) Vertex either from the preallocated pool or constructs a new one */		
-	final public Vert getVertex(final ImmutableCollisionVert icv)
+	final public Vertex getVertex(final ImmutableCollisionVertex icv)
 	{
-		Vert retval;
-		Vert available = vertHead.nextInList;
+		Vertex retval;
+		Vertex available = vertexHead.nextInList;
 		if(currentFreeVertexes > 0)
 		{
 			retval = available;
 			retval.initializeVertex(icv);
-			vertHead.nextInList = available.nextInList;
+			vertexHead.nextInList = available.nextInList;
 			currentFreeVertexes--;
 			return retval;
 		}
 		else
 		{
 			// otherwise allocate from heap
-			return new Vert(icv);
+			return new Vertex(icv);
 		}
 	}
 
@@ -212,10 +212,10 @@ final public class ItemFactory_Caching implements ItemFactory{
 			// add to free
 			for(int x = 0; x < toAdd; x++)
 			{
-				Vert tail = vertTail;
-				Vert newVertex = new Vert();
+				Vertex tail = vertexTail;
+				Vertex newVertex = new Vertex();
 				tail.nextInList = newVertex;
-				vertTail = newVertex;
+				vertexTail = newVertex;
 			}			
 			// update free
 			currentFreeVertexes = free;
@@ -225,14 +225,14 @@ final public class ItemFactory_Caching implements ItemFactory{
 		if(free < currentFreeVertexes)
 		{
 			// traverse in
-			Vert cursor = vertHead;
+			Vertex cursor = vertexHead;
 			for(int x = 0; x < free; x++)
 			{
 				cursor = cursor.nextInList;
 			}
 			
 			// chop LLL
-			vertTail = cursor;
+			vertexTail = cursor;
 			cursor.nextInList = null;
 			
 			// update free
@@ -318,9 +318,9 @@ final public class ItemFactory_Caching implements ItemFactory{
 		currentFreeBacksides = currentFreeBacksidesL;
 		
 		// recycle Vertexes
-		Vert[] scrapVertexes = item.getVertexes();
-		Vert vertexTailL = vertTail;
-		Vert scrapVert;
+		Vertex[] scrapVertexes = item.getVertexes();
+		Vertex vertexTailL = vertexTail;
+		Vertex scrapVert;
 		int maxFreeVertexL = maxFreeVertexes;
 		int scrapVertexLength = scrapVertexes.length;
 		int currentFreeVertexesL = currentFreeVertexes;
@@ -333,14 +333,14 @@ final public class ItemFactory_Caching implements ItemFactory{
 			currentFreeVertexesL++;
 		}
 		vertexTailL.nextInList = null;
-		vertTail = vertexTailL;
+		vertexTail = vertexTailL;
 		currentFreeVertexes = currentFreeVertexesL;
 		
 		
 		// recycle collision Vertexes
-		Vert[] scrapCollisionVertexes = item.getCollisionVertexes();
-		Vert vertexTailL2 = vertTail;
-		Vert scrapCollisionVert;
+		Vertex[] scrapCollisionVertexes = item.getCollisionVertexes();
+		Vertex vertexTailL2 = vertexTail;
+		Vertex scrapCollisionVert;
 		int maxFreeVertexL2 = maxFreeVertexes;
 		int scrapCollisionVertexLength = scrapCollisionVertexes.length;
 		int currentFreeVertexesL2 = currentFreeVertexes;
@@ -353,7 +353,7 @@ final public class ItemFactory_Caching implements ItemFactory{
 			currentFreeVertexesL2++;
 		}
 		vertexTailL2.nextInList = null;
-		vertTail = vertexTailL2;
+		vertexTail = vertexTailL2;
 		currentFreeVertexes = currentFreeVertexesL2;	
 	}
 

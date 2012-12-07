@@ -14,7 +14,7 @@ public class HLPBreaker {
 	static final int EIGHT = 8;
 	
 	/** Field used to generate Vertexs that occur at intersect points */
-	static Vert[] workingVertexs;
+	static Vertex[] workingVertexes;
 	/** Field used to generate Vertexs that occur at intersect points */
 	static int workingVertexIndex = 0;
 	
@@ -34,10 +34,10 @@ public class HLPBreaker {
 	 * @param touchedTop Item supplying the polygon may have touched top view-fustrum plane.
 	 * @param touchedBottom Item supplying the polygon may have touched bottom view-fustrum plane.
 	 * <br />
-	 * @param vert1 First Vertex of the polygon. Vertexes parameters must be given in clockwise order.
-	 * @param vert2 Second Vertex of the polygon.
-	 * @param vert3 Third Vertex of the polygon.
-	 * @param vert4 Fourth Vertex of the polygon.
+	 * @param vertex1 First Vertex of the polygon. Vertexes parameters must be given in clockwise order.
+	 * @param vertex2 Second Vertex of the polygon.
+	 * @param vertex3 Third Vertex of the polygon.
+	 * @param vertex4 Fourth Vertex of the polygon.
 	 * <br />
 	 * @param renderer The renderer to use to render the polygon into the supplied context.
 	 * @param polyData Polygon data to pass on to the renderer, such as its colour.
@@ -48,8 +48,8 @@ public class HLPBreaker {
 	static{ 
 		// DEBUG
 		int BUFFER_SIZE = 240;
-		workingVertexs = new Vert[BUFFER_SIZE];
-		for(int i = 0 ; i < BUFFER_SIZE; i++)workingVertexs[i]= new Vert();
+		workingVertexes = new Vertex[BUFFER_SIZE];
+		for(int i = 0 ; i < BUFFER_SIZE; i++)workingVertexes[i]= new Vertex();
 		}
 	static void process(	
 			NitrogenContext context,
@@ -60,7 +60,7 @@ public class HLPBreaker {
 			boolean touchedTop,
 			boolean touchedBottom,
 			
-			Vert vert1, Vert vert2, Vert vert3, Vert vert4,
+			Vertex vertex1, Vertex vertex2, Vertex vertex3, Vertex vertex4,
 			
 			Renderer renderer,
 			int[] polyData,
@@ -77,7 +77,7 @@ public class HLPBreaker {
 		{
 			polygonRenderer.process(							
 					context,
-					vert1, vert2, vert3, vert4,					
+					vertex1, vertex2, vertex3, vertex4,					
 					renderer,
 					polyData,
 					textureMap, lightingValue 
@@ -98,7 +98,7 @@ public class HLPBreaker {
 				touchedTop,
 				touchedBottom,
 				
-				vert1, vert2, vert3, vert4,
+				vertex1, vertex2, vertex3, vertex4,
 				
 				renderer,
 				polyData,
@@ -122,7 +122,7 @@ static void subprocess(
 		boolean touchedTop,
 		boolean touchedBottom,
 		
-		Vert vert1, Vert vert2, Vert vert3, Vert vert4,
+		Vertex vertex1, Vertex vertex2, Vertex vertex3, Vertex vertex4,
 		
 		Renderer renderer,
 		int[] polyData,
@@ -132,16 +132,16 @@ static void subprocess(
 	{
     System.out.println("HLP break subprocess called");
 //    if(accelerate)System.out.println("accelerate=true");
-    Vert a = vert1;
-    Vert b = vert2;
-    Vert c = vert3;
-    Vert d = vert4;
+    Vertex a = vertex1;
+    Vertex b = vertex2;
+    Vertex c = vertex3;
+    Vertex d = vertex4;
     System.out.println("vert a = " + a.vs_x + "," + a.vs_y + "," + a.vs_z );	    
     System.out.println("vert b = " + b.vs_x + "," + b.vs_y + "," + b.vs_z );	    
     System.out.println("vert c = " + c.vs_x + "," + c.vs_y + "," + c.vs_z );	    
     System.out.println("vert d = " + d.vs_x + "," + d.vs_y + "," + d.vs_z );	
 	
-	if(needsHLPBreak(accelerate, context, vert1, vert2, vert3, vert4))
+	if(needsHLPBreak(accelerate, context, vertex1, vertex2, vertex3, vertex4))
 		{
 			int hlpBreakCase = 0;
 			float localThresholdDist = thresholdDist; // set by needsHLPBreak
@@ -151,11 +151,11 @@ static void subprocess(
 			}
 			else
 			{
-				if(vert1.vs_z > localThresholdDist) hlpBreakCase |= ONE;
-				if(vert2.vs_z > localThresholdDist) hlpBreakCase |= TWO;
+				if(vertex1.vs_z > localThresholdDist) hlpBreakCase |= ONE;
+				if(vertex2.vs_z > localThresholdDist) hlpBreakCase |= TWO;
 			}
-			if(vert3.vs_z > localThresholdDist) hlpBreakCase |= FOUR;
-			if(vert4.vs_z > localThresholdDist) hlpBreakCase |= EIGHT;
+			if(vertex3.vs_z > localThresholdDist) hlpBreakCase |= FOUR;
+			if(vertex4.vs_z > localThresholdDist) hlpBreakCase |= EIGHT;
 			
 			hlpBreakCaseHandler(
 					context,
@@ -165,7 +165,7 @@ static void subprocess(
 					touchedLeft,
 					touchedTop,
 					touchedBottom,		
-					vert1, vert2, vert3, vert4,	
+					vertex1, vertex2, vertex3, vertex4,	
 					renderer,
 					polyData,
 					textureMap,
@@ -179,7 +179,7 @@ static void subprocess(
 		{			
 			polygonRenderer.process(
 					context,
-					vert1, vert2, vert3, vert4,					
+					vertex1, vertex2, vertex3, vertex4,					
 					renderer,
 					polyData,
 					textureMap, lightingValue 
@@ -196,7 +196,7 @@ static void hlpBreakCaseHandler(
 				boolean touchedLeft,
 				boolean touchedTop,
 				boolean touchedBottom,		
-				Vert vert1, Vert vert2, Vert vert3, Vert vert4,	
+				Vertex vertex1, Vertex vertex2, Vertex vertex3, Vertex vertex4,	
 				Renderer renderer,
 				int[] polyData,
 				TexMap textureMap,
@@ -206,8 +206,8 @@ static void hlpBreakCaseHandler(
 				float contextQualityOfHLP
 			)
 		{
-			Vert verta;
-			Vert vertb;	
+			Vertex vertexa;
+			Vertex vertexb;	
 			System.out.println("hlpBreakCase="+hlpBreakCase);
 			switch(hlpBreakCase)
 			{
@@ -216,7 +216,7 @@ static void hlpBreakCaseHandler(
 					// for robustness if it does happen resort to low level of perspective rendering
 					polygonRenderer.process(							
 							context,
-							vert1, vert2, vert3, vert4,					
+							vertex1, vertex2, vertex3, vertex4,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
@@ -224,11 +224,11 @@ static void hlpBreakCaseHandler(
 					return;
 			
 				case 1:
-					verta = calculateIntersect(vert1, vert4, thresholdDist);
-					vertb = calculateIntersect(vert1, vert2, thresholdDist);
+					vertexa = calculateIntersect(vertex1, vertex4, thresholdDist);
+					vertexb = calculateIntersect(vertex1, vertex2, thresholdDist);
 					polygonRenderer.process(
 							context,
-							vert1, vert1, vertb, verta,					
+							vertex1, vertex1, vertexb, vertexa,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
@@ -239,7 +239,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							verta, vertb, vert2, vert3,
+							vertexa, vertexb, vertex2, vertex3,
 							renderer,polyData,textureMap,lightingValue
 							);
 					subprocess(
@@ -247,17 +247,17 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							verta, verta, vert3, vert4,
+							vertexa, vertexa, vertex3, vertex4,
 							renderer,polyData,textureMap, lightingValue
 							);
 					return;
 					
 				case 2:
-					verta = calculateIntersect(vert2, vert1, thresholdDist);
-					vertb = calculateIntersect(vert2, vert3, thresholdDist);
+					vertexa = calculateIntersect(vertex2, vertex1, thresholdDist);
+					vertexb = calculateIntersect(vertex2, vertex3, thresholdDist);
 					polygonRenderer .process(
 							context,
-							vert2, vert2, vertb, verta,					
+							vertex2, vertex2, vertexb, vertexa,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
@@ -268,7 +268,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							verta, vertb, vert4, vert1,
+							vertexa, vertexb, vertex4, vertex1,
 							renderer, polyData, textureMap, lightingValue
 							);
 					subprocess(
@@ -276,18 +276,18 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vertb, vertb, vert3, vert4,
+							vertexb, vertexb, vertex3, vertex4,
 							renderer, polyData, textureMap, lightingValue
 							);
 					return;
 					
 					
 				case 3:
-					verta = calculateIntersect(vert1, vert4, thresholdDist);
-					vertb = calculateIntersect(vert2, vert3, thresholdDist);
+					vertexa = calculateIntersect(vertex1, vertex4, thresholdDist);
+					vertexb = calculateIntersect(vertex2, vertex3, thresholdDist);
 					polygonRenderer.process(
 							context,
-							vert1, vert2, vertb, verta,					
+							vertex1, vertex2, vertexb, vertexa,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
@@ -298,17 +298,17 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							verta, vertb, vert3, vert4,
+							vertexa, vertexb, vertex3, vertex4,
 							renderer, polyData, textureMap, lightingValue
 							);
 					return;
 					
 				case 4:
-					verta = calculateIntersect(vert3, vert2, thresholdDist);
-					vertb = calculateIntersect(vert3, vert4, thresholdDist);
+					vertexa = calculateIntersect(vertex3, vertex2, thresholdDist);
+					vertexb = calculateIntersect(vertex3, vertex4, thresholdDist);
 					polygonRenderer.process(
 							context,
-							vert3, vert3, vertb, verta,					
+							vertex3, vertex3, vertexb, vertexa,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
@@ -319,7 +319,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							verta, vertb, vert4, vert1,
+							vertexa, vertexb, vertex4, vertex1,
 							renderer, polyData, textureMap, lightingValue
 							);
 					subprocess(
@@ -327,7 +327,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert1, vert2, verta, verta,
+							vertex1, vertex2, vertexa, vertexa,
 							renderer, polyData, textureMap, lightingValue
 							);
 					return;
@@ -339,7 +339,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert1, vert1, vert2, vert4,
+							vertex1, vertex1, vertex2, vertex4,
 							renderer, polyData, textureMap, lightingValue
 							);
 					subprocess(
@@ -347,17 +347,17 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert3, vert3, vert4, vert2,
+							vertex3, vertex3, vertex4, vertex2,
 							renderer, polyData, textureMap, lightingValue
 							);				
 					return;
 					
 				case 6:
-					verta = calculateIntersect(vert2, vert1, thresholdDist);
-					vertb = calculateIntersect(vert3, vert4, thresholdDist);
+					vertexa = calculateIntersect(vertex2, vertex1, thresholdDist);
+					vertexb = calculateIntersect(vertex3, vertex4, thresholdDist);
 					polygonRenderer.process(
 							context,
-							vert2, vert3, vertb, verta,					
+							vertex2, vertex3, vertexb, vertexa,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
@@ -368,24 +368,24 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							verta, vertb, vert4, vert1,
+							vertexa, vertexb, vertex4, vertex1,
 							renderer, polyData, textureMap, lightingValue							
 							);
 					return;
 					
 				case 7:
-					verta = calculateIntersect(vert3, vert4, thresholdDist);
-					vertb = calculateIntersect(vert1, vert4, thresholdDist);
+					vertexa = calculateIntersect(vertex3, vertex4, thresholdDist);
+					vertexb = calculateIntersect(vertex1, vertex4, thresholdDist);
 					polygonRenderer.process(
 							context,
-							vert1, vert1, vert2, vert3,					
+							vertex1, vertex1, vertex2, vertex3,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
 							);
 					polygonRenderer.process(
 							context,
-							vert1, vert3, verta, vertb,					
+							vertex1, vertex3, vertexa, vertexb,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
@@ -396,17 +396,17 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vertb, verta, vert4, vert4,
+							vertexb, vertexa, vertex4, vertex4,
 							renderer, polyData, textureMap, lightingValue
 							);
 					return;					
 						
 				case 8:
-					verta = calculateIntersect(vert4, vert3, thresholdDist);
-					vertb = calculateIntersect(vert4, vert1, thresholdDist);
+					vertexa = calculateIntersect(vertex4, vertex3, thresholdDist);
+					vertexb = calculateIntersect(vertex4, vertex1, thresholdDist);
 					polygonRenderer.process(
 							context,
-							vert4, vert4, vertb, verta,					
+							vertex4, vertex4, vertexb, vertexa,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
@@ -417,7 +417,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							verta, vertb, vert2, vert3,
+							vertexa, vertexb, vertex2, vertex3,
 							renderer, polyData, textureMap, lightingValue
 							);
 					subprocess(
@@ -425,17 +425,17 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert1, vert1, vert2, vertb,
+							vertex1, vertex1, vertex2, vertexb,
 							renderer,polyData,textureMap, lightingValue
 							);
 					return;
 					
 				case 9:
-					verta = calculateIntersect(vert1, vert2, thresholdDist);
-					vertb = calculateIntersect(vert4, vert3, thresholdDist);
+					vertexa = calculateIntersect(vertex1, vertex2, thresholdDist);
+					vertexb = calculateIntersect(vertex4, vertex3, thresholdDist);
 					polygonRenderer.process(
 							context,
-							vert1, verta, vertb, vert4,					
+							vertex1, vertexa, vertexb, vertex4,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
@@ -446,7 +446,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vertb, verta, vert2, vert3,
+							vertexb, vertexa, vertex2, vertex3,
 							renderer, polyData, textureMap, lightingValue
 							);
 					return;
@@ -458,7 +458,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert2, vert2, vert3, vert1,
+							vertex2, vertex2, vertex3, vertex1,
 							renderer, polyData, textureMap, lightingValue
 							);
 					subprocess(
@@ -466,24 +466,24 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vert4, vert4, vert1, vert3,
+							vertex4, vertex4, vertex1, vertex3,
 							renderer, polyData, textureMap, lightingValue
 							);				
 					return;
 					
 				case 11:
-					verta = calculateIntersect(vert2, vert3, thresholdDist);
-					vertb = calculateIntersect(vert4, vert3, thresholdDist);
+					vertexa = calculateIntersect(vertex2, vertex3, thresholdDist);
+					vertexb = calculateIntersect(vertex4, vertex3, thresholdDist);
 					polygonRenderer.process(
 							context,
-							vert1, vert1, vert2, vert4,					
+							vertex1, vertex1, vertex2, vertex4,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
 							);
 					polygonRenderer.process(
 							context,
-							vert2, verta, vertb, vert4,					
+							vertex2, vertexa, vertexb, vertex4,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
@@ -494,17 +494,17 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vertb, verta, vert3, vert3,
+							vertexb, vertexa, vertex3, vertex3,
 							renderer, polyData, textureMap, lightingValue
 							);
 					return;
 					
 				case 12:
-					verta = calculateIntersect(vert3, vert2, thresholdDist);
-					vertb = calculateIntersect(vert4, vert1, thresholdDist);
+					vertexa = calculateIntersect(vertex3, vertex2, thresholdDist);
+					vertexb = calculateIntersect(vertex4, vertex1, thresholdDist);
 					polygonRenderer.process(
 							context,
-							vert3, vert4, vertb, verta,					
+							vertex3, vertex4, vertexb, vertexa,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
@@ -515,24 +515,24 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							verta, vertb, vert1, vert2,
+							vertexa, vertexb, vertex1, vertex2,
 							renderer, polyData, textureMap, lightingValue
 							);
 					return;
 					
 				case 13:
-					verta = calculateIntersect(vert1, vert2, thresholdDist);
-					vertb = calculateIntersect(vert3, vert2, thresholdDist);
+					vertexa = calculateIntersect(vertex1, vertex2, thresholdDist);
+					vertexb = calculateIntersect(vertex3, vertex2, thresholdDist);
 					polygonRenderer.process(
 							context,
-							vert4, vert4, vert1, vert3,					
+							vertex4, vertex4, vertex1, vertex3,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
 							);
 					polygonRenderer.process(
 							context,
-							vert3, vert1, verta, vertb,					
+							vertex3, vertex1, vertexa, vertexb,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
@@ -543,24 +543,24 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							vertb, verta, vert2, vert2,
+							vertexb, vertexa, vertex2, vertex2,
 							renderer, polyData, textureMap, lightingValue
 							);
 					return;
 					
 				case 14:
-					verta = calculateIntersect(vert2, vert1, thresholdDist);
-					vertb = calculateIntersect(vert4, vert1, thresholdDist);
+					vertexa = calculateIntersect(vertex2, vertex1, thresholdDist);
+					vertexb = calculateIntersect(vertex4, vertex1, thresholdDist);
 					polygonRenderer.process(
 							context,
-							vert3, vert3, vert4, vert2,					
+							vertex3, vertex3, vertex4, vertex2,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
 							);
 					polygonRenderer.process(
 							context,
-							vert2, vert4, vertb, verta,					
+							vertex2, vertex4, vertexb, vertexa,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
@@ -571,7 +571,7 @@ static void hlpBreakCaseHandler(
 							contextQualityOfHLP,
 							context,
 							fustrumTouchCount, touchedNear,touchedRight,touchedLeft,touchedTop,touchedBottom,							
-							verta, vertb, vert1, vert1,
+							vertexa, vertexb, vertex1, vertex1,
 							renderer, polyData, textureMap, lightingValue
 							);
 					return;
@@ -579,7 +579,7 @@ static void hlpBreakCaseHandler(
 				case 15:
 					polygonRenderer.process(
 							context,
-							vert1, vert2, vert3, vert4,					
+							vertex1, vertex2, vertex3, vertex4,					
 							renderer,
 							polyData,
 							textureMap, lightingValue 
@@ -589,7 +589,7 @@ static void hlpBreakCaseHandler(
 		}
 
 	/** Given four vertexes and a Nitrogen context containing a valid qualityofHLP determines if HLP breaking is required */ 
-	static boolean needsHLPBreak(boolean accelerate, NitrogenContext context, Vert vert1, Vert vert2, Vert vert3, Vert vert4)
+	static boolean needsHLPBreak(boolean accelerate, NitrogenContext context, Vertex vertex1, Vertex vertex2, Vertex vertex3, Vertex vertex4)
 	{
 		float z1,z2,z3,z4;
 		float maxaz, maxbz, minaz, minbz, finalmaxz, finalminz;
@@ -598,8 +598,8 @@ static void hlpBreakCaseHandler(
 		{
 			// we know that z1 and z2 are the closest points with z = thresholdDist
 			localThresholdDist = thresholdDist * context.qualityOfHLP;
-			z3 = vert3.vs_z;
-			z4 = vert4.vs_z;
+			z3 = vertex3.vs_z;
+			z4 = vertex4.vs_z;
 			if(z3 > z4)
 			{
 				finalmaxz = z4; // most -ve is farthest
@@ -622,10 +622,10 @@ static void hlpBreakCaseHandler(
 		}
 		else
 		{
-			z1 = vert1.vs_z;
-			z2 = vert2.vs_z;
-			z3 = vert3.vs_z;
-			z4 = vert4.vs_z;
+			z1 = vertex1.vs_z;
+			z2 = vertex2.vs_z;
+			z3 = vertex3.vs_z;
+			z4 = vertex4.vs_z;
 			
 			// sort first two vertexes (max = farthest from viewpoint)
 			if(z1 < z2)
@@ -678,7 +678,7 @@ static void hlpBreakCaseHandler(
 		}
 	}
 	
-	static Vert calculateIntersect(Vert in, Vert out, float threshold)
+	static Vertex calculateIntersect(Vertex in, Vertex out, float threshold)
 	{
 		//DEBUG
 //		System.out.println("calculatingIntersect");
@@ -688,7 +688,7 @@ static void hlpBreakCaseHandler(
 		float inz = in.vs_z;
 		float n = (threshold - inz)/(out.vs_z - inz);
 		System.out.println("n = " + n);
-		Vert retval = generateInbetweenVertex(in, out, n);
+		Vertex retval = generateInbetweenVertex(in, out, n);
 //		System.out.println("intersect = " + retval.vs_x +"," + retval.vs_y +","+ retval.vs_z);
 		return(retval);		
 	}
@@ -699,13 +699,13 @@ static void hlpBreakCaseHandler(
 	 * @param n The proportion parameter (expected to be in the range 0 ... 1)
 	 * @return The vertex that lies at proportion n along the line between first and second vertex parameters
 	 */
-	static final Vert generateInbetweenVertex(Vert first, Vert second, float n)
+	static final Vertex generateInbetweenVertex(Vertex first, Vertex second, float n)
 	{
 		//DEBUG
 //		System.out.println("generatingInbetweenVertex at index:"+workingVertexIndex);
 		
 		// create a new output vertex
-		Vert retval = workingVertexs[workingVertexIndex];
+		Vertex retval = workingVertexes[workingVertexIndex];
 		workingVertexIndex++;
 		
 		/** The generated vertex view-space coordinates */

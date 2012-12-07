@@ -155,6 +155,8 @@ final public class MyApplet extends JApplet{
             
             
             Item.setItemFactory(new ItemFactory_Caching());
+            
+            /*
             Item.getItemFactory().setMaxFreeItems(100000);
             Item.getItemFactory().setMaxFreeBacksides(600000);
             Item.getItemFactory().setMaxFreeVertexes(600000);
@@ -185,7 +187,7 @@ final public class MyApplet extends JApplet{
             System.out.println("initial recycling " + (time3-time2));
             System.out.println("re- creation " + (time4-time3));
             
-            /* 
+            */
             
  //           Item test = new Item(newsisi,t4); // shouldn't do this, we can because we are in package
             
@@ -195,9 +197,9 @@ final public class MyApplet extends JApplet{
             i2.setVisibility(true); 
             i2.setName("blogs boxes");
             
-            System.out.println("allocated Items " + ((ItemFactory_Development)Item.getItemFactory()).getAllocatedItemCount());
-            System.out.println("allocated Backsides " + ((ItemFactory_Development)Item.getItemFactory()).getAllocatedBacksideCount());
-            System.out.println("allocated Backsides " + ((ItemFactory_Development)Item.getItemFactory()).getAllocatedVertexCount());
+ //           System.out.println("allocated Items " + ((ItemFactory_Development)Item.getItemFactory()).getAllocatedItemCount());
+ //           System.out.println("allocated Backsides " + ((ItemFactory_Development)Item.getItemFactory()).getAllocatedBacksideCount());
+ //           System.out.println("allocated Backsides " + ((ItemFactory_Development)Item.getItemFactory()).getAllocatedVertexCount());
             
             // create user interface
             getContentPane().setLayout(new BorderLayout());
@@ -264,8 +266,6 @@ final public class MyApplet extends JApplet{
             	      	
             }
             cnc.addMouseListener( new MyMouseListener());
-            */
-            
 
 	}
     

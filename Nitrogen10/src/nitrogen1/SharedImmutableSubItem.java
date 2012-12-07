@@ -74,11 +74,11 @@ public class SharedImmutableSubItem implements Serializable{
 	final ImmutableBackside[] immutableBacksides;
 	
 	/** Vertex Data */
-	final ImmutableVertex[] immutableVertexs;
+	final ImmutableVertex[] immutableVertexes;
 	
 	/** Collision Data */
 	final boolean hasCollisionVertexes;
-	final ImmutableCollisionVert[] immutableCollisionVertexes;
+	final ImmutableCollisionVertex[] immutableCollisionVertexes;
 	
 	/**
 	 * Constructs a SharedImmutableSubItem from a text file
@@ -196,14 +196,14 @@ public class SharedImmutableSubItem implements Serializable{
         	} 
         	
         	
-        	// load all the ImmutableVertexs
+        	// load all the ImmutableVertexes
         	vertexMax = readInt( in, "unable to find vertexMax loading " + filename);    		
-        	immutableVertexs = new ImmutableVertex[vertexMax];
+        	immutableVertexes = new ImmutableVertex[vertexMax];
         	for(int i = 0; i < vertexMax; i++)
         	{		
         		try
         		{
-        			immutableVertexs[i] = buildImmutableVertex(in);
+        			immutableVertexes[i] = buildImmutableVertex(in);
         		}
         		catch(NitrogenCreationException e)
         		{
@@ -216,7 +216,7 @@ public class SharedImmutableSubItem implements Serializable{
         	if(collisionVertexMax > 0)
         	{
         		hasCollisionVertexes = true;
-            	immutableCollisionVertexes = new ImmutableCollisionVert[vertexMax];
+            	immutableCollisionVertexes = new ImmutableCollisionVertex[vertexMax];
             	for(int i = 0; i < vertexMax; i++)
             	{		
             		try
@@ -232,7 +232,7 @@ public class SharedImmutableSubItem implements Serializable{
         	else
         	{ 
         		hasCollisionVertexes = false;
-        		immutableCollisionVertexes = new ImmutableCollisionVert[0];
+        		immutableCollisionVertexes = new ImmutableCollisionVertex[0];
         	}
         }
         catch(NoSuchElementException nsee)
@@ -407,7 +407,7 @@ public class SharedImmutableSubItem implements Serializable{
 	}
 	
 	/** Creates an ImmutableVertex using text from a scanner */ 
-	ImmutableCollisionVert buildImmutableCollisionVert(Scanner in) throws NitrogenCreationException
+	ImmutableCollisionVertex buildImmutableCollisionVert(Scanner in) throws NitrogenCreationException
 	{
 		float temp_is_x;
 		float temp_is_y;
@@ -420,7 +420,7 @@ public class SharedImmutableSubItem implements Serializable{
 		temp_is_z = readFloat(in, "Unable to find is_z");
 		temp_radius = readFloat(in, "Unable to radius");
 
-		return new ImmutableCollisionVert(
+		return new ImmutableCollisionVertex(
 				temp_is_x,
 				temp_is_y,
 				temp_is_z,

@@ -31,16 +31,16 @@ final public class ItemFactory_Development implements ItemFactory{
 		return new Backside(ib);
 	}
 	
-	final public Vert getVertex(final ImmutableVertex iv)
+	final public Vertex getVertex(final ImmutableVertex iv)
 	{
 		if(++allocatedVertexes > allocatedVertexesMax)allocatedVertexesMax = allocatedVertexes;
-		return new Vert(iv);
+		return new Vertex(iv);
 	}
 	
-	final public Vert getVertex(final ImmutableCollisionVert icv)
+	final public Vertex getVertex(final ImmutableCollisionVertex icv)
 	{
 		if(++allocatedVertexes > allocatedVertexesMax)allocatedVertexesMax = allocatedVertexes;
-		return new Vert(icv);
+		return new Vertex(icv);
 	}
 	
 	final public int getAllocatedItemCount(){return allocatedItems;}

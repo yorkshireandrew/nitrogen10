@@ -9,10 +9,10 @@ public interface ItemFactory {
 	public Backside getBackside(ImmutableBackside ib);
 
 	/** generates a Vertex either from the preallocated pool or constructs a new one */	
-	public Vert getVertex(ImmutableVertex iv);
+	public Vertex getVertex(ImmutableVertex iv);
 
 	/** generates a (collision) Vertex either from the preallocated pool or constructs a new one */		
-	public Vert getVertex(ImmutableCollisionVert icv);
+	public Vertex getVertex(ImmutableCollisionVertex icv);
 
 	/** returns the number of Items waiting to be allocated */
 	public int getFreeItemCount();
