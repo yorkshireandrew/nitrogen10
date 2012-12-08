@@ -1,6 +1,6 @@
 package nitrogen1;
 
-public class PolygonClipper {
+final class PolygonClipper {
 	
 	static final int SH = 20; //limits aux coordinates to the range 0-2048
 	static final int NUM = 1 << SH;
@@ -16,7 +16,7 @@ public class PolygonClipper {
 
 	
 	/** enumerated value used to define which plane of the view fustrum is being processed */
-	static int pass;	
+//	static int pass;	
 	
 	/** constant used for computing clipCase */
 	static final int ONE = 1;
@@ -27,9 +27,9 @@ public class PolygonClipper {
 	/** constant used for computing clipCase */
 	static final int EIGHT = 8;
 	
-	/** Field used to generate Vertexs that occur at intersect points */
-	static Vertex[] workingVertexes;
-	/** Field used to generate Vertexs that occur at intersect points */
+	/** Field used to generate Vertexes that occur at intersect points */
+	static final Vertex[] workingVertexes;
+	/** Field used to generate Vertexes that occur at intersect points */
 	static int workingVertexIndex = 0;
 	
 	static{ 
@@ -62,30 +62,29 @@ public class PolygonClipper {
 	 * <br/><br/>
 	 * @param v11-v34 The orientation matrix computed by the scene graph (12 floating point values)
 	 */	
-	static void process(
+	final static void process(
 
-			NitrogenContext context,
-			int fustrumTouchCount, 
-			boolean touchedNear,
-			boolean touchedRight,
-			boolean touchedLeft,
-			boolean touchedTop,
-			boolean touchedBottom,
+			final NitrogenContext context,
+			final int fustrumTouchCount, 
+			final boolean touchedNear,
+			final boolean touchedRight,
+			final boolean touchedLeft,
+			final boolean touchedTop,
+			final boolean touchedBottom,
 			
-			Vertex vertex1, 
-			Vertex vertex2, 
-			Vertex vertex3, 
-			Vertex vertex4,
+			final Vertex vertex1, 
+			final Vertex vertex2, 
+			final Vertex vertex3, 
+			final Vertex vertex4,
 		
-			Renderer renderer,
-			int[] polyData,
-			TexMap textureMap,
-			float lightingValue,
-			boolean useHLPBreak
+			final Renderer renderer,
+			final int[] polyData,
+			final TexMap textureMap,
+			final float lightingValue,
+			final boolean useHLPBreak
 			)
 	{
 		context.polygonsRendered++;
-		if(touchedNear)System.out.println("touchedNear");
 		if(fustrumTouchCount == 0)
 		{
 			// the polygon does not need clipping so pass it on
@@ -99,9 +98,8 @@ public class PolygonClipper {
 		else
 		{
 			// Begin clipping the polygon
-			pass = NEAR_PASS;
 			clipPolygon(
-					pass,
+					NEAR_PASS,
 					context,
 					fustrumTouchCount, touchedNear, touchedRight, touchedLeft, touchedTop, touchedBottom,
 					vertex1, vertex2, vertex3, vertex4,					
@@ -140,26 +138,26 @@ public class PolygonClipper {
 	 * @param texMap			The texture map for the polygon if used.
 	 * @param lightingValue lighting value that may have been computed by the polygons backside to pass to the Renderer
 	 */	
-	static void clipPolygon(
-			int pass,
-			NitrogenContext context,
-			int fustrumTouchCount, 
-			boolean touchedNear,
-			boolean touchedRight,
-			boolean touchedLeft,
-			boolean touchedTop,
-			boolean touchedBottom,
+	final static void clipPolygon(
+			final int pass,
+			final NitrogenContext context,
+				  int fustrumTouchCount, 
+			final boolean touchedNear,
+			final boolean touchedRight,
+			final boolean touchedLeft,
+			final boolean touchedTop,
+			final boolean touchedBottom,
 			
-			Vertex vertex1, 
-			Vertex vertex2, 
-			Vertex vertex3, 
-			Vertex vertex4,
+			final Vertex vertex1, 
+			final Vertex vertex2, 
+			final Vertex vertex3, 
+			final Vertex vertex4,
 			
-			Renderer renderer,
-			int[] polyData,
-			TexMap textureMap,
-			float lightingValue,
-			boolean useHLPBreak
+			final Renderer renderer,
+			final int[] polyData,
+			final TexMap textureMap,
+			final float lightingValue,
+			final boolean useHLPBreak
 			)
 		{
 			if((fustrumTouchCount == 0)||(pass == RENDER_PASS))
@@ -469,7 +467,7 @@ public class PolygonClipper {
 	 * @param 	context The NitrogenContext that contains the view-fustrum information.
 	 * @param 	pass 	An enumerated integer used to define which plane of the view fustrum to clip against.
 	 * */
-	static final boolean isVertexCulled(Vertex vertex, NitrogenContext context, int pass)
+	static final boolean isVertexCulled(final Vertex vertex, final NitrogenContext context, final int pass)
 	{
 		float deapth_from_viewpoint = -vertex.vs_z;
 		switch(pass)
@@ -514,14 +512,6 @@ public class PolygonClipper {
 		float n;
 		/** Cached local value related to view fustrum's field-of-view */
 		float k;
-		/** The generated vertex view-space coordinates */
-		float vvsx, vvsy,vvsz;
-		/** The generated vertex aux values */
-		int va1, va2, va3;
-		
-		// create a new output vertex
-		Vertex returnval = workingVertexes[workingVertexIndex];
-		workingVertexIndex++;
 		
 		switch(pass)
 		{

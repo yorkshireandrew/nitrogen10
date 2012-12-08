@@ -8,7 +8,7 @@ import java.util.Iterator;
  * @author andrew
  *
  */
-public class Item {
+final public class Item {
 	
 	// Enumerations for whichRenderer
 	static final int NEAR_RENDERER = 0;
@@ -58,7 +58,7 @@ public class Item {
 	private int fustrumTouchCount;
 	
 	/** Enumerated value that determines which renderer to use based on distance */
-	private int whichRenderer = NEAR_RENDERER;
+	private int whichRendererOld = NEAR_RENDERER;
 		
 	// Which fustrum planes the item may touch, used to improve efficiency of polygon clipping
 	// note: Items remain visible then clip entirely once they cross the fustrum farClip distance
@@ -117,9 +117,8 @@ public class Item {
     /** used by factories to re-use an Item
 	 * @param in_sisi The SharedImmutableSubItem used to compose the Item
 	 * @param t Transform the Item is to be attached to
-	 * @param factory ItemFactory that shall provide the internal parts of the Item
 	 */
-	void initializeItem(SharedImmutableSubItem in_sisi, Transform t)
+	final void initializeItem(final SharedImmutableSubItem in_sisi, final Transform t)
 	{
 		if(t == null)return;
 		
@@ -131,29 +130,33 @@ public class Item {
 		ItemFactory itemFactoryL = itemFactory;
 
 		// create a blank backside array
-		int backsideMax = in_sisi.immutableBacksides.length;
-		backsides = new Backside[backsideMax];
-		for(int x = 0; x < backsideMax; x++)backsides[x] = itemFactoryL.getBackside(in_sisi.immutableBacksides[x]);
+		final ImmutableBackside[] inSISIImmutableBacksides = in_sisi.immutableBacksides;		
+		final int backsideMax = inSISIImmutableBacksides.length;
+		final Backside[] backsidesL = new Backside[backsideMax];
+		for(int x = 0; x < backsideMax; x++)backsidesL[x] = itemFactoryL.getBackside(inSISIImmutableBacksides[x]);
+		backsides = backsidesL;
 
 		// create the vertexes array from the sisi ImmutableVertexs
-		ImmutableVertex[] iva = in_sisi.immutableVertexes;
-		int vertexMax = iva.length;
-		vertexes = new Vertex[vertexMax];
-		for(int x = 0; x < vertexMax; x++)vertexes[x] = itemFactoryL.getVertex(iva[x]);
+		final ImmutableVertex[] inSISIImmutableVertexes = in_sisi.immutableVertexes;		
+		final int vertexMax = inSISIImmutableVertexes.length;
+		Vertex[] vertexesL = new Vertex[vertexMax];
+		for(int x = 0; x < vertexMax; x++)vertexesL[x] = itemFactoryL.getVertex(inSISIImmutableVertexes[x]);
+		vertexes = vertexesL;
 		
-		// create the collision vertex array from the sisi ImmutableCollisionVertexes
-		ImmutableCollisionVertex[] icva = in_sisi.immutableCollisionVertexes;
-		int collisionVertexMax = icva.length;
+		// create the collision vertexes array from the sisi ImmutableVertexs
+		final ImmutableCollisionVertex[] inSISIImmutableCollisionVertexes = in_sisi.immutableCollisionVertexes;		
+		final int collisionVertexMax = inSISIImmutableCollisionVertexes.length;
+		final Vertex[] collisionVertexesL = new Vertex[collisionVertexMax];
+		for(int x = 0; x < collisionVertexMax; x++)collisionVertexesL[x] = itemFactoryL.getVertex(inSISIImmutableCollisionVertexes[x]);	
+		collisionVertexes = collisionVertexesL;
 		if(collisionVertexMax > 0){hasCollisionVertexes = true;}
 		else{hasCollisionVertexes = false;}
-		collisionVertexes = new Vertex[collisionVertexMax];
-		for(int x = 0; x < collisionVertexMax; x++)collisionVertexes[x] = itemFactoryL.getVertex(icva[x]);
 		
 		// clear other flags
 		visibility = false;
 		rotationNeedsUpdate = true;
 		translationNeedsUpdate = true;
-		whichRenderer = NEAR_RENDERER;
+		whichRendererOld = NEAR_RENDERER;
 		isImprovedDetail = false;	
 		isUsingHLPBreaking = false;
 		isUsingBillboardOriention = false;
@@ -162,6 +165,9 @@ public class Item {
 		nextInList = null;
 	}
 	
+	
+	 ///---------------- TO DO --------------//
+	/// carry on optimising from here ///
 	/** called to render the Item 
 	 * @param context The NitrogenContext to render the Item in
 	 * @param v11-v34 The orientation matrix computed by the scene graph (12 floating point values)*/
@@ -179,6 +185,8 @@ public class Item {
 		// return if the Item is fustrum culled
 		if(isItemFustrumCulled(v14,v24,v34,context))return;
 
+		final int whichRenderer;
+		// DEBUG
 		context.itemsRendered++;
 		
 		// remember we were rendered in case anyone asks
@@ -188,22 +196,24 @@ public class Item {
 		context.currentItem = this;
 		
 		//Cache values needed for rendering locally
-		SharedImmutableSubItem 	sisiCache 				= sisi;
-		int 					fustrumTouchCountCache	= fustrumTouchCount;
-		boolean 				touchedNearCache 		= touchedNear;
-		boolean 				touchedRightCache 		= touchedRight;
-		boolean 				touchedLeftCache		= touchedLeft;
-		boolean 				touchedTopCache			= touchedTop;
-		boolean 				touchedBottomCache  	= touchedBottom;
+		final SharedImmutableSubItem 	sisiL = sisi;
+		final int 		fustrumTouchCountL	= fustrumTouchCount;
+		final boolean 	touchedNearL 		= touchedNear;
+		final boolean 	touchedRightL 		= touchedRight;
+		final boolean 	touchedLeftL		= touchedLeft;
+		final boolean 	touchedTopL			= touchedTop;
+		final boolean 	touchedBottomL  	= touchedBottom;
+		
+		int 		whichRendererIsIt = whichRendererOld;	// the near-mid-far renderer to use for rendering this item
 		
 		// if there is movement determine which renderer to use
-		float itemDist = -v34;
+		final float itemDist = -v34;
 		
 		if(translationNeedsUpdate)
 		{
-			if(isUsingBillboardOriention)
+			if(!isUsingBillboardOriention)
 			{
-				if(itemDist > sisi.billboardOrientationDistPlus)
+				if(itemDist > sisiL.billboardOrientationDistPlus)
 				{			
 					// Item has just become a billboard 
 					// so orientate along the view-space axis
@@ -217,58 +227,55 @@ public class Item {
 					// set the billboard flag
 					isUsingBillboardOriention = true;
 				}
-				else
-				{
-					// inhibit any rotation notifications from the scene graph
-					rotationNeedsUpdate = false;
-				}
 			}
 			else
 			{
-				if(itemDist < sisi.billboardOrientationDist)
+				// inhibit rotation updates from scene graph 
+				rotationNeedsUpdate = false;
+				
+				if(itemDist < sisiL.billboardOrientationDist)
 				{
 					// ensure the passed in scene graph orientation is applied
 					rotationNeedsUpdate = true;
 					
 					// clear the billboard flag
-					isUsingBillboardOriention = false;
-					
+					isUsingBillboardOriention = false;		
 				}
 			}
 			
 			// see if renderer needs changing
-			selectWhichRenderer(itemDist,sisiCache);			
+			whichRendererIsIt = selectWhichRenderer(itemDist,sisiL);			
 			
 			// update other flags used during rendering
-			updateRenderingFlags(itemDist,sisiCache);
+			updateRenderingFlags(itemDist,sisiL);
 		}
 		
-		calculateItemFustrumFlags(v14,v24,v34,context);
+		calculateItemFustrumFlags(v14,v24,v34,context, sisiL);
 		lazyComputeBacksidesAndVertexs();
 
 		// Select the right number of polygons to render
-		int polyStart;
-		int polyFinish;
+		final int polyStart;
+		final int polyFinish;
 		if(isImprovedDetail)
 		{
-			polyStart = sisiCache.improvedDetailPolyStart;
-			polyFinish = sisiCache.improvedDetailPolyFinish;
+			polyStart = sisiL.improvedDetailPolyStart;
+			polyFinish = sisiL.improvedDetailPolyFinish;
 		}
 		else
 		{
-			polyStart = sisiCache.normalDetailPolyStart;
-			polyFinish = sisiCache.normalDetailPolyFinish;
+			polyStart = sisiL.normalDetailPolyStart;
+			polyFinish = sisiL.normalDetailPolyFinish;
 		}
 		
 		ImmutablePolygon immutablePolygon;
 		int backsideIndex;
 		Backside backside;
-		boolean transparentPolygon;
-		boolean transparencyPass = context.transparencyPass;
-		boolean useHLPBreaking = isUsingHLPBreaking;
+		boolean immutablePolygonIsTransparentL;
+		final boolean contextTransparencyPassL = context.transparencyPass;
+		final boolean isUsingHLPBreakingL = isUsingHLPBreaking;
 		
 		/** True unless the Items SharedImmutableSubItem nearPlaneCrashBacksideOverride is true and the Item has also crashed into near Plane */
-		boolean noBacksideOverride = (!sisi.nearPlaneCrashBacksideOverride) ||(!touchedNear);
+		final boolean noBacksideCullOverride = (!sisiL.nearPlaneCrashBacksideOverride) ||(!touchedNear);
 		
 		for(int x = polyStart; x < polyFinish; x++)
 		{
@@ -277,17 +284,16 @@ public class Item {
 			System.out.println("--- RENDERING POLYGON ---"+x);
 			System.out.println("--- ******************---");	
 			
-			immutablePolygon = sisi.immutablePolygons[x];
+			immutablePolygon = sisiL.immutablePolygons[x];
 			
 			// skip the polygon if its transparency is wrong for the pass
-			transparentPolygon = immutablePolygon.isTransparent;
-			if(!transparencyPass &&  transparentPolygon)continue;
-			if( transparencyPass && !transparentPolygon)continue;
+			immutablePolygonIsTransparentL = immutablePolygon.isTransparent;
+			if(!contextTransparencyPassL &&  immutablePolygonIsTransparentL)continue;
+			if( contextTransparencyPassL && !immutablePolygonIsTransparentL)continue;
 			
 			// calculate the polygons backside if necessary
 			backsideIndex = immutablePolygon.backsideIndex;
 			backside = backsides[backsideIndex];
-			
 			if(backside.translationNeedsUpdate)
 			{
 				backside.calculate(
@@ -299,6 +305,7 @@ public class Item {
 			
 			if(backside.facingViewer())
 			{
+				// -- optimised to here --
 				// Calculate the vertexes, then Pass the polygon on to the next process.
 				Vertex v1 = vertexes[immutablePolygon.c1];
 				Vertex v2 = vertexes[immutablePolygon.c2];
@@ -318,28 +325,28 @@ public class Item {
 				PolygonClipper.prepareForNewPolygon();
 				PolygonClipper.process(
 						context,
-						fustrumTouchCountCache, 
-						touchedNearCache,
-						touchedRightCache,
-						touchedLeftCache,
-						touchedTopCache,
-						touchedBottomCache,					
+						fustrumTouchCountL, 
+						touchedNearL,
+						touchedRightL,
+						touchedLeftL,
+						touchedTopL,
+						touchedBottomL,					
 						v1, 
 						v2, 
 						v3, 
 						v4, 									
 
-						immutablePolygon.getRenderer(whichRenderer, context.isPicking),
+						immutablePolygon.getRenderer(whichRendererIsIt, context.isPicking),
 						immutablePolygon.polyData,
 						immutablePolygon.textureMap,						
 						backside.lightingValue,
-						useHLPBreaking						
+						isUsingHLPBreakingL						
 					);				
 			}
 			else
 			{
 				// Skip rendering the polygon if it is backside culled
-				if(immutablePolygon.isBacksideCulled && noBacksideOverride)continue;
+				if(immutablePolygon.isBacksideCulled && noBacksideCullOverride)continue;
 				
 				// Calculate the vertexes, then Pass the polygon on to the next process.
 				Vertex v1 = vertexes[immutablePolygon.c1];
@@ -361,21 +368,21 @@ public class Item {
 				PolygonClipper.prepareForNewPolygon();
 				PolygonClipper.process(
 					context,
-					fustrumTouchCountCache, 
-					touchedNearCache,
-					touchedRightCache,
-					touchedLeftCache,
-					touchedTopCache,
-					touchedBottomCache,					
+					fustrumTouchCountL, 
+					touchedNearL,
+					touchedRightL,
+					touchedLeftL,
+					touchedTopL,
+					touchedBottomL,					
 					v4, 
 					v3, 
 					v2, 
 					v1,
-					immutablePolygon.getRenderer(whichRenderer,context.isPicking),					
+					immutablePolygon.getRenderer(whichRendererIsIt,context.isPicking),					
 					immutablePolygon.polyData,
 					immutablePolygon.textureMap,
 					backside.lightingValue,
-					useHLPBreaking
+					isUsingHLPBreakingL
 				);
 			} //end of backside facing viewer if-else
 		} //end of polygon rendering loop	
@@ -384,14 +391,14 @@ public class Item {
 	//**************************** END OF RENDER *****************************
 	
 	/** Quick Optimistic Item fustrum culling using boundingRadius. Returns true only if the item lies completely outside the view-fustrum */
-	private boolean isItemFustrumCulled(float x, float y, float z, NitrogenContext context)
+	final private boolean isItemFustrumCulled(final float x, final float y, final float z, final NitrogenContext context)
 	{	
-		float boundingRadiusCache = sisi.boundingRadius;
+		final float boundingRadiusCache = sisi.boundingRadius;
 		
 		// calculate optimistic distance from viewpoint
-		float dist = boundingRadiusCache - z;
-		float allowedRightness = context.xClip * dist;
-		float allowedDownness = context.yClip * dist;
+		final float dist = boundingRadiusCache - z;
+		final float allowedRightness = context.xClip * dist;
+		final float allowedDownness = context.yClip * dist;
 		
 		// near clip
 		if(dist < context.nearClip)return(true);
@@ -420,83 +427,82 @@ public class Item {
 	 *  @param z z-coordinate of centre of Item
 	 *  @param context The NitrogenContext object that defines the fustrum.
 	 *  */
-	private void calculateItemFustrumFlags(float x, float y, float z, NitrogenContext context)
+	final private void calculateItemFustrumFlags(final float x, final float y, final float z, final NitrogenContext context, final SharedImmutableSubItem sisiL)
 	{
-		int fustrumTouchCountCache = 0;
-		float boundingRadiusCache = sisi.boundingRadius;
+		int fustrumTouchCountL = 0;
+		final float sisiBoundingRadius = sisiL.boundingRadius;
 		
 		// calculate pessimistic distance from viewpoint
-		float dist = -z - boundingRadiusCache;
-		float allowedRightness = context.xClip * dist;
-		float allowedDownness = context.yClip * dist;	
+		final float dist = -z - sisiBoundingRadius;
+		final float allowedRightness = context.xClip * dist;
+		final float allowedDownness = context.yClip * dist;	
 		
 		// near clip
 		if(dist < context.nearClip)
 		{
-			fustrumTouchCountCache++;
+			fustrumTouchCountL++;
 			touchedNear = true;
 		}
 		else
 		{touchedNear = false;}		
 		
 		// right clip
-		if((x + boundingRadiusCache) > allowedRightness)
+		if((x + sisiBoundingRadius) > allowedRightness)
 		{
-			fustrumTouchCountCache++;
+			fustrumTouchCountL++;
 			touchedRight = true;			
 		}
 		else
 		{touchedRight = false;}
 
 		// left clip
-		if((-x + boundingRadiusCache) > allowedRightness)
+		if((-x + sisiBoundingRadius) > allowedRightness)
 		{
-			fustrumTouchCountCache++;
+			fustrumTouchCountL++;
 			touchedLeft = true;			
 		}
 		else
 		{touchedLeft = false;}
 		
 		// bottom clip
-		if((y + boundingRadiusCache) > allowedDownness)
+		if((y + sisiBoundingRadius) > allowedDownness)
 		{
-			fustrumTouchCountCache++;
+			fustrumTouchCountL++;
 			touchedBottom = true;			
 		}
 		else
 		{touchedBottom = false;}
 		
 		// top clip
-		if((-y + boundingRadiusCache) > allowedDownness)
+		if((-y + sisiBoundingRadius) > allowedDownness)
 		{
-			fustrumTouchCountCache++;
+			fustrumTouchCountL++;
 			touchedTop = true;			
 		}
 		else
 		{touchedTop = false;}
-		
-		
-		
-		this.fustrumTouchCount = fustrumTouchCountCache;	
+			
+		fustrumTouchCount = fustrumTouchCountL;	
 	}
 	
 	/** Examines rotationNeedsUpdate and translationNeedsUpdate flags then if necessary informs all the Items backsides and vertexs that they have moved 
 	 * . Also as a side-effect it clears the aforementioned flags */
-	private void lazyComputeBacksidesAndVertexs()
+	final private void lazyComputeBacksidesAndVertexs()
 	{
 		Backside b;
 		Vertex v;
 		if(rotationNeedsUpdate)
 		{
-			int backsidesLength = backsides.length;
-			for(int x =0; x < backsidesLength; x++)
+			final int backsidesLength = backsides.length;
+			for(int x = 0; x < backsidesLength; x++)
 			{
 				b = backsides[x];
 				b.rotationNeedsUpdate = true;
 				b.translationNeedsUpdate = true;
 			}
-			int vertexsLength = vertexes.length;
-			for(int x =0; x < vertexsLength; x++)
+			
+			final int vertexsLength = vertexes.length;
+			for(int x = 0; x < vertexsLength; x++)
 			{
 				v = vertexes[x];
 				v.rotationNeedsUpdate = true;
@@ -506,8 +512,8 @@ public class Item {
 			if(hasCollisionVertexes)
 			{
 				Vertex cv;
-				int collisionVertexesLength = collisionVertexes.length;
-				for(int x =0; x < collisionVertexesLength; x++)
+				final int collisionVertexesLength = collisionVertexes.length;
+				for(int x = 0; x < collisionVertexesLength; x++)
 				{
 					cv = collisionVertexes[x];
 					cv.rotationNeedsUpdate = true;
@@ -523,16 +529,16 @@ public class Item {
 		// Its just a translation
 		if(translationNeedsUpdate)
 		{
-			int backsidesLength = backsides.length;
+			final int backsidesLength = backsides.length;
 			for(int x =0; x < backsidesLength; x++) backsides[x].translationNeedsUpdate = true;
 
-			int vertexsLength = vertexes.length;
+			final int vertexsLength = vertexes.length;
 			for(int x =0; x < vertexsLength; x++)vertexes[x].translationNeedsUpdate = true;
 
 			if(hasCollisionVertexes)
 			{
 				Vertex cv;
-				int collisionVertexesLength = collisionVertexes.length;
+				final int collisionVertexesLength = collisionVertexes.length;
 				for(int x =0; x < collisionVertexesLength; x++)
 				{
 					cv = collisionVertexes[x];
@@ -546,35 +552,35 @@ public class Item {
 	
 	/** Updates the Items whichRenderer field, for example a different NEAR_RENDERER could be used up close to add interpolation and a different FAR_RENDERER could
 	 * be used at a distance to render using a fixed colour instead of texture for speed and to reduce aliasing artifacts. </br></br>This method also providing some hysteresis to prevent flickering*/
-	private void selectWhichRenderer(float dist, SharedImmutableSubItem sisiCache)
+	final private int selectWhichRenderer(final float dist, final SharedImmutableSubItem sisiL)
 	{
 		
-		int whichRendererCache = whichRenderer;
+		int whichRendererNew = whichRendererOld; 
 		
-		if(whichRendererCache == NEAR_RENDERER)
+		switch(whichRendererOld)
 		{
-			if(dist > sisiCache.nearRendererDistPlus)
-			{
-				whichRendererCache = MID_RENDERER;
-			}
-		}
-		
-		if(whichRendererCache == MID_RENDERER)
-		{
-			if(dist < sisiCache.nearRendererDist)whichRendererCache = NEAR_RENDERER;
-			if(dist > sisiCache.farRendererDistPlus)whichRendererCache = FAR_RENDERER;
-		}
-		
-		if(whichRendererCache == FAR_RENDERER)
-		{
-			if(dist < sisiCache.farRendererDist)whichRendererCache = MID_RENDERER;		
+			case NEAR_RENDERER:
+				if(dist > sisiL.nearRendererDistPlus)whichRendererNew = MID_RENDERER;
+				break;
+
+			case MID_RENDERER:
+				if(dist < sisiL.nearRendererDist)whichRendererNew = NEAR_RENDERER;
+				if(dist > sisiL.farRendererDistPlus)whichRendererNew = FAR_RENDERER;
+				break;
+				
+			case FAR_RENDERER:
+				if(dist < sisiL.farRendererDist)whichRendererNew = MID_RENDERER;		
+				break;
+				
+			default: whichRendererNew = NEAR_RENDERER;	
 		}
 		
 		// ensure this Item's whichRenderer is updated if there has been a change
-		whichRenderer = whichRendererCache;
+		whichRendererOld = whichRendererNew;
+		return whichRendererNew;
 	}
 	
-	private final void updateRenderingFlags(float itemDist, SharedImmutableSubItem sisi)
+	final private void updateRenderingFlags(final float itemDist, final SharedImmutableSubItem sisi)
 	{
 		// see if isImprovedDetail needs changing
 		if(isImprovedDetail)

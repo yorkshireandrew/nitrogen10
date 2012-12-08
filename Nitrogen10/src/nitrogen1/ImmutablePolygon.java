@@ -78,9 +78,9 @@ public class ImmutablePolygon implements Serializable{
 	
 	/** Selects a Renderer from the Polygons RendererTriplet based on the whichRenderer parameter 
 	 * @return The selected renderer*/
-	Renderer getRenderer(int whichRenderer, boolean isPicking)
+	final Renderer getRenderer(final int whichRenderer, final boolean isPicking)
 	{
-		if(isPicking)return(rendererTriplet.pickingRenderer);
+		if(isPicking)return(RendererTriplet.pickingRenderer);
 		return(rendererTriplet.getRenderer(whichRenderer));
 	}
 }

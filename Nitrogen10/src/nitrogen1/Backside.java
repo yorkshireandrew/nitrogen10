@@ -56,26 +56,26 @@ public class Backside {
      * @param v11-v34 The orientation matrix computed by the scene graph 
      */
     final void calculate(
-    		NitrogenContext context,
-    		float v11, float v12, float v13, float v14,
-    		float v21, float v22, float v23, float v24,
-    		float v31, float v32, float v33, float v34
+    		final NitrogenContext context,
+    		final float v11, final float v12, final float v13, final float v14,
+    		final float v21, final float v22, final float v23, final float v24,
+    		final float v31, final float v32, final float v33, final float v34
     		)
     		{
     			// if the backside is not stale return its value
     			if(translationNeedsUpdate == false)return;
-    			ImmutableBackside ib = linkedImmutableBackside;
+    			ImmutableBackside lib = linkedImmutableBackside;
     			
     			if(rotationNeedsUpdate)
     			{ 
     				
     				// cache immutable backside values for speed.
-    				float ibix = ib.ix;
-    				float ibiy = ib.iy;
-    				float ibiz = ib.iz;
-    				float ibinx = ib.inx;
-    				float ibiny = ib.iny;
-    				float ibinz = ib.inz;
+    				float ibix = lib.ix;
+    				float ibiy = lib.iy;
+    				float ibiz = lib.iz;
+    				float ibinx = lib.inx;
+    				float ibiny = lib.iny;
+    				float ibinz = lib.inz;
     				
     				rx = v11 * ibix + v12 * ibiy + v13 * ibiz;
     				ry = v21 * ibix + v22 * ibiy + v23 * ibiz;
@@ -107,7 +107,7 @@ public class Backside {
     				value = false;	// tangent away from viewpoint
     			}
     			
-    			if(ib.calculateLighting)lightingValue = calculateLighting(context);
+    			if(lib.calculateLighting)lightingValue = calculateLighting(context);
     			
     		}
     

@@ -30,7 +30,7 @@ public class RendererTriplet implements Serializable{
 		this.farRenderer = theRenderer;
 	}
 	
-	Renderer getRenderer(int whichRenderer)
+	final Renderer getRenderer(final int whichRenderer)
 	{
 		switch(whichRenderer)
 		{
@@ -47,7 +47,7 @@ public class RendererTriplet implements Serializable{
 	
 	void setPickingRenderer(Renderer in)
 	{
-		pickingRenderer =in;
+		pickingRenderer = in;
 	}
 	
 	

@@ -115,20 +115,20 @@ public final class Vertex {
     
     /** Calculate the vertex's view-space coordinates 
      * @param v11-v34  The orientation matrix computed by the scene graph (12 floating point values)*/
-    void calculateViewSpaceCoordinates(			
-    		float v11, float v12, float v13, float v14,
-			float v21, float v22, float v23, float v24,
-			float v31, float v32, float v33, float v34)
+    final void calculateViewSpaceCoordinates(			
+    		final float v11, final float v12, final float v13, final float v14,
+    		final float v21, final float v22, final float v23, final float v24,
+    		final float v31, final float v32, final float v33, final float v34)
     {		
     	if(rotationNeedsUpdate)
     	{
     		// cache the vertex instance item space coordinate locally for speed
-    		float is_xC = is_x;
-    		float is_yC = is_y;
-    		float is_zC = is_z;
-    		rvs_x = v11 * is_xC + v12 * is_yC + v13 * is_zC;
-    		rvs_y = v21 * is_xC + v22 * is_yC + v23 * is_zC;
-    		rvs_z = v31 * is_xC + v32 * is_yC + v33 * is_zC;
+    		final float is_xL = is_x;
+    		final float is_yL = is_y;
+    		final float is_zL = is_z;
+    		rvs_x = v11 * is_xL + v12 * is_yL + v13 * is_zL;
+    		rvs_y = v21 * is_xL + v22 * is_yL + v23 * is_zL;
+    		rvs_z = v31 * is_xL + v32 * is_yL + v33 * is_zL;
     		rotationNeedsUpdate = false;
     	}
     	if(translationNeedsUpdate)
@@ -151,7 +151,8 @@ public final class Vertex {
      * @param aux3 Auxiliary value used for texture map coordinates etc (as a scaled-up integer value)
      * */
     final void setViewSpaceAndAux(
-    		float vs_x, float vs_y, float vs_z, float aux1, float aux2, float aux3
+    		final float vs_x, final float vs_y, final float vs_z, 
+    		final float aux1, final float aux2, final float aux3
     		)
     {
     	this.vs_x = vs_x;
@@ -191,7 +192,7 @@ public final class Vertex {
     }
     
     /** collision vertex method */
-    float distanceTo(Vertex target)
+    final float distanceTo(final Vertex target)
     {
     	float dx = vs_x - target.vs_x;
     	float dy = vs_y - target.vs_y;
@@ -200,7 +201,7 @@ public final class Vertex {
     }
     
     /** collision vertex method */
-    float distanceToSquared(Vertex target)
+    final float distanceToSquared(final Vertex target)
     {
     	float dx = vs_x - target.vs_x;
     	float dy = vs_y - target.vs_y;
@@ -209,13 +210,13 @@ public final class Vertex {
     }
     
     /** collision vertex method */
-    float gapTo(Vertex target)
+    final float gapTo(final Vertex target)
     {
     	return(distanceToSquared(target) - radius - target.radius);
     }
     
     /** collision vertex method */
-    float gapToSquared(Vertex target)
+    final float gapToSquared(final Vertex target)
     {
     	float radiusL = radius;
     	float targetRadius = target.radius;
@@ -223,7 +224,7 @@ public final class Vertex {
    	
     }
     
-    boolean collidedWith(Vertex target)
+    final boolean collidedWith(final Vertex target)
     {
     	float radiusL = radius;
     	float targetRadius = target.radius;

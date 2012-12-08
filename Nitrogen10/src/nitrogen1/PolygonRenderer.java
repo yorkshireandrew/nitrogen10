@@ -1,6 +1,6 @@
 package nitrogen1;
 
-public class PolygonRenderer {
+final class PolygonRenderer {
 	  static final int SHIFT = 20;
 	  static final int NUM = 1 << SHIFT;  // create a numerator equal to one - used to fast divide
     
@@ -17,7 +17,7 @@ public class PolygonRenderer {
 	 * @param lightingValue lighting value that may have been computed by the polygons backside to pass to the Renderer
 	 * @param renderer Renderer to use to render the polygon.
 	 */
-	static final void process(
+	final static void process(
 			final NitrogenContext context,
 			final Vertex a, final Vertex b, final Vertex c, final Vertex d, 
 			final Renderer ren, 
@@ -112,7 +112,7 @@ public class PolygonRenderer {
 	    }
 	}
 	
-	private static final void min_a(
+	final private static void min_a(
 			final NitrogenContext context,
 			final Vertex a, final Vertex b, final Vertex c, final Vertex d, 
 			final Renderer ren, 
@@ -122,7 +122,7 @@ public class PolygonRenderer {
 			)
 	{
 		// create local copies of y coordinates for sorting
-	    int ay = a.sy;
+//	    int ay = a.sy;
 	    int by = b.sy;
 	    int cy = c.sy;
 	    int dy = d.sy;
@@ -168,7 +168,7 @@ public class PolygonRenderer {
 		
 	}
 	
-	private static final void min_b(
+	final private static void min_b(
 			final NitrogenContext context,
 			final Vertex a, final Vertex b, final Vertex c, final Vertex d, 
 			final Renderer ren, 
@@ -179,7 +179,7 @@ public class PolygonRenderer {
 	{
 		// create local copies of y coordinates for sorting
 	    int ay = a.sy;
-	    int by = b.sy;
+//	    int by = b.sy;
 	    int cy = c.sy;
 	    int dy = d.sy;
 	    
@@ -235,7 +235,7 @@ public class PolygonRenderer {
 	    }    
 	}
 	
-	private static final void min_c(
+	final private static void min_c(
 			final NitrogenContext context,
 			final Vertex a, final Vertex b, final Vertex c, final Vertex d, 
 			final Renderer ren, 
@@ -247,7 +247,7 @@ public class PolygonRenderer {
 		// create local copies of y coordinates for sorting
 	    int ay = a.sy;
 	    int by = b.sy;
-	    int cy = c.sy;
+//	    int cy = c.sy;
 	    int dy = d.sy;
 	    // find max we know its not c
 	    
@@ -292,7 +292,7 @@ public class PolygonRenderer {
 	    }   
 	}
 	
-	private static final void min_d(
+	final private static void min_d(
 			final NitrogenContext context,
 			final Vertex a, final Vertex b, final Vertex c, final Vertex d, 
 			final Renderer ren, 
@@ -305,7 +305,7 @@ public class PolygonRenderer {
 	    int ay = a.sy;
 	    int by = b.sy;
 	    int cy = c.sy;
-	    int dy = d.sy;
+//	    int dy = d.sy;
 	    
 	    // find max we know its not d
 	    if (ay >= by)
@@ -351,7 +351,7 @@ public class PolygonRenderer {
 	//------------------------------------------------------------------------------------------------------------------------
 	    //*********************** PLOT CASE 1 ************************************
 		/** case where  a <  b <  c <  d */
-		private static final void plotCase1(final NitrogenContext context, final Vertex a, final Vertex b, final Vertex c, final Vertex d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
+		final private static void plotCase1(final NitrogenContext context, final Vertex a, final Vertex b, final Vertex c, final Vertex d, final Renderer ren, final int[] polyData, final TexMap tm, final float lightingValue)
 	    {
 			System.out.println(" plot case 1 where vert a < vert b < vert c < vert d");
 		    System.out.println("vert a = " + a.sx + "," + a.sy );	    
@@ -365,7 +365,10 @@ public class PolygonRenderer {
 	
 	        // catch degenerate polygons
 	        if(ay == dy)return;
+	        
+	        //DEBUG
 			 context.linesRendered += (dy - ay);	
+			 
 	        // localise a coordinates
 	        int ax = a.sx;
 	//        int ay = a.sy;
@@ -708,7 +711,7 @@ public class PolygonRenderer {
 	    
 		//************************ PLOT CASE 2 ***********************************************
 		/** case where a < b < d < c */
-	    private static final void plotCase2(final NitrogenContext context, final Vertex a, final Vertex b, final Vertex c, final Vertex d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
+	    final private static void plotCase2(final NitrogenContext context, final Vertex a, final Vertex b, final Vertex c, final Vertex d, final Renderer ren, final int[] polyData, final TexMap tm, final float lightingValue)
 	    {
 			System.out.println("plot case 2 where vert a < vert b < vert d < vert c");
 		    System.out.println("vert a = " + a.sx + "," + a.sy );	    
@@ -722,7 +725,10 @@ public class PolygonRenderer {
 	
 	        // catch degenerate polygons
 	        if(ay == cy)return;
+	        
+	        //DEBUG
 	        context.linesRendered += (cy - ay);
+	        
 	        // localise a coordinates
 	        int ax = a.sx;
 	//        int ay = a.sy;
@@ -1094,7 +1100,7 @@ public class PolygonRenderer {
 	    
 	    //*********************** PLOT CASE 3 *********************************
 	    /** plot case 3 a < d < b < c */
-	    private static final void plotCase3(final NitrogenContext context, final Vertex a, final Vertex b, final Vertex c, final Vertex d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
+	    private static final void plotCase3(final NitrogenContext context, final Vertex a, final Vertex b, final Vertex c, final Vertex d, final Renderer ren, final int[] polyData, final TexMap tm, final float lightingValue)
 	    {
 			System.out.println("plot case 3 where vert a < vert d < vert b < vert c");
 		    System.out.println("vert a = " + a.sx + "," + a.sy );	    
@@ -1108,6 +1114,8 @@ public class PolygonRenderer {
 	
 	        // catch degenerate polygons
 	        if(ay == cy)return;
+	        
+	        //DEBUG
 	        context.linesRendered += (cy - ay);
 	
 	        // localise a coordinates
@@ -1479,7 +1487,7 @@ public class PolygonRenderer {
 
 	    //*********************** PLOT CASE 4 *********************************
 	    /** plot case 4 a < d < c < b */	    
-	    private static final void plotCase4(final NitrogenContext context, final Vertex a, final Vertex b, final Vertex c, final Vertex d, final Renderer ren, final int[] polyData, final TexMap tm, float lightingValue)
+	    final private static void plotCase4(final NitrogenContext context, final Vertex a, final Vertex b, final Vertex c, final Vertex d, final Renderer ren, final int[] polyData, final TexMap tm, final float lightingValue)
 	    {
 			System.out.println(" plot case 4 where vert a < vert d < vert c < vert b");
 		    System.out.println("vert a = " + a.sx + "," + a.sy );	    

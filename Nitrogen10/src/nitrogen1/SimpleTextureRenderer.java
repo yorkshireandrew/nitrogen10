@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author andrew
  */
-public class SimpleTextureRenderer implements Renderer,Serializable{
+final public class SimpleTextureRenderer implements Renderer,Serializable{
 
 private static final long serialVersionUID = -9205815146173706598L;
 
@@ -45,22 +45,22 @@ final public void renderTrapezoid(
         int st_aux3,
         
         // start point increment
-        int st_dx,   long st_dz,
-        int st_daux1,
-        int st_daux2,
-        int st_daux3,
+        final int st_dx,   final long st_dz,
+        final int st_daux1,
+        final int st_daux2,
+        final int st_daux3,
         
         // line finish point
         int fin_x,   long fin_z,
         int fin_aux1,
         int fin_aux2,
-        int fin_aux3,                    
+        final int fin_aux3,                    
 
         // finish point increment
-        int fin_dx,   long fin_dz,
-        int fin_daux1,
-        int fin_daux2,
-        int fin_daux3,
+        final int fin_dx,   final long fin_dz,
+        final int fin_daux1,
+        final int fin_daux2,
+        final int fin_daux3,
         
         // start and finish y values
         // note the last line y_max is not rendered

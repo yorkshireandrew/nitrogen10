@@ -1,6 +1,6 @@
 package nitrogen1;
 
-public class HLPBreaker {
+final class HLPBreaker {
 	
 	/** constant used for computing hlpBreakCase */
 	static final int ONE = 1;
@@ -13,9 +13,9 @@ public class HLPBreaker {
 	/** constant used for computing hlpBreakCase */
 	static final int EIGHT = 8;
 	
-	/** Field used to generate Vertexs that occur at intersect points */
+	/** Field used to generate Vertexes that occur at intersect points */
 	static Vertex[] workingVertexes;
-	/** Field used to generate Vertexs that occur at intersect points */
+	/** Field used to generate Vertexes that occur at intersect points */
 	static int workingVertexIndex = 0;
 	
 	/** nearest point in polygon or sub-polygon being processed
@@ -51,24 +51,29 @@ public class HLPBreaker {
 		workingVertexes = new Vertex[BUFFER_SIZE];
 		for(int i = 0 ; i < BUFFER_SIZE; i++)workingVertexes[i]= new Vertex();
 		}
-	static void process(	
-			NitrogenContext context,
-			int fustrumTouchCount, 
-			boolean touchedNear,
-			boolean touchedRight,
-			boolean touchedLeft,
-			boolean touchedTop,
-			boolean touchedBottom,
+	
+	final static void process(	
+			final NitrogenContext context,
+			final int fustrumTouchCount, 
+			final boolean touchedNear,
+			final boolean touchedRight,
+			final boolean touchedLeft,
+			final boolean touchedTop,
+			final boolean touchedBottom,
 			
-			Vertex vertex1, Vertex vertex2, Vertex vertex3, Vertex vertex4,
+			final Vertex vertex1, 
+			final Vertex vertex2, 
+			final Vertex vertex3, 
+			final Vertex vertex4,
 			
-			Renderer renderer,
-			int[] polyData,
-			TexMap textureMap,
-			float lightingValue,
-			boolean useHLPBreak
+			final Renderer renderer,
+			final int[] polyData,
+			final TexMap textureMap,
+			final float lightingValue,
+			final boolean useHLPBreak
 			)
 	{
+		// DEBUG
 		context.clippedPolygonsRendered++;
 		
 		// skip HLP breaking if Item being rendered
@@ -111,51 +116,55 @@ public class HLPBreaker {
 	
 	
 /** processes the polygons breaking them down. If the first two vertexes are known to be closest set accelerate true */	
-static void subprocess(
-		boolean accelerate,
-		float contextQualityOfHLP,
-		NitrogenContext context,
-		int fustrumTouchCount, 
-		boolean touchedNear,
-		boolean touchedRight,
-		boolean touchedLeft,
-		boolean touchedTop,
-		boolean touchedBottom,
+final static void subprocess(
+		final boolean accelerate,
+		final float contextQualityOfHLP,
+		final NitrogenContext context,
+		final int fustrumTouchCount, 
+		final boolean touchedNear,
+		final boolean touchedRight,
+		final boolean touchedLeft,
+		final boolean touchedTop,
+		final boolean touchedBottom,
 		
-		Vertex vertex1, Vertex vertex2, Vertex vertex3, Vertex vertex4,
+		final Vertex vertex1, 
+		final Vertex vertex2, 
+		final Vertex vertex3, 
+		final Vertex vertex4,
 		
-		Renderer renderer,
-		int[] polyData,
-		TexMap textureMap,
-		float lightingValue
+		final Renderer renderer,
+		final int[] polyData,
+		final TexMap textureMap,
+		final float lightingValue
 		)
 	{
-    System.out.println("HLP break subprocess called");
+		// DEBUG
+ //   System.out.println("HLP break subprocess called");
 //    if(accelerate)System.out.println("accelerate=true");
-    Vertex a = vertex1;
-    Vertex b = vertex2;
-    Vertex c = vertex3;
-    Vertex d = vertex4;
-    System.out.println("vert a = " + a.vs_x + "," + a.vs_y + "," + a.vs_z );	    
-    System.out.println("vert b = " + b.vs_x + "," + b.vs_y + "," + b.vs_z );	    
-    System.out.println("vert c = " + c.vs_x + "," + c.vs_y + "," + c.vs_z );	    
-    System.out.println("vert d = " + d.vs_x + "," + d.vs_y + "," + d.vs_z );	
+//    final Vertex a = vertex1;
+//    final Vertex b = vertex2;
+//    final Vertex c = vertex3;
+//    final Vertex d = vertex4;
+//    System.out.println("vert a = " + a.vs_x + "," + a.vs_y + "," + a.vs_z );	    
+//    System.out.println("vert b = " + b.vs_x + "," + b.vs_y + "," + b.vs_z );	    
+//    System.out.println("vert c = " + c.vs_x + "," + c.vs_y + "," + c.vs_z );	    
+//    System.out.println("vert d = " + d.vs_x + "," + d.vs_y + "," + d.vs_z );	
 	
 	if(needsHLPBreak(accelerate, context, vertex1, vertex2, vertex3, vertex4))
 		{
 			int hlpBreakCase = 0;
-			float localThresholdDist = thresholdDist; // set by needsHLPBreak
+			final float thresholdDistL = thresholdDist; // set by needsHLPBreak
 			if(accelerate)
 			{
 				hlpBreakCase = THREE;
 			}
 			else
 			{
-				if(vertex1.vs_z > localThresholdDist) hlpBreakCase |= ONE;
-				if(vertex2.vs_z > localThresholdDist) hlpBreakCase |= TWO;
+				if(vertex1.vs_z > thresholdDistL) hlpBreakCase |= ONE;
+				if(vertex2.vs_z > thresholdDistL) hlpBreakCase |= TWO;
 			}
-			if(vertex3.vs_z > localThresholdDist) hlpBreakCase |= FOUR;
-			if(vertex4.vs_z > localThresholdDist) hlpBreakCase |= EIGHT;
+			if(vertex3.vs_z > thresholdDistL) hlpBreakCase |= FOUR;
+			if(vertex4.vs_z > thresholdDistL) hlpBreakCase |= EIGHT;
 			
 			hlpBreakCaseHandler(
 					context,
@@ -171,7 +180,7 @@ static void subprocess(
 					textureMap,
 					lightingValue,
 					hlpBreakCase,
-					localThresholdDist,
+					thresholdDistL,
 					contextQualityOfHLP
 				);					
 		}
@@ -188,26 +197,29 @@ static void subprocess(
 	}
 
 /** breaks high level perspective polygons down into lower level perspective polygons. It requires a hlpBreakCase parameter that determines which of the supplied vertexes exceed the high level of perspective threshold. */
-static void hlpBreakCaseHandler(
-				NitrogenContext context,
-				int fustrumTouchCount, 
-				boolean touchedNear,
-				boolean touchedRight,
-				boolean touchedLeft,
-				boolean touchedTop,
-				boolean touchedBottom,		
-				Vertex vertex1, Vertex vertex2, Vertex vertex3, Vertex vertex4,	
-				Renderer renderer,
-				int[] polyData,
-				TexMap textureMap,
-				float lightingValue,
-				int hlpBreakCase,
+final static void hlpBreakCaseHandler(
+				final NitrogenContext context,
+				final int fustrumTouchCount, 
+				final boolean touchedNear,
+				final boolean touchedRight,
+				final boolean touchedLeft,
+				final boolean touchedTop,
+				final boolean touchedBottom,		
+				final Vertex vertex1, 
+				final Vertex vertex2, 
+				final Vertex vertex3, 
+				final Vertex vertex4,	
+				final Renderer renderer,
+				final int[] polyData,
+				final TexMap textureMap,
+				final float lightingValue,
+				final int hlpBreakCase,
 				float thresholdDist,
 				float contextQualityOfHLP
 			)
 		{
-			Vertex vertexa;
-			Vertex vertexb;	
+			final Vertex vertexa;
+			final Vertex vertexb;	
 			System.out.println("hlpBreakCase="+hlpBreakCase);
 			switch(hlpBreakCase)
 			{
@@ -589,7 +601,7 @@ static void hlpBreakCaseHandler(
 		}
 
 	/** Given four vertexes and a Nitrogen context containing a valid qualityofHLP determines if HLP breaking is required */ 
-	static boolean needsHLPBreak(boolean accelerate, NitrogenContext context, Vertex vertex1, Vertex vertex2, Vertex vertex3, Vertex vertex4)
+	final static boolean needsHLPBreak(final boolean accelerate, final NitrogenContext context, final Vertex vertex1, final Vertex vertex2, final Vertex vertex3, final Vertex vertex4)
 	{
 		float z1,z2,z3,z4;
 		float maxaz, maxbz, minaz, minbz, finalmaxz, finalminz;
@@ -678,7 +690,7 @@ static void hlpBreakCaseHandler(
 		}
 	}
 	
-	static Vertex calculateIntersect(Vertex in, Vertex out, float threshold)
+	final static Vertex calculateIntersect(final Vertex in, final Vertex out, final float threshold)
 	{
 		//DEBUG
 //		System.out.println("calculatingIntersect");
@@ -699,7 +711,7 @@ static void hlpBreakCaseHandler(
 	 * @param n The proportion parameter (expected to be in the range 0 ... 1)
 	 * @return The vertex that lies at proportion n along the line between first and second vertex parameters
 	 */
-	static final Vertex generateInbetweenVertex(Vertex first, Vertex second, float n)
+	final static Vertex generateInbetweenVertex(Vertex first, Vertex second, float n)
 	{
 		//DEBUG
 //		System.out.println("generatingInbetweenVertex at index:"+workingVertexIndex);
@@ -723,7 +735,7 @@ static void hlpBreakCaseHandler(
 		return retval;	
 	}
 	
-	static void prepareForNewPolygon()
+	final static void prepareForNewPolygon()
 	{
 		//DEBUG
 //		System.out.println("HLP BREAKER PREPARING FOR NEW POLYGON");
