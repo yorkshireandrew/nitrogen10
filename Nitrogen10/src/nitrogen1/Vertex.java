@@ -87,6 +87,7 @@ public final class Vertex {
     	is_x = iv.is_x;
     	is_y = iv.is_y;
     	is_z = iv.is_z;
+    	radius = 0f;
     	rotationNeedsUpdate = true;
     	translationNeedsUpdate = true;
         screenCoordinatesNeedUpdate = true;  

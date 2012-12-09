@@ -30,7 +30,7 @@ final public class MyApplet extends JApplet{
 	private static final long serialVersionUID = 1799576836511527595L;
 	static final int APP_WIDTH = 501;
     static final int APP_HEIGHT =501;
-    static final Renderer simpleTextureRenderer = new SimpleTextureRenderer();
+    static final Renderer simpleTextureRenderer = new Renderer_SimpleTexture();
 
     Transform t4_class;
     Transform t3_class;
@@ -92,7 +92,7 @@ final public class MyApplet extends JApplet{
             
     
             // add renderers to RendererHelper
-            SimpleTextureRenderer str = new SimpleTextureRenderer();
+            Renderer_SimpleTexture str = new Renderer_SimpleTexture();
             RendererTriplet rt = new RendererTriplet(str);
             try
             {
@@ -100,7 +100,7 @@ final public class MyApplet extends JApplet{
             }
             catch(Exception e){System.out.println(e.getMessage());}
 
-            SimpleSingleColourRenderer sscr = new SimpleSingleColourRenderer();           
+            Renderer_SimpleSingleColour sscr = new Renderer_SimpleSingleColour();           
             RendererTriplet sscrt = new RendererTriplet(sscr);
             try
             {

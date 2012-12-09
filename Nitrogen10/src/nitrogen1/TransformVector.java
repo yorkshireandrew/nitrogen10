@@ -8,12 +8,10 @@ import java.util.Iterator;
  *
  * @author andrew
  */
-    class TransformVector {
+    final class TransformVector {
     private Transform[] vec;
-    int capacity;
-    int position;
-    
-    int itteration_index;
+    private int capacity;
+    private int position;
     
     /**
      * Creates a new instance 
@@ -119,7 +117,8 @@ import java.util.Iterator;
      final boolean removeElement(Transform ob) 
      {
          int x = 0;
-         while(x < position)
+         int positionL = position;
+         while(x < positionL)
          {
              if(vec[x] == ob)
              {

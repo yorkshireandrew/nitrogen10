@@ -115,7 +115,8 @@ package nitrogen1;
      final boolean removeElement(Item ob) 
      {
          int x = 0;
-         while(x < position)
+         final int positionL = position;
+         while(x < positionL)
          {
              if(vec[x] == ob)
              {

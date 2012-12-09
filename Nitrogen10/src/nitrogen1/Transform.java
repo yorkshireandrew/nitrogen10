@@ -79,7 +79,7 @@ public class Transform{
 	
 	/** Adds a transform to this transforms child transform list. This is an internal method that does not detach the supplied transform from any parents it may already have; external code should use the setParent method
 	 * @param t Transform to be added as a child to the Transform being called */
-	private void add(Transform t)
+	final private void add(Transform t)
 	{
 		// add passed in transform to childTransforms, creating it if it is null
 		if (childTransforms == null)childTransforms = new TransformVector();
@@ -99,11 +99,11 @@ public class Transform{
 	 * @param p11 to p12 are the calculated parent transform values that must be passed in.
 	 * @param context The NitrogenContext to render Items into. 
 	 */
-	private final void render(
-			NitrogenContext context,
-			float p11, float p12, float p13, float p14,
-			float p21, float p22, float p23, float p24,
-			float p31, float p32, float p33, float p34
+	final private void render(
+			final NitrogenContext context,
+			final float p11, final float p12, final float p13, final float p14,
+			final float p21, final float p22, final float p23, final float p24,
+			final float p31, final float p32, final float p33, final float p34
 			)
 	{		
 		// avoid doing any work if we can help it!
@@ -167,14 +167,16 @@ public class Transform{
 		la34 = c34;
 		
 		// first render our own child Items
-		int ci = childItems.size();
-		for(int i = 0; i < ci; i++)childItems.elementAt(i).renderItem(context,la11,la12,la13,la14,la21,la22,la23,la24,la31,la32,la33,la34);
+		final ItemVector childItemsL = childItems;
+		int childItemsSize = childItemsL.size();
+		for(int i = 0; i < childItemsSize; i++)childItemsL.elementAt(i).renderItem(context,la11,la12,la13,la14,la21,la22,la23,la24,la31,la32,la33,la34);
 		
 		// now instruct child transforms to calculate themselves and render themselves
 		if(childTransforms != null)
 		{
-			int ct = childTransforms.size();
-			for(int i = 0; i < ct; i++)childTransforms.elementAt(i).render(context,la11,la12,la13,la14,la21,la22,la23,la24,la31,la32,la33,la34);
+			final TransformVector childTransformsL = childTransforms;
+			int childTransformsSize = childTransformsL.size();
+			for(int i = 0; i < childTransformsSize; i++)childTransformsL.elementAt(i).render(context,la11,la12,la13,la14,la21,la22,la23,la24,la31,la32,la33,la34);
 		}
 	}
 	
@@ -249,8 +251,8 @@ public class Transform{
 		return false;
 	}
 	
-	/** increases the numberOfVisibleChildren in this transform
-	 *  as well as any above it in the scenegraph, by n
+	/** package scope method that increases the numberOfVisibleChildren in this transform
+	 *  as well as any above it in the scene graph, by n
 	 * @param n How much to increase the count by
 	 */
 	final void increaseVisibleChildrenBy(int n)
@@ -259,8 +261,8 @@ public class Transform{
 		if(parent != null)parent.increaseVisibleChildrenBy(n);
 	}
 	
-	/** decreases the numberOfVisibleChildren in this transform
-	 *  as well as any above it in the scenegraph, by n
+	/** package scope method that decreases the numberOfVisibleChildren in this transform
+	 *  as well as any above it in the scene graph, by n
 	 * @param n How much to decrease the count by
 	 */
 	final void decreaseVisibleChildrenBy(int n)
@@ -269,7 +271,7 @@ public class Transform{
 		if(parent != null)parent.decreaseVisibleChildrenBy(n);
 	}
 	
-	/** Causes the complete viewspace transform for this 
+	/** Causes the complete view-space transform for this 
 	 * and all its child transforms to be updated on next render.
 	 * <br /><br />
 	 * Needs to be called if the transform matrix (a) has been replaced or matrix (a)
@@ -281,18 +283,20 @@ public class Transform{
 		rotationNeedsUpdate = true;
 		
 		// inform any child Transforms they need totally updating too
-		if(childTransforms != null)
+		final TransformVector childTransformsL = childTransforms;		
+		if(childTransformsL != null)
 		{
-			int ctsize = childTransforms.size();
-			for(int i = 0; i < ctsize; i++)childTransforms.elementAt(i).setNeedsTotallyUpdating();
+			int childTransformsSize = childTransformsL.size();
+			for(int i = 0; i < childTransformsSize; i++)childTransformsL.elementAt(i).setNeedsTotallyUpdating();
 		}
 		
 		// also inform child items they need totally updating
-		int cisize = childItems.size();
-		for(int i = 0; i < cisize; i++)childItems.elementAt(i).setNeedsTotallyUpdating();	
+		final ItemVector childItemsL = childItems;
+		int childItemsSize = childItemsL.size();
+		for(int i = 0; i < childItemsSize; i++)childItemsL.elementAt(i).setNeedsTotallyUpdating();	
 	}
 	
-	/** Causes the viewspace transform for this 
+	/** Causes the view-space transform for this 
 	 * and all its child transforms to be updated on next render
 	 * to reflect a rotation change to the (a) matrix
 	 * <br /><br />
@@ -300,19 +304,21 @@ public class Transform{
 	 */
 	final public void setNeedsRotationUpdating()
 	{
-		// this Transform need only update its calculated rotation
+		// this Transform need only update its calculated Rotation
 		rotationNeedsUpdate = true;
 		
-		// inform any child Transforms they need totally updating
-		if(childTransforms != null)
+		// inform any child Transforms they need totally updating too as the rotation may have translated them
+		final TransformVector childTransformsL = childTransforms;
+		if(childTransformsL != null)
 		{
-			int ctsize = childTransforms.size();
-			for(int i = 0; i< ctsize; i++)childTransforms.elementAt(i).setNeedsTotallyUpdating();
+			int childTransformsSize = childTransformsL.size();
+			for(int i = 0; i < childTransformsSize; i++)childTransformsL.elementAt(i).setNeedsTotallyUpdating();
 		}
 		
 		// also inform child items they need totally updating
-		int cisize = childItems.size();
-		for(int i = 0; i< cisize; i++)childItems.elementAt(i).setNeedsTotallyUpdating();					
+		final ItemVector childItemsL = childItems;
+		int childItemsSize = childItemsL.size();
+		for(int i = 0; i < childItemsSize; i++)childItemsL.elementAt(i).setNeedsTotallyUpdating();	
 	}
 	
 	/** Causes the view space transform for this 
@@ -326,16 +332,18 @@ public class Transform{
 		// this Transform need only update its calculated translation
 		translationNeedsUpdate = true;
 		
-		// inform any child Transforms they need their translation updating
-		if(childTransforms != null)
+		// inform any child Transforms they are translated 
+		final TransformVector childTransformsL = childTransforms;		
+		if(childTransformsL != null)
 		{
-			int ctsize = childTransforms.size();
-			for(int i = 0; i< ctsize; i++)childTransforms.elementAt(i).setNeedsTranslationUpdating();
+			int childTransformsSize = childTransformsL.size();
+			for(int i = 0; i < childTransformsSize; i++)childTransformsL.elementAt(i).setNeedsTranslationUpdating();
 		}
 		
-		// also inform child items they need their translation updating
-		int cisize = childItems.size();
-		for(int i = 0; i< cisize; i++)childItems.elementAt(i).setNeedsTranslationUpdating();		
+		// also inform child items they need totally updating
+		final ItemVector childItemsL = childItems;
+		int childItemsSize = childItemsL.size();
+		for(int i = 0; i < childItemsSize; i++)childItemsL.elementAt(i).setNeedsTranslationUpdating();					
 	}
 	
 	//***************************************************************
@@ -365,14 +373,16 @@ public class Transform{
 		float n34 = c34;
 		
 		// first render our own child Items
-		int ci = childItems.size();
-		for(int i = 0; i < ci; i++)childItems.elementAt(i).renderItem(context,n11,n12,n13,n14,n21,n22,n23,n24,n31,n32,n33,n34);
+		final ItemVector childItemsL = childItems;
+		int childItemsSize = childItemsL.size();
+		for(int i = 0; i < childItemsSize; i++)childItemsL.elementAt(i).renderItem(context,n11,n12,n13,n14,n21,n22,n23,n24,n31,n32,n33,n34);
 		
 		// now instruct child transforms to calculate themselves and render themselves
-		if(childTransforms != null)
+		final TransformVector childTransformsL = childTransforms;
+		if(childTransformsL != null)
 		{
-			int ct = childTransforms.size();
-			for(int i = 0; i < ct; i++)childTransforms.elementAt(i).render(context,n11,n12,n13,n14,n21,n22,n23,n24,n31,n32,n33,n34);
+			int childTransformsSize = childTransformsL.size();
+			for(int i = 0; i < childTransformsSize; i++)childTransformsL.elementAt(i).render(context,n11,n12,n13,n14,n21,n22,n23,n24,n31,n32,n33,n34);
 		}
 	}
 	
@@ -665,13 +675,14 @@ public class Transform{
 	final public Transform findTransformNamed(String target)
 	{
 		Transform retval;
-		if(this.outerName.equals(target))return(this);
-		if(childTransforms != null)
+		if(outerName.equals(target))return(this);
+		final TransformVector childTransformsL = childTransforms;		
+		if(childTransformsL != null)
 		{
-			int cts = childTransforms.size();
-			for(int i = 0; i < cts; i++)
+			int childTransformsSize = childTransformsL.size();
+			for(int i = 0; i < childTransformsSize; i++)
 			{
-				retval = childTransforms.elementAt(i).findTransformNamed(target);
+				retval = childTransformsL.elementAt(i).findTransformNamed(target);
 				if(retval != null)return(retval);
 			}
 		}
@@ -681,13 +692,14 @@ public class Transform{
 	final public Transform findTransformInnerNamed(String target)
 	{
 		Transform retval;
-		if(this.innerName.equals(target))return(this);
-		if(childTransforms != null)
+		if(innerName.equals(target))return(this);
+		final TransformVector childTransformsL = childTransforms;
+		if(childTransformsL != null)
 		{
-			int cts = childTransforms.size();
-			for(int i = 0; i < cts; i++)
+			int childTransformsSize = childTransformsL.size();
+			for(int i = 0; i < childTransformsSize; i++)
 			{
-				retval = childTransforms.elementAt(i).findTransformNamed(target);
+				retval = childTransformsL.elementAt(i).findTransformInnerNamed(target);
 				if(retval != null)return(retval);
 			}
 		}
@@ -698,19 +710,23 @@ public class Transform{
 	{
 		Item retval;
 		
-		int maxItems = childItems.size();
-		for(int i = 0; i < maxItems; i++)
+		// search our Items
+		final ItemVector childItemsL = childItems;
+		int childItemsSize = childItemsL.size();
+		for(int i = 0; i < childItemsSize; i++)
 		{
-			retval = childItems.elementAt(i);
+			retval = childItemsL.elementAt(i);
 			if(retval.getName().equals(target))return(retval);
 		}
 		
-		if(childTransforms != null)
+		// OK ask our children
+		final TransformVector childTransformsL = childTransforms;
+		if(childTransformsL != null)
 		{
-			int cts = childTransforms.size();
-			for(int i = 0; i < cts; i++)
+			int childTransformsSize = childTransformsL.size();
+			for(int i = 0; i < childTransformsSize; i++)
 			{
-				retval = childTransforms.elementAt(i).findItemNamed(target);
+				retval = childTransformsL.elementAt(i).findItemNamed(target);
 				if(retval != null)return(retval);
 			}
 		}
