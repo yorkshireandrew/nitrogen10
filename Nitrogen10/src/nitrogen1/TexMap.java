@@ -35,7 +35,14 @@ public class TexMap implements Serializable{
     
     final static TexMap getTexture(String st) throws NitrogenCreationException
     {
-    	if(textures.containsKey(st))return(textures.get(st));
+    	if(textures == null)System.out.println("TexMap textures is null");
+    	System.out.println("seeing if we hava texture called :"+ st);
+    	if(textures.containsKey(st))
+    	{
+    		System.out.println("yes we do");
+    		return(textures.get(st));
+    	}
+    	System.out.println("no we dont");
     	return(new TexMap(st));
     }
 
@@ -73,10 +80,22 @@ public class TexMap implements Serializable{
         return h;
     }
     
+
     final private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
     {
+    	System.out.println("TexMap.readObject called");
     	in.defaultReadObject();
-    	if(textures.containsKey(resourceName))return; // we already have loaded the texture
+    	System.out.println("ok the resource is called :" + resourceName);
+    	if(textures.containsKey(resourceName))
+    		{
+    			System.out.println("we already have that resource");
+    			System.out.println("I bet we should do something here");
+    			TexMap loadedTexture = textures.get(resourceName);
+    			tex = loadedTexture.tex;
+       			h = loadedTexture.h;
+       			w = loadedTexture.w;
+       		    return; // we already have loaded the texture
+    		}
     	URL url = getClass().getResource(resourceName);
         if(url == null)throw new IOException("TexMap resource " + resourceName + " could not be found");
     	Image ii = new javax.swing.ImageIcon(getClass().getResource(resourceName)).getImage();

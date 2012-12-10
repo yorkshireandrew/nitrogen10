@@ -1,6 +1,6 @@
 package nitrogen1;
 
-public class PickingRenderer implements Renderer{
+public class Renderer_Picking implements Renderer{
 
 	static final int SH = 20;
 	static final int NUM = 1 << SH;

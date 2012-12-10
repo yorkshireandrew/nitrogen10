@@ -17,7 +17,61 @@ private static final long serialVersionUID = -9205815146173706598L;
 
 static final int SH = 20;
 static final int NUM = 1 << SH;
+/*
+final public void renderTrapezoid(
 
+        // line start point
+        int st_x,   long st_z,
+        int st_aux1,
+        int st_aux2,
+        int st_aux3,
+        
+        // start point increment
+        final int st_dx,   final long st_dz,
+        final int st_daux1,
+        final int st_daux2,
+        final int st_daux3,
+        
+        // line finish point
+        int fin_x,   long fin_z,
+        int fin_aux1,
+        int fin_aux2,
+        final int fin_aux3,                    
+
+        // finish point increment
+        final int fin_dx,   final long fin_dz,
+        final int fin_daux1,
+        final int fin_daux2,
+        final int fin_daux3,
+        
+        // start and finish y values
+        // note the last line y_max is not rendered
+        int y_counter,   int y_max,
+
+        // pixel buffer
+        int[] p,
+        
+        // z buffer
+        int[] z,
+
+        // texture buffer
+        int[] tex,
+
+        // output image width
+        int pixelBufferWidth,
+
+        // input texture width
+        int textureBufferWidth,
+        
+        // global parameters array - eg. the colour for a single colour polygon
+        int[] polyData,
+        float lightingValue,
+        NitrogenContext context
+        ){
+		if(tex == null){System.out.println("null texture!");}
+		else{System.out.println("has texture!");}
+}
+*/
 /**
  * 
  * @param st_aux1	texture map x coord for line start point

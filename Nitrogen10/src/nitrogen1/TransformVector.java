@@ -2,14 +2,16 @@
 
 package nitrogen1;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 /**
  *
  * @author andrew
  */
-    final class TransformVector {
-    private Transform[] vec;
+    final class TransformVector implements Serializable{
+	private static final long serialVersionUID = 8879546974244886541L;
+	private Transform[] vec;
     private int capacity;
     private int position;
     

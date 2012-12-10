@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 
 final public class MyApplet extends JApplet{
     /**
@@ -50,7 +51,7 @@ final public class MyApplet extends JApplet{
             			1f, 0f, 0f, 0f,
             			0f, 1f, 0f, 0f,
             			0f, 0f, 1f, 0f);
-            
+            t1.setOuterName("t2");
             Transform looker= new Transform(t1,
             		1,0,0,1,
             		0,1,0,0,
@@ -71,12 +72,19 @@ final public class MyApplet extends JApplet{
             			1f, 0f, 0f, 0f,
             			0f, 1f, 0f, 0f,
             			0f, 0f, 1f, -20f);
-            
+            t2.setOuterName("t2");
             t2b	= new 	Transform(
         			t1,
         			1f, 0f, 0f, 2f,
         			0f, 1f, 0f, 2f,
         			0f, 0f, 1f, -20f);
+            t2b.setOuterName("t2b");
+            Transform t2c = new 	Transform(
+        			t2b,
+        			1f, 0f, 0f, 0f,
+        			0f, 1f, 0f, 0f,
+        			0f, 0f, 1f, 0f);
+            t2c.setOuterName("t2c");
 
             t3	= new 	Transform(
             			t2,
@@ -193,9 +201,61 @@ final public class MyApplet extends JApplet{
             
             Item i = Item.createItem(newsisi,t4);
             i.setVisibility(true); 
-            Item i2 = Item.createItem(newsisi,t2b);
+            Item i2 = Item.createItem(newsisi,t2c);
             i2.setVisibility(true); 
             i2.setName("blogs boxes");
+            
+            t2c.setTurn(0.1f);
+         
+            // output sisi
+            try {
+				ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("test2"));
+				out.writeObject(t2b);
+				out.close();
+            } catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
+            t1.remove(t2b);
+            // switch to another factory! test that !
+            Item.setItemFactory(new ItemFactory_Default());
+            
+            //line below was a test needing public textures in TexMap
+            //TexMap.textures = new HashMap<String,TexMap>();
+            
+            System.out.println("*********************");
+            System.out.println("** LOADING BLOGS BOXES *****");
+            System.out.println("*********************");
+
+            // output sisi
+            Transform readTransform;
+            try {
+				ObjectInputStream in = new ObjectInputStream(new FileInputStream("test2"));
+				readTransform = (Transform) in.readObject();
+				in.close();
+            } catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			}  
+            Item blogs = readTransform.findItemNamed("blogs boxes");
+            if(blogs != null)System.out.println("FOUND BLOGS BOXES");
+            blogs.setName("loaded blogs boxes");
+            readTransform.setParent(t1);
+      
+            
             
  //           System.out.println("allocated Items " + ((ItemFactory_Development)Item.getItemFactory()).getAllocatedItemCount());
  //           System.out.println("allocated Backsides " + ((ItemFactory_Development)Item.getItemFactory()).getAllocatedBacksideCount());
@@ -239,7 +299,7 @@ final public class MyApplet extends JApplet{
             
             // ********* OK Add stuff for picking *****
             i.setName("box1");
-            RendererTriplet.pickingRenderer = new PickingRenderer();
+            RendererTriplet.pickingRenderer = new Renderer_Picking();
             class MyMouseListener extends MouseInputAdapter
             {
             	@Override

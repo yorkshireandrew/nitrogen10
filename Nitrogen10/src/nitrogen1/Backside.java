@@ -1,33 +1,38 @@
 package nitrogen1;
 
-public class Backside {
-	
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+
+public class Backside implements Serializable{
+	private static final long serialVersionUID = 5140009704459622721L;
+
 	/** the ImmutableBackside linked to this backside */
 	ImmutableBackside linkedImmutableBackside;
 		
 	/** the backsides normal coordinates, which are recalculated if rotation occurs */
-	float nx, ny, nz;
+	transient float nx, ny, nz;
 	
 	/** Partially computed view-space coordinate, formed from a rotated but not translated ImmutableBackside */
-	float rx, ry, rz;
+	transient float rx, ry, rz;
 	
 	/** the backsides view-space coordinates,  which are recalculated if rotation or translation occurs */
-	float vx, vy, vz;
+	transient float vx, vy, vz;
 	
 	/** Lighting value computed by the backside (if this is enabled in the associated immutable backside) */
-	float lightingValue;
+	transient float lightingValue;
 	
 	/** return value, which is true if the tangent points toward the viewer */
-	boolean value;
+	transient boolean value;
 	
     /** flag indicating the positional offset caused by rotation needs updating */
-    boolean rotationNeedsUpdate = true;
+	transient boolean rotationNeedsUpdate = true;
     
     /** flag indicating the view-space coordinates and backside value need updating */ 
-    boolean translationNeedsUpdate = true;
+	transient boolean translationNeedsUpdate = true;
     
 	/** package scope reference for use in factories LLL*/
-	Backside nextInList;
+    transient Backside nextInList;
     
     /** default constructor used by factories to preallocate a Backside */
     Backside(){}
@@ -119,5 +124,12 @@ public class Backside {
     		// ** TO DO **
     		return 0;
     	}
+    	
+        final private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+        {
+        	in.defaultReadObject();
+        	translationNeedsUpdate = true;
+        	rotationNeedsUpdate = true;
+        }
     		
 }

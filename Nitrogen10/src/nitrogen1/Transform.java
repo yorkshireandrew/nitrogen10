@@ -1,10 +1,22 @@
 package nitrogen1;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.Math;
 
+import java.io.Serializable;
+
 /** component of the scene graph that encapsulates translation and orientation */
-public class Transform{
+public class Transform implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5690578721257459299L;
 	private static final float[]	sinTable;
 	private static final float[]	cosTable;
+	
+	private static boolean isSerializingRoot = true;
 	
 	/** The actual values of this transform */
 	float 			a11,a12,a13,a14;
@@ -12,15 +24,15 @@ public class Transform{
 	float 			a31,a32,a33,a34;
 	
 	/** Calculated view space transform  */
-	float 			c11,c12,c13,c14;
-	float 			c21,c22,c23,c24;
-	float 			c31,c32,c33,c34;
+	transient float c11,c12,c13,c14;
+	transient float c21,c22,c23,c24;
+	transient float c31,c32,c33,c34;
 	
 	/** Flag indicating if the transforms translation needs to be computed */
-	private boolean 		translationNeedsUpdate = true;
+	transient private boolean 		translationNeedsUpdate = true;
 	
 	/** Flag indicating the transforms rotation needs to be computed */	
-	private boolean 		rotationNeedsUpdate = true;
+	transient private boolean 		rotationNeedsUpdate = true;
 	
 	// Counter to ensure the view-space transform only gets calculated
 	// if this transform has visible children 
@@ -34,7 +46,7 @@ public class Transform{
 	private TransformVector childTransforms;
 	
 	/** child items of this transform - always an ItemVector but it may be empty */
-	private final ItemVector		childItems = new ItemVector();		
+	private ItemVector childItems = new ItemVector();		
 	
 	/** outer name */
 	private String outerName;
@@ -815,4 +827,35 @@ public class Transform{
 		if(t == null){return null;}
 		else{return t.innerName;}
 	}
+	
+    final private void writeObject(ObjectOutputStream out) throws IOException, ClassNotFoundException
+    {
+    	if(isSerializingRoot)
+    	{
+    		System.out.println("serialising root:" + this.getOuterName());
+    		Transform parentL = parent;
+    		parent = null;
+    		isSerializingRoot = false;
+    		writeObject(out);
+    		parent = parentL;
+    		isSerializingRoot = true;
+    	}
+    	else
+    	{
+    		System.out.println("serialising as not root:" + this.getOuterName());
+    		out.defaultWriteObject();
+    	}
+    }
+	
+    final private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+//		parent = (Transform)in.readObject();
+//		childTransforms = (TransformVector)in.readObject();
+//		childItems = (ItemVector)in.readObject();
+    	System.out.println("reading a transform");
+    	in.defaultReadObject();
+    	System.out.println("the transforms name is:" + this.getOuterName());   	
+    	translationNeedsUpdate = true;
+    	rotationNeedsUpdate = true;
+    }
 }

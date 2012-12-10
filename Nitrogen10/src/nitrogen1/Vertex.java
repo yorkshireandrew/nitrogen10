@@ -5,12 +5,17 @@
 
 package nitrogen1;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+
 /**
  *
  * @author andrew
  */
-public final class Vertex {
-    
+public final class Vertex implements Serializable{
+	private static final long serialVersionUID = -1727767468127453585L;
+
 	// Item-space coordinates
 	/** Item space x coordinate. The containing Items orientation transform gets applied to the (usually fixed) Item space coordinates of the vertex in order to generate the vertex's view-space coordinates. */
 	float is_x;
@@ -21,48 +26,48 @@ public final class Vertex {
 	
     // coordinates 
     /** Partially computed view-space x coordinate, formed from a rotated but not translated item-space coordinate. */
-    float rvs_x;
+    transient float rvs_x;
     /** Partially computed view-space y coordinate, formed from a rotated but not translated item-space coordinate. */
-    float rvs_y;
+    transient float rvs_y;
     /** Partially computed view-space z coordinate, formed from a rotated but not translated item-space coordinate. */    
-    float rvs_z;
+    transient float rvs_z;
 	
     // view-space coordinates 
     /** view-space x coordinate. Positive is right-ward */
-    float vs_x;
+    transient float vs_x;
     /** views-pace y coordinate. Positive is up-ward. */
-    float vs_y;
+    transient float vs_y;
     /** view-space z coordinate. Increasing negativity is moving away from the view-point. */
-    float vs_z;
+    transient float vs_z;
     
     /** flag indicating the view-space coordinates are stale due to rotation of the containing Item */
-    boolean rotationNeedsUpdate = true;    
+    transient boolean rotationNeedsUpdate = true;    
     /** flag indicating the view-space coordinates are stale due to rotation of the containing Item  */ 
-    boolean translationNeedsUpdate = true;
+    transient boolean translationNeedsUpdate = true;
 	
     // screen coordinates
 	/** screen x coordinate (not including an offset) */
-    int sx;
+    transient int sx;
     /** screen y coordinate (not including an offset) */
-    int sy;
+    transient int sy;
     /** screen z coordinate (which may differ from the vertexes view-space z due to perspective projection)*/
-    int sz;
+    transient int sz;
     /** flag indicating if the vertex screen coordinates need updating */
-    boolean screenCoordinatesNeedUpdate = true;
+    transient boolean screenCoordinatesNeedUpdate = true;
     
     // auxiliary coordinates
     /**An auxiliary coordinate used by renderer (i.e. a float representing a texture or lighting coordinate)*/
-    float aux1;
+    transient float aux1;
     /**An auxiliary coordinate used by renderer (i.e. a float representing a texture or lighting coordinate)*/   
-    float aux2;
+    transient float aux2;
     /**An auxiliary coordinate used by renderer (i.e. a float representing a texture or lighting coordinate)*/    
-    float aux3;
+    transient float aux3;
     
     /** value for when Vert is used as a collision vertex */
     float radius;
     
 	/** package scope reference for use in factories LLL*/
-	Vertex nextInList;
+    transient Vertex nextInList;
     
     /** default constructor used by static initialiser in HLPBreaker */
     Vertex() {}
@@ -232,7 +237,13 @@ public final class Vertex {
     	if((distanceToSquared(target) - radiusL*radiusL - targetRadius*targetRadius)>0){return false;}else{return true;}   	
     }	
     		
-    
+    final private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+    	in.defaultReadObject();
+    	translationNeedsUpdate = true;
+    	rotationNeedsUpdate = true;
+        screenCoordinatesNeedUpdate = true;   	
+    }    
 
     
     

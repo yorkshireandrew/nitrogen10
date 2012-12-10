@@ -1,5 +1,9 @@
 package nitrogen1;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Iterator;
 
 /** An Item comprised of several polygons, TexMaps, Colour data, BSPPlanes 
@@ -8,7 +12,8 @@ import java.util.Iterator;
  * @author andrew
  *
  */
-final public class Item {
+final public class Item implements Serializable{
+	private static final long serialVersionUID = 1592586975370696804L;
 	
 	// Enumerations for whichRenderer
 	static final int NEAR_RENDERER = 0;
@@ -31,15 +36,19 @@ final public class Item {
 	private SharedImmutableSubItem sisi;
 		
 	/** The Items computed Backsides. A Backsides consists of a position, view space coordinate and a direction vector, 
-	 * they are used by polygons to determine visibility and which of their two faces is being viewed */
-	private Backside backsides[];
+	 * they are used by polygons to determine visibility and which of their two faces is being viewed 
+	 * serialisation is controlled by writeObject & readObject*/
+	private transient Backside backsides[];
 	
-	/** The Items vertexes */
-	private Vertex vertexes[];
+	/** The Items vertexes 
+	 * serialisation is controlled by writeObject & readObject*/
+
+	private transient Vertex vertexes[];
 	
-	/** The Items collision vertexes */
+	/** The Items collision vertexes 
+	 *serialisation is controlled by writeObject & readObject*/
 	private boolean hasCollisionVertexes;
-	private Vertex collisionVertexes[];
+	private transient Vertex collisionVertexes[];
 	
 	// ************************************************
 	// ********************** FLAGS *******************
@@ -55,18 +64,18 @@ final public class Item {
 	private boolean translationNeedsUpdate = true;
 	
 	/** Count of how many fustrum planes the item may touch */
-	private int fustrumTouchCount;
+	transient private int fustrumTouchCount;
 	
 	/** Enumerated value that determines which renderer to use based on distance */
 	private int whichRendererOld = NEAR_RENDERER;
 		
 	// Which fustrum planes the item may touch, used to improve efficiency of polygon clipping
 	// note: Items remain visible then clip entirely once they cross the fustrum farClip distance
-	private boolean touchedNear;
-	private boolean touchedRight;
-	private boolean touchedLeft;
-	private boolean touchedTop;
-	private boolean touchedBottom;
+	transient private boolean touchedNear;
+	transient private boolean touchedRight;
+	transient private boolean touchedLeft;
+	transient private boolean touchedTop;
+	transient private boolean touchedBottom;
 	
 	/** Flag to render using improved detail polygons. This is a state field used to apply hysteresis */
 	private boolean isImprovedDetail = false;
@@ -165,9 +174,25 @@ final public class Item {
 		nextInList = null;
 	}
 	
+	final void copyFrom(Item i)
+	{
+		parent = i.parent;	
+		sisi = i.sisi;
+		backsides = i.backsides;
+		vertexes = i.vertexes;
+		collisionVertexes = i.collisionVertexes;
+		visibility = i.visibility;
+		rotationNeedsUpdate = i.rotationNeedsUpdate;
+		translationNeedsUpdate = i.translationNeedsUpdate;
+		whichRendererOld = i.whichRendererOld;
+		isImprovedDetail = i.isImprovedDetail;	
+		isUsingHLPBreaking = i.isUsingHLPBreaking;
+		isUsingBillboardOriention = i.isUsingBillboardOriention;
+		name = i.name;
+		wasRendered = i.wasRendered;
+		nextInList = i.nextInList;		
+	}
 	
-	 ///---------------- TO DO --------------//
-	/// carry on optimising from here ///
 	/** called to render the Item 
 	 * @param context The NitrogenContext to render the Item in
 	 * @param v11-v34 The orientation matrix computed by the scene graph (12 floating point values)*/
@@ -179,6 +204,7 @@ final public class Item {
 			float v21, float v22, float v23, float v24,
 			float v31, float v32, float v33, float v34)
 	{
+		System.out.println("rendering "+ name);
 		// return if the Item is not set visible
 		if(visibility == false)return;
 		
@@ -751,6 +777,76 @@ final public class Item {
 		backsides  = null;
 		vertexes = null;
 	}
+	/*
+	final private void writeObject(ObjectOutputStream out) throws IOException, ClassNotFoundException
+	{
+    	System.out.println("writing Item:"+ this.getName());
+    	out.defaultWriteObject();
+    	
+	}
+	*/
+	
+	final private void writeObject(ObjectOutputStream out) throws IOException, ClassNotFoundException
+	{
+    	System.out.println("writing Item:"+ this.getName());
+    	out.defaultWriteObject();
+    	
+    	// write the backsides
+    	int backsideLength = backsides.length;
+    	out.writeInt(backsideLength);
+
+    	// write the vertexes
+    	int vertexesLength = vertexes.length;
+    	out.writeInt(vertexesLength);
+    	
+    	// write the collision vertexes
+    	int collisionVertexesLength = collisionVertexes.length;
+    	out.writeInt(collisionVertexesLength);
+
+	}
+
+    final private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	{
+    	in.defaultReadObject();
+    	System.out.println("reading Item:"+ this.getName());
+    	
+    	SharedImmutableSubItem sisiL = sisi;
+    	
+    	// read and generate the backsides
+    	int backsideLength = in.readInt();
+    	backsides = new Backside[backsideLength];
+    	ImmutableBackside[] ibs = sisiL.immutableBacksides;
+    	for(int i = 0 ; i < backsideLength; i++)
+    	{
+    		backsides[i] = itemFactory.getBackside(ibs[i]);
+    	}
+    	
+    	// read and generate the vertexes
+    	int vertexesLength = in.readInt();
+    	vertexes = new Vertex[vertexesLength];
+    	ImmutableVertex[] ivs = sisiL.immutableVertexes;
+    	for(int i = 0 ; i < vertexesLength; i++)
+    	{
+    		vertexes[i] = itemFactory.getVertex(ivs[i]);
+    	}
+    	
+    	// read and generate the collisionVertexes
+    	int collisonVertexesLength = in.readInt();
+    	collisionVertexes = new Vertex[collisonVertexesLength];
+    	ImmutableCollisionVertex[] icvs = sisiL.immutableCollisionVertexes;
+    	for(int i = 0 ; i < collisonVertexesLength; i++)
+    	{
+    		collisionVertexes[i] = itemFactory.getVertex(icvs[i]);
+    	}   	
+	}
+/*	
+    final private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+    	System.out.println("reading an Item");
+    	in.defaultReadObject();
+    	System.out.println("The Items name is :" + this.name);
+    }  
+    */
 	
 	/** returns an Iterator<Vert> for enumerating the Items collision vertexes */
 	final public Iterator<Vertex> getCollisionVertexIterator()

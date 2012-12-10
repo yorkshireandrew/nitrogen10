@@ -2,6 +2,8 @@
 
 package nitrogen1;
 
+import java.io.Serializable;
+
 // used 
 // import java.util.Enumeration;
 
@@ -9,10 +11,11 @@ package nitrogen1;
  *
  * @author andrew
  */
-    class ItemVector {
-    private Item[] vec;
-    int capacity;
-    int position;
+    class ItemVector implements Serializable{
+	private static final long serialVersionUID = 757924086215290201L;
+	private Item[] vec;
+    private int capacity;
+    private int position;
     
     /**
      * Creates a new instance 
@@ -120,7 +123,7 @@ package nitrogen1;
          {
              if(vec[x] == ob)
              {
-                 // ok we have found what we are looking for
+                 // OK we have found what we are looking for
                  System.arraycopy(vec,(x+1),vec, x,(position-1-x));
                  position--;
                  
