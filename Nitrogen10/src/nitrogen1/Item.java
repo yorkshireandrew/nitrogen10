@@ -739,11 +739,16 @@ final public class Item {
 		return collisionVertexes;
 	}
 	
-	final void recycle()
+	final public void recycle()
 	{
 		// tell our parents we are going
 		if(parent != null)parent.remove(this);
 		itemFactory.recycle(this);
+		
+		// ensure garbage collector can collect 
+		//any none recycled components of this Item
+		backsides  = null;
+		vertexes = null;
 	}
 	
 	/** returns an Iterator<Vert> for enumerating the Items collision vertexes */

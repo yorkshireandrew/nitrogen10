@@ -317,6 +317,7 @@ final public class ItemFactory_Caching implements ItemFactory{
 		backsideTail = backsideTailL;
 		currentFreeBacksides = currentFreeBacksidesL;
 		
+		
 		// recycle Vertexes
 		Vertex[] scrapVertexes = item.getVertexes();
 		Vertex vertexTailL = vertexTail;
@@ -356,5 +357,4 @@ final public class ItemFactory_Caching implements ItemFactory{
 		vertexTail = vertexTailL2;
 		currentFreeVertexes = currentFreeVertexesL2;	
 	}
-
 }
