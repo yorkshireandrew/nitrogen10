@@ -35,6 +35,9 @@ public class SharedImmutableSubItem implements Serializable{
 	final float farRendererDist;	
 	/** Distance at which to switch from using normal renderer to (faster)far renderer e.g. fixed colour renderer */
 	final float farRendererDistPlus;
+	
+	/** Distance at which to stop rendering */
+	final float farPlane;
 
 	// ***************** VALUES RELATING TO HLP POLYGON BREAKING ****************
 	/** Distance at which  (slower) high level of perspective (HLP) breaking is enabled*/
@@ -110,6 +113,7 @@ public class SharedImmutableSubItem implements Serializable{
         	farRendererDist  = readFloat(in, "unable to find farRendererDist loading " + filename);
         	hlpBreakingDist  = readFloat(in, "unable to find hlpBreakingDist loading " + filename);
         	billboardOrientationDist = readFloat(in, "unable to find billboardOrientationDist loading " + filename);
+        	farPlane = readFloat(in, "unable to find farPlane loading " + filename);
 
         	// read values related to level of detail
         	normalDetailPolyStart 	= readInt(in, "unable to find normalDetailPolyStart loading " + filename);

@@ -6,6 +6,7 @@
 1000
 1000
 1000
+1000
 
 // normal and improved polystarts and finishes we have 6 polygons
 0

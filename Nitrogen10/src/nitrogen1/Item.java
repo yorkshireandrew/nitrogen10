@@ -182,10 +182,14 @@ final public class Item {
 		// return if the Item is not set visible
 		if(visibility == false)return;
 		
-		// return if the Item is fustrum culled
+		// return if the Item is fustrum culled using context
 		if(isItemFustrumCulled(v14,v24,v34,context))return;
+		
+		// far plane cull using the Items own farPlane
+		final float itemDist = -v34;
+		final SharedImmutableSubItem 	sisiL = sisi;
+		if(itemDist > sisiL.farPlane)return;
 
-		final int whichRenderer;
 		// DEBUG
 		context.itemsRendered++;
 		
@@ -196,7 +200,6 @@ final public class Item {
 		context.currentItem = this;
 		
 		//Cache values needed for rendering locally
-		final SharedImmutableSubItem 	sisiL = sisi;
 		final int 		fustrumTouchCountL	= fustrumTouchCount;
 		final boolean 	touchedNearL 		= touchedNear;
 		final boolean 	touchedRightL 		= touchedRight;
@@ -204,10 +207,8 @@ final public class Item {
 		final boolean 	touchedTopL			= touchedTop;
 		final boolean 	touchedBottomL  	= touchedBottom;
 		
+		// which near-mid-far renderer to use for this render
 		int 		whichRendererIsIt = whichRendererOld;	// the near-mid-far renderer to use for rendering this item
-		
-		// if there is movement determine which renderer to use
-		final float itemDist = -v34;
 		
 		if(translationNeedsUpdate)
 		{
