@@ -6,7 +6,7 @@
 1000
 1000
 1000
-1000
+20
 
 // normal and improved polystarts and finishes we have 6 polygons
 0
@@ -16,11 +16,6 @@
 
 //improved detail dist
 1000
-
-//texturemaps
-1
-front
-/res/helloworld.PNG
 
 //polygonVertexData
 5
@@ -45,26 +40,94 @@ null
 0
 0
 
+//polygonData
+5
+
+null
+0
+
+red
+1
+0XFF0000
+
+darkgrey
+1
+0X888888
+
+green
+1
+0X00FF00
+
+black
+1
+0X000000
+
+
+//texturemaps
+1
+front
+/res/helloworld.PNG
+
+//backsides
+
+6
+
+front
+0 0 5
+0 0 1
+no
+
+right
+5 0 0
+1 0 0
+no
+
+back
+0 0 -5
+0 0 -1
+no
+
+left
+-5 0 0
+-1 0 0
+no
+
+top
+0 5 0
+0 1 0
+no
+
+bottom
+0 -5 0
+0 -1 0
+no
+
+
+
+
+
+
 //polygonMax
 6
 
 // -----------------
 // Frontmost polygon (1)
 // -----------------
-0 1 3 2
+0 2 3 1
 topleft
 topright
 bottomright
 bottomleft
 
 //no data
-0
+null
 
 str
 front
 
-//backside index
-0
+//backside
+front
+
 
 // initially no backside culling 
 no
@@ -74,21 +137,19 @@ no
 // -----------------
 // righthand polygon (2)
 // -----------------
-0 4 5 3
+3 5 4 1
 null
 null
 null
 null
 
-// one polydata entry colour FFFF0000 - red
-1
-4294901760
+//polydata 
+red
 
 sscr
 null
 
-//backside index
-1
+right
 
 // initially no backside culling 
 no
@@ -98,21 +159,20 @@ no
 // -----------------
 // rear polygon (3)
 // -----------------
-4 6 7 5
+5 7 6 4
 null
 null
 null
 null
 
-// one polydata entry colour FF666666 - dark grey
-1
-4284900966
+// polydata 
+dark grey
 
 sscr
 null
 
-//backside index
-2
+//backside
+back
 
 // initially no backside culling 
 no
@@ -122,21 +182,20 @@ no
 // -----------------
 // left polygon (4)
 // -----------------
-6 0 2 7
+7 2 0 6
 null
 null
 null
 null
 
-// one polydata entry colour FF00FF00 - green
-1
-4278255360
+// polydata 
+green
 
 sscr
 null
 
-//backside index
-3
+//backside
+left
 
 // initially no backside culling 
 no
@@ -146,21 +205,20 @@ no
 // -----------------
 // top polygon (5)
 // -----------------
-0 1 4 6
+1 4 6 0
 null
 null
 null
 null
 
-// one polydata entry colour FF0000FF - blue
-1
-4278190335
+// polydata 
+black
 
 sscr
 null
 
-//backside index
-4
+//backside
+top
 
 // initially no backside culling 
 no
@@ -170,62 +228,27 @@ no
 // -----------------
 // bottom polygon (5)
 // -----------------
-2 3 5 7
+7 5 3 2
 null
 null
 null
 null
 
-// one polydata entry colour FF0000FF - blue
-1
-4278190335
+// polydata 
+black
 
 sscr
 null
 
-//backside index
-5
+//backside
+bottom
 
 // initially no backside culling 
 no
 // not transparent
 no
 
-// --------------
-// backsides - no lighting calculation
-// --------------
 
-6
-
-// frontmost backside
-0 0 5
-0 0 1
-no
-
-// rightmost backside
-5 0 0
-1 0 0
-no
-
-// rearmost
-0 0 -5
--1 0 0
-no
-
-// leftmost
--5 0 0
--1 0 0
-no
-
-// topmost
-0 5 0
-0 1 0
-no
-
-bottommost
-0 -5 0
-0 -1 0
-no
 
 // vertexs
 8

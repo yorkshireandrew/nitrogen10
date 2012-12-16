@@ -2,9 +2,9 @@ bounding_radius
 
 nearRendererDist
 farRendererDist
-hlpBreakingDist 		<= distance at which hlp breaking begins
+hlpBreakingDist 			<= distance at which hlp breaking begins
 billboardOrientationDist	<= distance at which item uses billboard orientation
-
+farPlane					<= distance at which rendering stops, context can override to nearer
 	
 normalDetailPolyStart
 improvedDetailPolyStart
@@ -12,46 +12,51 @@ normalDetailPolyFinish
 improvedDetailPolyFinish 
 improvedDetailDist 
 
-textureMapMax
-{
-  	textureMapName <= so it can be referred to later in polygon
-  	textureMapResource
-}
-
 polygonVertexDataMax
 {
-	polygonVertexDataName <= so it can be referred to later in polygon
+	polygonVertexDataName 	<= so it can be referred to later in polygon
 	aux1 <= float
 	aux2 <= float
 	aux3 <= float
 }
 
-polygonMax
+polygonDataMax
 {
-	c1 c2 c3 c4 <= indexes into vertex array
-	
-	polygonVertexDataName <= polygonVertexData name that is associated with c1 etc
-	polygonVertexDataName
-	polygonVertexDataName
-	polygonVertexDataName
-	
+	polygonDataName 		<= so it can be referred to later in polygon
 	polyDataMax
 	{
-		integer
+		polyData			<= integer
 	}
-	NameOfRendererTriplet
-	textureMapName
+}
 
-	backsideIndex
-	isBacksideCulled (yes/no)
-	isTransparent (yes/no)	<= determines which renderer pass renders.
+textureMapMax
+{
+  	textureMapName 			<= so it can be referred to later in polygon
+  	textureMapResource
 }
 
 backsideMax
 {
+	immutableBacksideName 	<= so it can be referred to later in polygon
 	ix	iy	iz
 	inx	iny	inz
 	calculateLighting(yes/no)
+}
+
+polygonMax
+{
+	c1 c2 c3 c4 		<= indexes into vertex array
+	
+	polygonVertexDataName 	<= polygonVertexData name that is associated with c1 etc
+	polygonVertexDataName
+	polygonVertexDataName
+	polygonVertexDataName	
+	polyDataName
+	rendererTripletName
+	textureMapName
+	backsideName
+	isBacksideCulled (yes/no)
+	isTransparent (yes/no)	<= determines which renderer pass renders.
 }
 
 vertexMax

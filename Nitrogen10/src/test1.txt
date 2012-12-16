@@ -9,138 +9,138 @@
 6
 6
 1000
-1
-front
-/res/helloworld.PNG
 5
 topleft
-1
-1
-1
+0
+0
+0
 topright
 100
-1
-1
+0
+0
 bottomright
 100
 100
-1
+0
 bottomleft
-1
+0
 100
-1
+0
 null
 0
 0
 0
+5
+null
+0
+red
+1
+0XFFFF00
+darkgrey
+1
+0X888888
+green
+1
+0X00FF00
+black
+1
+0X000000
+1
+front
+/res/helloworld.PNG
 6
-
+front
+0 0 5
+0 0 1
+no
+right
+5 0 0
+1 0 0
+no
+back
+0 0 -5
+0 0 -1
+no
+left
+-5 0 0
+-1 0 0
+no
+top
+0 5 0
+0 1 0
+no
+bottom
+0 -5 0
+0 -1 0
+no
+6
 0 2 3 1
 topleft
 topright
 bottomright
 bottomleft
-0
+null
 str
 front
-0
+front
 no
 no
-
 3 5 4 1
 null
 null
 null
 null
-1
-0XFF0000
+red
 sscr
 null
-1
+right
 no
 no
-
 5 7 6 4
 null
 null
 null
 null
-1
-0X00FF00
+darkgrey
 sscr
 null
-2
+back
 no
 no
-
-
 7 2 0 6
 null
 null
 null
 null
-1
-0X000000
+green
 sscr
 null
-3
+left
 no
 no
-
 1 4 6 0
 null
 null
 null
 null
-1
-0x888888
+black
 sscr
 null
-4
+top
 no
 no
-
 7 5 3 2
 null
 null
 null
 null
-1
-0XFFFF00
+black
 sscr
 null
-5
+bottom
 no
 no
-
-6
-
-0 0 5
-0 0 1
-no
-
-5 0 0
-1 0 0
-no
-
-0 0 -5
-0 0 -1
-no
-
--5 0 0
--1 0 0
-no
-
-0 5 0
-0 1 0
-no
-
-0 -5 0
-0 -1 0
-no
-
 8
-
 -5 5 5
 5 5 5
 -5 -5 5
@@ -150,8 +150,14 @@ no
 5 -5 -5
 -5 5 -5
 -5 -5 -5
-
 0
+
+
+
+
+
+
+
 
 
 

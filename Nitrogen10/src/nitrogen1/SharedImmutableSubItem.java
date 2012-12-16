@@ -4,6 +4,8 @@ package nitrogen1;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -96,14 +98,30 @@ public class SharedImmutableSubItem implements Serializable{
             File f = new File(filename);
             System.out.println(f.getAbsolutePath());
             in = new Scanner(new File(filename));
-            int polygonVertexDataMax; 	// number of PolygonVertexData objects the file contains
+            
+            /** maps polygonVertexDataName */
             Map<String,PolygonVertexData> polygonVertexDataMap = new HashMap<String,PolygonVertexData>();
-            int polygonMax; 	// number of ImmutablePolygons the file indicates it contains
-            int textureMapMax; 	// number of texture maps the file indicates it references
-            Map<String,TexMap> textureMaps = new HashMap<String,TexMap>();
-            int backsideMax;	// number of ImmutableBacksides the file indicates it contains       
-            int vertexMax; 			// number of ImmutableVertexs
-            int collisionVertexMax; // number of ImmutableCollisionVertexs
+            /** maps polyDataName */
+            Map<String,int[]> polygonDataMap = new HashMap<String,int[]>();
+            /** maps textureMapName */
+            Map<String,TexMap> textureMapMap = new HashMap<String,TexMap>(); 
+            /** maps for backsideName */
+            List<String> immutableBacksideList = new ArrayList<String>(); 
+                
+            /** number of PolygonVertexData entries the file contains */
+            int polygonVertexDataMax; 
+            /** number of PolygonData entries the file contains */
+            int polygonDataMax;
+            /** number of texture map entries the file contains */
+            int textureMapMax;
+            /** number of ImmutableBackside entries the file contains */
+            int backsideMax;
+            /** number of ImmutablePolygons */
+            int polygonMax;            
+            /** number of ImmutableVertex entries the file contains */
+            int vertexMax; 
+            /** number of ImmutableCollisionVertex entries the file contains */
+            int collisionVertexMax;          
             
             // read bounding radius
         	boundingRadius 	= readFloat(in, " unable to find boundingRadius loading " + filename);
@@ -129,29 +147,8 @@ public class SharedImmutableSubItem implements Serializable{
     		billboardOrientationDistPlus = billboardOrientationDist * hysteresis;   
     		improvedDetailDistPlus = improvedDetailDist * hysteresis;
     		
-    		// load all the TexMap object referenced by the SISI polygons
-    		// and place them in the textureMaps map
-    		textureMapMax = readInt(in, "unable to find textureMapMax loading" + filename);
- 		
-    		for(int i = 0; i < textureMapMax; i++)
-    		{
-    			String textureMapName;
-    			String textureMapResource;
-    			
-    			TexMap newTextureMap;    			
-    			textureMapName = readLine(in, "unable to find textureMap [" + i + "] name loading " + filename);
-    			textureMapResource = readLine(in, "unable to find textureMap [" + i + "] resource name loading " + filename);
-    			
-    			try{
-    				newTextureMap = TexMap.getTexture(textureMapResource);
-    				textureMaps.put(textureMapName, newTextureMap);
-    			}
-    			catch(NitrogenCreationException e){
-    				throw new NitrogenCreationException("unable to find textureMap resource " + textureMapResource + " loading " + filename + "   " + e.getMessage());
-    			}
-    		}
-    		
-        	// load all the PolgonVertexData
+        	// load all the PolgonVertexData referenced by the SISI polygons
+    		System.out.println("now reading polgonVertexData");
     		String polygonVertexDataName;
         	polygonVertexDataMax = readInt(in, "unable to find polygonVertexDataMax loading " + filename);    		
         	for(int i = 0; i < polygonVertexDataMax; i++)
@@ -163,10 +160,67 @@ public class SharedImmutableSubItem implements Serializable{
         		}
         		catch(NitrogenCreationException e)
         		{
-        			throw new NitrogenCreationException("Exception occured reading " + filename +" on polygonVertexData" + i + " caused by: " + e.getMessage());
+        			throw new NitrogenCreationException("Exception occured reading " + filename +" on polygonVertexData " + polygonVertexDataName + " caused by: " + e.getMessage());
+        		}
+        	}
+        	
+        	System.out.println("now reading polyData");
+        	// load all the polygonData referenced by the SISI polygons
+    		String polygonDataName;
+        	polygonDataMax = readInt(in, "unable to find polygonDataMax loading " + filename);    		
+        	for(int i = 0; i < polygonDataMax; i++)
+        	{		
+        		polygonDataName = readLine(in, "unable to find polygonData [" + i + "] name loading " + filename);
+        		try
+        		{
+        			polygonDataMap.put(polygonDataName, buildPolygonData(in));
+        		}
+        		catch(NitrogenCreationException e)
+        		{
+        			throw new NitrogenCreationException("Exception occured reading " + filename +" on polygonData " + polygonDataName + " caused by: " + e.getMessage());
+        		}
+        	}   
+    		
+    		// load all the TexMap object referenced by the SISI polygons
+    		// and place them in the textureMaps map
+    		textureMapMax = readInt(in, "unable to find textureMapMax loading" + filename);		
+    		for(int i = 0; i < textureMapMax; i++)
+    		{
+    			String textureMapName;
+    			String textureMapResource;
+    			
+    			TexMap newTextureMap;    			
+    			textureMapName = readLine(in, "unable to find textureMap [" + i + "] name loading " + filename);
+    			textureMapResource = readLine(in, "unable to find textureMap " + textureMapName + " resource name loading " + filename);
+    			
+    			try{
+    				newTextureMap = TexMap.getTexture(textureMapResource);
+    				textureMapMap.put(textureMapName, newTextureMap);
+    			}
+    			catch(NitrogenCreationException e){
+    				throw new NitrogenCreationException("unable to find textureMap resource " + textureMapResource + " loading " + filename + "   " + e.getMessage());
+    			}
+    		}
+    		
+        	// load all the ImmutableBacksides referenced by the SISI polygons
+    		String immutableBacksideName;
+        	backsideMax = readInt( in, "unable to find backsideMax loading " + filename);    		
+        	immutableBacksides = new ImmutableBackside[backsideMax];
+        	for(int i = 0; i < backsideMax; i++)
+        	{
+        		
+        		try
+        		{
+        			immutableBacksideName = readLine(in, "unable to find mmutableBacksideName [" + i + "] loading " + filename);
+        			immutableBacksides[i] = buildImmutableBackside(in);
+        			immutableBacksideList.add(immutableBacksideName);
+        		}
+        		catch(NitrogenCreationException e)
+        		{
+        			throw new NitrogenCreationException("Exception occured reading " + filename +" on ImmutableBackside" + i + " caused by: " + e.getMessage());
         		}
         	} 
-        	
+      	
     		// load all the ImmutablePolygons
         	polygonMax = readInt(in, "unable to find polygonMax reading " + filename);    		
         	immutablePolygons = new ImmutablePolygon[polygonMax];
@@ -175,7 +229,7 @@ public class SharedImmutableSubItem implements Serializable{
         		
         		try
         		{
-        			immutablePolygons[i] = buildImmutablePolygon(in , textureMaps, polygonVertexDataMap);
+        			immutablePolygons[i] = buildImmutablePolygon(in , polygonVertexDataMap, polygonDataMap, textureMapMap, immutableBacksideList);
         		}
         		catch(NitrogenCreationException e)
         		{
@@ -183,21 +237,7 @@ public class SharedImmutableSubItem implements Serializable{
         		}
         	}
         	
-        	// load all the ImmutableBacksides
-        	backsideMax = readInt( in, "unable to find backsideMax loading " + filename);    		
-        	immutableBacksides = new ImmutableBackside[backsideMax];
-        	for(int i = 0; i < backsideMax; i++)
-        	{
-        		
-        		try
-        		{
-        			immutableBacksides[i] = buildImmutableBackside(in);
-        		}
-        		catch(NitrogenCreationException e)
-        		{
-        			throw new NitrogenCreationException("Exception occured reading " + filename +" on ImmutableBackside" + i + " caused by: " + e.getMessage());
-        		}
-        	} 
+
         	
         	
         	// load all the ImmutableVertexes
@@ -215,7 +255,7 @@ public class SharedImmutableSubItem implements Serializable{
         		}
         	}
         	
-        	// load all the ImmutableVertexs
+        	// load all the ImmutableCollisionVertexs
         	collisionVertexMax = readInt( in, "unable to find collisionVertexMax loading " + filename);    		
         	if(collisionVertexMax > 0)
         	{
@@ -253,29 +293,40 @@ public class SharedImmutableSubItem implements Serializable{
         }       	
 	}
 	
+	// buildImmutablePolygon(in , polygonVertexDataMap, polygonDataMap, textureMapMap, immutableBacksideList);
 	/** creates an ImmutablePolygon using text from a Scanner, it also requires a textureMap Map created earlier in the parsing so that it can identify and inject into the polygon a TexMap reference */
-	ImmutablePolygon buildImmutablePolygon(Scanner in , Map<String, TexMap> textureMaps, Map<String, PolygonVertexData> polygonVertexDataMap) throws NitrogenCreationException, NoSuchElementException
+	ImmutablePolygon buildImmutablePolygon(
+											Scanner in,
+											Map<String,PolygonVertexData> polygonVertexDataMap,
+											Map<String,int[]> polygonDataMap,											
+											Map<String, TexMap> textureMapMap,
+											List<String> immutableBacksideList
+										) throws NitrogenCreationException, NoSuchElementException
 	{
-			int 			temp_c1;	
-			int 			temp_c2;	
-			int 			temp_c3;	
-			int 			temp_c4;
-			int[] 			temp_polyData;
-			RendererTriplet temp_rendererTriplet;
-			String			textureMapName;
+			// variables used to build the polygon
+			int 				temp_c1;	
+			int 				temp_c2;	
+			int 				temp_c3;	
+			int 				temp_c4;
+			PolygonVertexData 	temp_pvd_c1 = null;
+			PolygonVertexData 	temp_pvd_c2 = null;
+			PolygonVertexData 	temp_pvd_c3 = null;
+			PolygonVertexData 	temp_pvd_c4 = null;			
+			int[] 				temp_polygonData;
+			RendererTriplet 	temp_rendererTriplet;
+			TexMap 				temp_textureMap = null;	
+			int 				temp_backsideIndex;
+			boolean 			temp_isBacksideCulled;
+			boolean 			temp_isTransparent;			
+			
+			// strings used to reference things in the passed in Map and List Objects
 			String			polygonVertexDataName;
-			String			rendererTripletName;
-			TexMap 			temp_textureMap = null;
-			
-			PolygonVertexData temp_pvd_c1 = null;
-			PolygonVertexData temp_pvd_c2 = null;
-			PolygonVertexData temp_pvd_c3 = null;
-			PolygonVertexData temp_pvd_c4 = null;
-			
-			int 			temp_backsideIndex;
-			boolean 		temp_isBacksideCulled;
-			boolean 		temp_isTransparent;
-			
+			String 			polygonDataName;
+			String			rendererTripletName;			
+			String			textureMapName;
+			String			backsideName;		
+						
+			// read in the indexes to the Vertexes
 			temp_c1 = readInt( in, "Unable to find c1.");
 			temp_c2 = readInt( in, "Unable to find c2.");
 			temp_c3 = readInt( in, "Unable to find c3.");
@@ -301,20 +352,14 @@ public class SharedImmutableSubItem implements Serializable{
 		    if(polygonVertexDataMap.containsKey(polygonVertexDataName)){temp_pvd_c4 = polygonVertexDataMap.get(polygonVertexDataName);}
 			else throw new NitrogenCreationException("The PolygonVertexData named " + polygonVertexDataName + "is not loaded by the file.");
 		
-			// read in the polygons polyData
-			int polyDataMax;
-			polyDataMax = readInt( in, "Unable to find polyDataMax.");
-			temp_polyData = new int[polyDataMax];
-			for(int j = 0; j < polyDataMax; j++)
-			{
-				String temp = readLine( in, "Unable to find polyData [" + j + "]. (polyData entries must be on seperate lines)");
-				int read = Integer.decode(temp);
-				temp_polyData[j] = read;
-			}
+		    // read in the polygonData 
+			polygonDataName = readLine(in, "Unable to find polygonData name");
+		    if(polygonDataMap.containsKey(polygonDataName)){temp_polygonData = polygonDataMap.get(polygonDataName);}
+			else throw new NitrogenCreationException("The PolygonData named " + polygonDataName + "is not loaded by the file.");
 				
 			// obtain renderer triplet
 			rendererTripletName = readLine( in, "Unable to find RenderTriplet name.");
-
+			
 			// The Exception that getRenderTriplet() may throw is suitably informative
 			try{
 				temp_rendererTriplet = RendererHelper.getRendererTriplet(rendererTripletName);
@@ -328,13 +373,20 @@ public class SharedImmutableSubItem implements Serializable{
 			textureMapName = readLine( in, "Unable to find TexMap name, should be a line containing \"null\" if no texture map is used.");
 			if(!textureMapName.equals("null"))
 			{
-				if(textureMaps.containsKey(textureMapName)){temp_textureMap = textureMaps.get(textureMapName);}
+				if(textureMapMap.containsKey(textureMapName)){temp_textureMap = textureMapMap.get(textureMapName);}
 				else throw new NitrogenCreationException("The TexMap named " + textureMapName + "is not loaded by the file.");
 			}
 			
-			// obtain the backside index			
-			temp_backsideIndex = readInt( in, "Unable to find backsideIndex.");
-				
+			backsideName = readLine( in, "Unable to find ImmutableBackside name");
+		    if(immutableBacksideList.contains(backsideName))
+		    {
+		    	temp_backsideIndex = immutableBacksideList.indexOf(backsideName);
+		    }
+		    else
+		    {
+				throw new NitrogenCreationException("ImmutableBackside " + backsideName + " is not loaded by the file");
+		    }
+
 			// obtain the isBacksideCulled
 		    temp_isBacksideCulled = readBoolean( in, "Unable to find isBacksideCulled ");
 
@@ -350,7 +402,7 @@ public class SharedImmutableSubItem implements Serializable{
 					temp_pvd_c2,
 					temp_pvd_c3,
 					temp_pvd_c4,
-					temp_polyData,
+					temp_polygonData,
 					temp_rendererTriplet,
 					temp_textureMap,
 					temp_backsideIndex,
@@ -443,6 +495,14 @@ public class SharedImmutableSubItem implements Serializable{
 		return (new PolygonVertexData(temp_aux1,temp_aux2,temp_aux3));
 	}
 	
+	int[] buildPolygonData(Scanner in) throws NitrogenCreationException
+	{	
+	    int polyDataMax = readInt(in,"Unable to read polyDataMax");
+	    int[] retval = new int[polyDataMax];
+	    for(int x = 0; x < polyDataMax; x++)retval[x] = readArkwardInt(in,"Unable to read polyData index=[" + x + "]"); 
+	    return retval;
+	}	
+	
 	/** reads the next line from the scanner or throws a NitrogenCreationException containing the exception text if not found. skips over if its a line ending */
 	final static String readLine(Scanner in, String exceptionText)throws NitrogenCreationException
 	{
@@ -454,6 +514,17 @@ public class SharedImmutableSubItem implements Serializable{
 		return retval;	
 	}
 
+	/** can deal with big integers such as 0XFFFFFFFF, but must be on its own line */
+	final static int readArkwardInt(Scanner in, String exceptionText)throws NitrogenCreationException
+	{
+		String line = readLine(in, exceptionText);
+		int i;
+		try{
+			i = Integer.decode(line);
+			return i;
+		}
+		catch(NumberFormatException e){ throw new NitrogenCreationException(exceptionText + " - Number Format Exception");}
+	}
 	final static int readInt(Scanner in, String exceptionText)throws NitrogenCreationException
 	{
 		if(in.hasNextInt()){return in.nextInt();}
