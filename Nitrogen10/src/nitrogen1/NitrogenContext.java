@@ -19,7 +19,7 @@ import javax.swing.*;
 // import nitrogen1.TexMap;
 // import nitrogen1.Vert;
 
-public class NitrogenContext extends JButton{
+public class NitrogenContext extends JPanel{
 	static final int SHIFT = 20;	// shift used when rendering textures
 	
 	/** multiplier used in perspective magnifying the image so that the xclip value equals the right of button */
