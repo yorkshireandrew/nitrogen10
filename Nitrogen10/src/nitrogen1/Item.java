@@ -304,6 +304,10 @@ final public class Item implements Serializable{
 		/** True unless the Items SharedImmutableSubItem nearPlaneCrashBacksideOverride is true and the Item has also crashed into near Plane */
 		final boolean noBacksideCullOverride = (!sisiL.nearPlaneCrashBacksideOverride) ||(!touchedNear);
 		
+		/** things pulled out of loop for optimisation */
+		ImmutablePolygon[] sisiImmutablePolygons = sisiL.immutablePolygons;
+		Vertex[] vertexesL = vertexes;
+		boolean contextIsPicking = context.isPicking;
 		for(int x = polyStart; x < polyFinish; x++)
 		{
 			//DEBUG
@@ -311,7 +315,7 @@ final public class Item implements Serializable{
 			System.out.println("--- RENDERING POLYGON ---"+x);
 			System.out.println("--- ******************---");	
 			
-			immutablePolygon = sisiL.immutablePolygons[x];
+			immutablePolygon = sisiImmutablePolygons[x];
 			
 			// skip the polygon if its transparency is wrong for the pass
 			immutablePolygonIsTransparentL = immutablePolygon.isTransparent;
@@ -334,10 +338,10 @@ final public class Item implements Serializable{
 			{
 				// -- optimised to here --
 				// Calculate the vertexes, then Pass the polygon on to the next process.
-				Vertex v1 = vertexes[immutablePolygon.c1];
-				Vertex v2 = vertexes[immutablePolygon.c2];
-				Vertex v3 = vertexes[immutablePolygon.c3];
-				Vertex v4 = vertexes[immutablePolygon.c4];				
+				Vertex v1 = vertexesL[immutablePolygon.c1];
+				Vertex v2 = vertexesL[immutablePolygon.c2];
+				Vertex v3 = vertexesL[immutablePolygon.c3];
+				Vertex v4 = vertexesL[immutablePolygon.c4];				
 				v1.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
 				v2.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
 				v3.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
@@ -363,7 +367,7 @@ final public class Item implements Serializable{
 						v3, 
 						v4, 									
 
-						immutablePolygon.getRenderer(whichRendererIsIt, context.isPicking),
+						immutablePolygon.getRenderer(whichRendererIsIt, contextIsPicking),
 						immutablePolygon.polyData,
 						immutablePolygon.textureMap,						
 						backside.lightingValue,
@@ -376,10 +380,10 @@ final public class Item implements Serializable{
 				if(immutablePolygon.isBacksideCulled && noBacksideCullOverride)continue;
 				
 				// Calculate the vertexes, then Pass the polygon on to the next process.
-				Vertex v1 = vertexes[immutablePolygon.c1];
-				Vertex v2 = vertexes[immutablePolygon.c2];
-				Vertex v3 = vertexes[immutablePolygon.c3];
-				Vertex v4 = vertexes[immutablePolygon.c4];			
+				Vertex v1 = vertexesL[immutablePolygon.c1];
+				Vertex v2 = vertexesL[immutablePolygon.c2];
+				Vertex v3 = vertexesL[immutablePolygon.c3];
+				Vertex v4 = vertexesL[immutablePolygon.c4];			
 				v1.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
 				v2.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
 				v3.calculateViewSpaceCoordinates(v11,v12,v13,v14,v21,v22,v23,v24,v31,v32,v33,v34);				
@@ -405,7 +409,7 @@ final public class Item implements Serializable{
 					v3, 
 					v2, 
 					v1,
-					immutablePolygon.getRenderer(whichRendererIsIt,context.isPicking),					
+					immutablePolygon.getRenderer(whichRendererIsIt,contextIsPicking),					
 					immutablePolygon.polyData,
 					immutablePolygon.textureMap,
 					backside.lightingValue,

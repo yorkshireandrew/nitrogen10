@@ -413,6 +413,11 @@ final class PolygonRenderer {
 	        int tw = 0;
 	        if(tm != null){tex = tm.tex; tw = tm.w;}
 	
+	        // --------------------------------------------------------
+	        // --------------------------------------------------------	        
+	        // TO DO - see if making SHIFT a local improves performance
+	        // --------------------------------------------------------	 
+	        // --------------------------------------------------------	        
 	        // set start point to a
 	        int st_x 	= ax << SHIFT;
 	        long st_z 	= az << SHIFT;    // z-buffer is 32bit so need to use a long to scale up
