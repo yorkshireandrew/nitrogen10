@@ -22,7 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashMap;
+
 
 final public class MyApplet extends JApplet{
     /**
@@ -120,8 +120,9 @@ final public class MyApplet extends JApplet{
             SharedImmutableSubItem testItemSISI = null;        
             try{
             	
-            	testItemSISI = new SharedImmutableSubItem("test1.txt");
-            }
+             	testItemSISI = new SharedImmutableSubItem("test1.txt");
+
+                     }
             catch(NitrogenCreationException e)
             {
             	e.printStackTrace();           	
@@ -144,7 +145,8 @@ final public class MyApplet extends JApplet{
             // output sisi
             SharedImmutableSubItem newsisi;
             try {
-				ObjectInputStream in = new ObjectInputStream(new FileInputStream("test"));
+	//			ObjectInputStream in = new ObjectInputStream(new FileInputStream("test"));
+				ObjectInputStream in = new ObjectInputStream(new FileInputStream("migy.nit"));
 				newsisi = (SharedImmutableSubItem) in.readObject();
 				in.close();
             } catch (FileNotFoundException e) {
